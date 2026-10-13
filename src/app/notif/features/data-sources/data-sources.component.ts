@@ -16,6 +16,7 @@ import { DataSourcesService } from '../../core/services/data-sources.service';
 import { DataSource } from '../../core/models/data-source';
 import { PermActionDirective } from '../../../secu/directives/perm-action.directive';
 import { formatHttpError, unwrapList } from '../../shared/utils/api-utils';
+import { TranslatePipe } from '@ngx-translate/core';
 
 const PAGE_CODE = 'NOTIF_DATASOURCES';
 
@@ -37,7 +38,8 @@ type ParamRow = { key: string; value: string };
     MessageModule,
     TableModule,
     TagModule,
-    PermActionDirective
+    PermActionDirective,
+    TranslatePipe
   ],
   templateUrl: './data-sources.component.html'
 })

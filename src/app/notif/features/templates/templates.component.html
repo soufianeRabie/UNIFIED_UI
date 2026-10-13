@@ -7,10 +7,10 @@
     <div class="nt-list-header">
       <div class="nt-list-title">
         <i class="pi pi-file-edit"></i>
-        <span>Templates</span>
+        <span>{{ 'DOM_FALLBACK.TEXT_089' | translate }}</span>
         <span class="nt-count-badge">{{ templates.length }}</span>
       </div>
-      <button class="nt-new-btn" [permAction]="perm.canCreate(PAGE_CODE)" (click)="resetForm()" title="New template">
+      <button class="nt-new-btn" [permAction]="perm.canCreate(PAGE_CODE)" (click)="resetForm()" [title]="'AUTO_SECURITY_UI.NEW_TEMPLATE' | translate">
         <i class="pi pi-plus"></i>
       </button>
     </div>
@@ -18,13 +18,13 @@
     <div class="nt-list-search">
       <i class="pi pi-search nt-list-search-icon"></i>
       <input class="nt-list-search-input" [(ngModel)]="listSearch" [ngModelOptions]="{standalone:true}"
-        placeholder="Search templates�" />
+        [placeholder]="'NOTIF.TEMPLATES.SEARCH' | translate" />
     </div>
 
     <div class="nt-list-body">
       <div class="nt-list-empty" *ngIf="!filteredTemplates.length">
         <i class="pi pi-inbox"></i>
-        <span>No templates yet</span>
+        <span>{{ 'DOM_FALLBACK.TEXT_090' | translate }}</span>
       </div>
 
       <button type="button" class="nt-list-item" *ngFor="let tpl of filteredTemplates"
@@ -44,7 +44,7 @@
             {{ tpl.isActive ? 'Active' : 'Draft' }}
           </div>
         </div>
-        <button class="nt-list-item-del" [permAction]="perm.canDelete(PAGE_CODE)" (click)="removeTemplate(tpl); $event.stopPropagation()" title="Delete">
+        <button class="nt-list-item-del" [permAction]="perm.canDelete(PAGE_CODE)" (click)="removeTemplate(tpl); $event.stopPropagation()" [title]="'COMMON.DELETE' | translate">
           <i class="pi pi-trash"></i>
         </button>
       </button>
@@ -59,12 +59,12 @@
     <!-- Top bar -->
     <div class="nt-editor-topbar">
       <div class="nt-editor-breadcrumb">
-        <span *ngIf="!selected" class="nt-editor-breadcrumb-text">New Template</span>
+        <span *ngIf="!selected" class="nt-editor-breadcrumb-text">{{ 'DOM_FALLBACK.TEXT_091' | translate }}</span>
         <span *ngIf="selected" class="nt-editor-breadcrumb-text">
           <span class="nt-code">{{ selectedEventType?.code || selected.id }}</span>
         </span>
-        <span class="nt-status-pill nt-status-pill--active" *ngIf="selected?.isActive">Active</span>
-        <span class="nt-status-pill nt-status-pill--draft" *ngIf="selected && !selected.isActive">Draft</span>
+        <span class="nt-status-pill nt-status-pill--active" *ngIf="selected?.isActive">{{ 'DOM_FALLBACK.TEXT_092' | translate }}</span>
+        <span class="nt-status-pill nt-status-pill--draft" *ngIf="selected && !selected.isActive">{{ 'DOM_FALLBACK.TEXT_093' | translate }}</span>
       </div>
       <div class="nt-editor-actions">
         <button class="nt-btn nt-btn--ghost" *ngIf="selected" [permAction]="perm.canUpdate(PAGE_CODE)" (click)="toggle()">
@@ -72,7 +72,7 @@
           {{ selected.isActive ? 'Deactivate' : 'Activate' }}
         </button>
         <button class="nt-btn nt-btn--ghost" (click)="resetForm()">
-          <i class="pi pi-plus"></i> New
+          <i class="pi pi-plus"></i> {{ 'DOM_FALLBACK.TEXT_094' | translate }}
         </button>
         <button class="nt-btn nt-btn--primary" [permAction]="isEditing ? perm.canUpdate(PAGE_CODE) : perm.canCreate(PAGE_CODE)" (click)="saveTemplate()">
           <i class="pi" [class.pi-check]="isEditing" [class.pi-plus-circle]="!isEditing"></i>
@@ -90,27 +90,27 @@
     <div class="nt-readiness-bar">
       <div class="nt-readiness-step" [class.done]="!!form.controls.eventTypeId.value">
         <i class="pi" [class.pi-check-circle]="!!form.controls.eventTypeId.value" [class.pi-circle]="!form.controls.eventTypeId.value"></i>
-        Event type
+        {{ 'DOM_FALLBACK.TEXT_095' | translate }}
       </div>
       <i class="pi pi-chevron-right nt-readiness-sep"></i>
       <div class="nt-readiness-step" [class.done]="!!form.controls.defaultTitle.value">
         <i class="pi" [class.pi-check-circle]="!!form.controls.defaultTitle.value" [class.pi-circle]="!form.controls.defaultTitle.value"></i>
-        Subject
+        {{ 'DOM_FALLBACK.TEXT_096' | translate }}
       </div>
       <i class="pi pi-chevron-right nt-readiness-sep"></i>
       <div class="nt-readiness-step" [class.done]="!!form.controls.defaultBody.value">
         <i class="pi" [class.pi-check-circle]="!!form.controls.defaultBody.value" [class.pi-circle]="!form.controls.defaultBody.value"></i>
-        Body
+        {{ 'DOM_FALLBACK.TEXT_097' | translate }}
       </div>
       <i class="pi pi-chevron-right nt-readiness-sep"></i>
       <div class="nt-readiness-step" [class.done]="(form.controls.channels.value || []).length > 0">
         <i class="pi" [class.pi-check-circle]="(form.controls.channels.value || []).length > 0" [class.pi-circle]="!(form.controls.channels.value || []).length"></i>
-        Channel
+        {{ 'DOM_FALLBACK.TEXT_098' | translate }}
       </div>
       <i class="pi pi-chevron-right nt-readiness-sep"></i>
       <div class="nt-readiness-step" [class.done]="!!selected?.targetResolvers?.length">
         <i class="pi" [class.pi-check-circle]="selected?.targetResolvers?.length" [class.pi-circle]="!selected?.targetResolvers?.length"></i>
-        Recipients
+        {{ 'DOM_FALLBACK.TEXT_046' | translate }}
       </div>
     </div>
 
@@ -118,10 +118,10 @@
     <div class="nt-tabs-wrapper">
       <p-tabs [value]="activeTab()" (valueChange)="activeTab.set(+$event!)">
         <p-tablist>
-          <p-tab [value]="0"><i class="pi pi-pencil"></i> Compose</p-tab>
-          <p-tab [value]="1"><i class="pi pi-users"></i> Audience & Data</p-tab>
-          <p-tab [value]="2"><i class="pi pi-globe"></i> Localisations</p-tab>
-          <p-tab [value]="3"><i class="pi pi-eye"></i> Preview</p-tab>
+          <p-tab [value]="0"><i class="pi pi-pencil"></i> {{ 'DOM_FALLBACK.TEXT_099' | translate }}</p-tab>
+          <p-tab [value]="1"><i class="pi pi-users"></i> {{ 'DOM_FALLBACK.TEXT_100' | translate }}</p-tab>
+          <p-tab [value]="2"><i class="pi pi-globe"></i> {{ 'DOM_FALLBACK.TEXT_101' | translate }}</p-tab>
+          <p-tab [value]="3"><i class="pi pi-eye"></i> {{ 'DOM_FALLBACK.TEXT_102' | translate }}</p-tab>
         </p-tablist>
 
         <p-tabpanels>
@@ -134,27 +134,27 @@
               <section class="nt-section">
                 <div class="nt-section-header">
                   <i class="pi pi-link"></i>
-                  <span class="nt-section-title">Template Identity</span>
+                  <span class="nt-section-title">{{ 'DOM_FALLBACK.TEXT_103' | translate }}</span>
                 </div>
                 <div class="nt-section-body">
                   <div class="nt-row-2">
                     <div class="nt-field">
-                      <label class="nt-label">Event Type <span class="nt-req">*</span></label>
+                      <label class="nt-label">{{ 'DOM_FALLBACK.TEXT_104' | translate }} <span class="nt-req">*</span></label>
                       <p-select [options]="eventTypeOptions" formControlName="eventTypeId"
-                        placeholder="Select an event type" [filter]="true"
+                        [placeholder]="'AUTO_SECURITY_UI.SELECT_AN_EVENT_TYPE' | translate" [filter]="true"
                         filterPlaceholder="Search event types�"></p-select>
-                      <span class="nt-hint">The event that triggers this notification</span>
+                      <span class="nt-hint">{{ 'DOM_FALLBACK.TEXT_105' | translate }}</span>
                     </div>
                     <div class="nt-field">
-                      <label class="nt-label">Priority</label>
+                      <label class="nt-label">{{ 'DOM_FALLBACK.TEXT_106' | translate }}</label>
                       <p-select [options]="priorityOptions" formControlName="priority"></p-select>
                     </div>
                   </div>
                   <div class="nt-field">
-                    <label class="nt-label">Delivery Channels</label>
+                    <label class="nt-label">{{ 'DOM_FALLBACK.TEXT_107' | translate }}</label>
                     <p-multiSelect [options]="channelOptions" formControlName="channels"
-                      placeholder="Pick one or more channels" display="chip"></p-multiSelect>
-                    <span class="nt-hint"><i class="pi pi-lock" style="font-size:10px"></i> Channels are locked after creation</span>
+                      [placeholder]="'AUTO_SECURITY_UI.PICK_ONE_OR_MORE_CHANNELS' | translate" display="chip"></p-multiSelect>
+                    <span class="nt-hint"><i class="pi pi-lock" style="font-size:10px"></i> {{ 'DOM_FALLBACK.TEXT_108' | translate }}</span>
                   </div>
                 </div>
               </section>
@@ -163,9 +163,9 @@
               <section class="nt-section">
                 <div class="nt-section-header">
                   <i class="pi pi-file-edit"></i>
-                  <span class="nt-section-title">Message Content</span>
+                  <span class="nt-section-title">{{ 'DOM_FALLBACK.TEXT_109' | translate }}</span>
                   <div class="nt-section-actions" *ngIf="availableTemplateVariables.length > 0">
-                    <span class="nt-hint" style="margin:0">Insert variable:</span>
+                    <span class="nt-hint" style="margin:0">{{ 'DOM_FALLBACK.TEXT_110' | translate }}</span>
                     <div class="nt-token-row">
                       <button class="nt-token" type="button" *ngFor="let key of availableTemplateVariables"
                         draggable="true" (dragstart)="onColumnDragStart($event, key)"
@@ -177,13 +177,13 @@
                 </div>
                 <div class="nt-section-body">
                   <div class="nt-field">
-                    <label class="nt-label">Subject / Title <span class="nt-req">*</span></label>
-                    <input pInputText formControlName="defaultTitle" placeholder="e.g. Your booking is confirmed" />
+                    <label class="nt-label">{{ 'DOM_FALLBACK.TEXT_111' | translate }} <span class="nt-req">*</span></label>
+                    <input pInputText formControlName="defaultTitle" [placeholder]="'AUTO_SECURITY_UI.E_G_YOUR_BOOKING_IS_CONFIRMED' | translate" />
                   </div>
                   <div class="nt-field">
-                    <label class="nt-label">Body <span class="nt-req">*</span></label>
+                    <label class="nt-label">{{ 'DOM_FALLBACK.TEXT_097' | translate }} <span class="nt-req">*</span></label>
                     <textarea pTextarea formControlName="defaultBody" [rows]="16"
-                      placeholder="Write the notification body here. Drag variables from above to insert them."
+                      [placeholder]="'AUTO_SECURITY_UI.WRITE_THE_NOTIFICATION_BODY_HERE_DRAG_VARIABLES_FROM_ABOVE_TO_IN' | translate"
                       (drop)="onBodyDrop($event)" (dragover)="onBodyDragOver($event)"
                       style="font-family:var(--s-font-mono, monospace);font-size:13px;line-height:1.6;resize:vertical"></textarea>
                   </div>
@@ -191,15 +191,15 @@
                     <label class="nt-toggle-item">
                       <p-checkbox formControlName="isHtml" binary="true" inputId="isHtml"></p-checkbox>
                       <span class="nt-toggle-text">
-                        <span class="nt-toggle-name">Render as HTML</span>
-                        <span class="nt-toggle-hint">Body is interpreted as HTML markup</span>
+                        <span class="nt-toggle-name">{{ 'DOM_FALLBACK.TEXT_112' | translate }}</span>
+                        <span class="nt-toggle-hint">{{ 'DOM_FALLBACK.TEXT_113' | translate }}</span>
                       </span>
                     </label>
                     <label class="nt-toggle-item" *ngIf="isEditing">
                       <p-checkbox formControlName="isActive" binary="true" inputId="isActive"></p-checkbox>
                       <span class="nt-toggle-text">
-                        <span class="nt-toggle-name">Active</span>
-                        <span class="nt-toggle-hint">Template can be triggered by events</span>
+                        <span class="nt-toggle-name">{{ 'DOM_FALLBACK.TEXT_092' | translate }}</span>
+                        <span class="nt-toggle-hint">{{ 'DOM_FALLBACK.TEXT_114' | translate }}</span>
                       </span>
                     </label>
                   </div>
@@ -210,21 +210,21 @@
               <section class="nt-section">
                 <div class="nt-section-header">
                   <i class="pi pi-clock"></i>
-                  <span class="nt-section-title">Schedule & Retry</span>
+                  <span class="nt-section-title">{{ 'DOM_FALLBACK.TEXT_115' | translate }}</span>
                 </div>
                 <div class="nt-section-body">
                   <div class="nt-field">
-                    <label class="nt-label">Schedule Mode</label>
+                    <label class="nt-label">{{ 'DOM_FALLBACK.TEXT_116' | translate }}</label>
                     <p-selectButton [options]="scheduleOptions" formControlName="scheduleType"></p-selectButton>
                   </div>
 
                   <div class="nt-row-2" *ngIf="scheduleTypeValue === 1">
                     <div class="nt-field">
-                      <label class="nt-label">Delay (minutes)</label>
+                      <label class="nt-label">{{ 'DOM_FALLBACK.TEXT_061' | translate }}</label>
                       <p-inputNumber formControlName="delayMinutes" [min]="0" [showButtons]="true"></p-inputNumber>
                     </div>
                     <div class="nt-field">
-                      <label class="nt-label">Quick Presets</label>
+                      <label class="nt-label">{{ 'DOM_FALLBACK.TEXT_117' | translate }}</label>
                       <div style="display:flex;gap:8px;flex-wrap:wrap;padding-top:6px">
                         <button *ngFor="let p of delayPresets" type="button" class="nt-preset-btn"
                           (click)="applyDelayPreset(p.value)">{{ p.label }}</button>
@@ -234,23 +234,23 @@
 
                   <div class="nt-row-2" *ngIf="scheduleTypeValue === 2">
                     <div class="nt-field">
-                      <label class="nt-label">Cron Expression</label>
+                      <label class="nt-label">{{ 'DOM_FALLBACK.TEXT_058' | translate }}</label>
                       <input pInputText formControlName="cronExpression" placeholder="*/5 * * * *" />
                     </div>
                     <div class="nt-field">
-                      <label class="nt-label">Preset</label>
+                      <label class="nt-label">{{ 'DOM_FALLBACK.TEXT_118' | translate }}</label>
                       <p-select [options]="cronPresets" optionLabel="label" optionValue="value"
-                        placeholder="Choose a preset" (onChange)="applyCronPreset($event.value)"></p-select>
+                        [placeholder]="'AUTO_SECURITY_UI.CHOOSE_A_PRESET' | translate" (onChange)="applyCronPreset($event.value)"></p-select>
                     </div>
                   </div>
 
                   <div class="nt-row-2">
                     <div class="nt-field">
-                      <label class="nt-label">Max Retries</label>
+                      <label class="nt-label">{{ 'DOM_FALLBACK.TEXT_119' | translate }}</label>
                       <p-inputNumber formControlName="maxRetries" [min]="0" [showButtons]="true"></p-inputNumber>
                     </div>
                     <div class="nt-field">
-                      <label class="nt-label">Retry Delay (seconds)</label>
+                      <label class="nt-label">{{ 'DOM_FALLBACK.TEXT_120' | translate }}</label>
                       <p-inputNumber formControlName="retryDelaySeconds" [min]="0" [showButtons]="true"></p-inputNumber>
                     </div>
                   </div>
@@ -261,12 +261,12 @@
               <section class="nt-section" [formGroup]="attachmentForm">
                 <div class="nt-section-header">
                   <i class="pi pi-paperclip"></i>
-                  <span class="nt-section-title">File Attachment</span>
+                  <span class="nt-section-title">{{ 'DOM_FALLBACK.TEXT_121' | translate }}</span>
                   <div class="nt-section-actions">
                     <label class="nt-toggle-item" style="padding:0;background:transparent">
                       <p-checkbox formControlName="enabled" binary="true" inputId="attachEnabled"></p-checkbox>
                       <span class="nt-toggle-text">
-                        <span class="nt-toggle-name" style="font-size:12px">Enable attachment</span>
+                        <span class="nt-toggle-name" style="font-size:12px">{{ 'DOM_FALLBACK.TEXT_122' | translate }}</span>
                       </span>
                     </label>
                   </div>
@@ -274,67 +274,67 @@
                 <div class="nt-section-body" *ngIf="!attachmentEnabled">
                   <div class="nt-hint-block">
                     <i class="pi pi-info-circle"></i>
-                    Enable to attach a generated Excel, CSV or PDF file to this notification email. The file is built from a SQL data source at send time.
+                    {{ 'AUTO_SECURITY_UI.ENABLE_TO_ATTACH_A_GENERATED_EXCEL_CSV_OR_PDF_FILE_TO_THIS_NOTIF' | translate }}
                   </div>
                 </div>
                 <div class="nt-section-body" *ngIf="attachmentEnabled">
                   <div class="nt-row-2">
                     <div class="nt-field">
-                      <label class="nt-label">File Type <span class="nt-req">*</span></label>
+                      <label class="nt-label">{{ 'DOM_FALLBACK.TEXT_123' | translate }} <span class="nt-req">*</span></label>
                       <p-selectButton [options]="attachmentTypeOptions" formControlName="type"></p-selectButton>
                     </div>
                     <div class="nt-field">
-                      <label class="nt-label">Filename <span class="nt-req">*</span></label>
-                      <input pInputText formControlName="filename" placeholder="report" />
-                      <span class="nt-hint">Without extension — added automatically</span>
+                      <label class="nt-label">{{ 'DOM_FALLBACK.TEXT_124' | translate }} <span class="nt-req">*</span></label>
+                      <input pInputText formControlName="filename" [placeholder]="'AUTO_SECURITY_UI.REPORT' | translate" />
+                      <span class="nt-hint">{{ 'AUTO_SECURITY_UI.WITHOUT_EXTENSION_ADDED_AUTOMATICALLY' | translate }}</span>
                     </div>
                   </div>
                   <div class="nt-row-2">
                     <div class="nt-field">
-                      <label class="nt-label">Sheet / Tab Name</label>
-                      <input pInputText formControlName="sheetName" placeholder="Sheet1" />
+                      <label class="nt-label">{{ 'DOM_FALLBACK.TEXT_126' | translate }}</label>
+                      <input pInputText formControlName="sheetName" [placeholder]="'AUTO_SECURITY_UI.SHEET1' | translate" />
                     </div>
                     <div class="nt-field">
-                      <label class="nt-label">Report Title</label>
-                      <input pInputText formControlName="reportTitle" placeholder="e.g. Monthly Summary" />
-                      <span class="nt-hint">Printed at top of the Excel sheet</span>
+                      <label class="nt-label">{{ 'DOM_FALLBACK.TEXT_127' | translate }}</label>
+                      <input pInputText formControlName="reportTitle" [placeholder]="'AUTO_SECURITY_UI.E_G_MONTHLY_SUMMARY' | translate" />
+                      <span class="nt-hint">{{ 'DOM_FALLBACK.TEXT_128' | translate }}</span>
                     </div>
                   </div>
                   <div class="nt-field">
-                    <label class="nt-label">Data Source</label>
+                    <label class="nt-label">{{ 'DOM_FALLBACK.TEXT_044' | translate }}</label>
                     <p-select [options]="dataSourceOptions" formControlName="dataSourceId"
-                      placeholder="Select SQL data source for the file contents"></p-select>
-                    <span class="nt-hint">The query result becomes the file rows. No data source = empty attachment.</span>
+                      [placeholder]="'AUTO_SECURITY_UI.SELECT_SQL_DATA_SOURCE_FOR_THE_FILE_CONTENTS' | translate"></p-select>
+                    <span class="nt-hint">{{ 'AUTO_SECURITY_UI.THE_QUERY_RESULT_BECOMES_THE_FILE_ROWS_NO_DATA_SOURCE_EMPTY_ATTA' | translate }}</span>
                   </div>
                   <div *ngIf="selectedAttachmentColumns.length > 0" class="nt-columns-preview">
-                    <div class="nt-hint" style="margin-bottom:6px"><i class="pi pi-table" style="font-size:10px"></i> File columns:</div>
+                    <div class="nt-hint" style="margin-bottom:6px"><i class="pi pi-table" style="font-size:10px"></i> {{ 'DOM_FALLBACK.TEXT_129' | translate }}</div>
                     <div class="nt-token-row">
                       <span class="nt-token" *ngFor="let col of selectedAttachmentColumns">{{ col }}</span>
                     </div>
                   </div>
                   <div class="nt-field">
                     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-                      <label class="nt-label" style="margin:0">Parameter Mappings</label>
+                      <label class="nt-label" style="margin:0">{{ 'DOM_FALLBACK.TEXT_130' | translate }}</label>
                       <div style="display:flex;gap:8px">
                         <button type="button" class="nt-btn nt-btn--ghost nt-btn--sm" (click)="autoFillAttachmentMappings()">
-                          <i class="pi pi-bolt"></i> Auto Map
+                          <i class="pi pi-bolt"></i> {{ 'DOM_FALLBACK.TEXT_131' | translate }}
                         </button>
                         <button type="button" class="nt-btn nt-btn--ghost nt-btn--sm" (click)="addAttachmentMappingRow()">
-                          <i class="pi pi-plus"></i> Add Row
+                          <i class="pi pi-plus"></i> {{ 'DOM_FALLBACK.TEXT_132' | translate }}
                         </button>
                       </div>
                     </div>
                     <ng-container *ngIf="attachmentMappings.length > 0">
-                      <div class="nt-kv-header"><span>SQL Parameter</span><span>Template Variable</span><span></span></div>
+                      <div class="nt-kv-header"><span>{{ 'DOM_FALLBACK.TEXT_133' | translate }}</span><span>{{ 'DOM_FALLBACK.TEXT_134' | translate }}</span><span></span></div>
                       <div class="nt-kv-list">
                         <div class="nt-kv-row" *ngFor="let row of attachmentMappings; let i = index">
-                          <input pInputText [(ngModel)]="row.param" [ngModelOptions]="{standalone:true}" placeholder="userId" />
-                          <input pInputText [(ngModel)]="row.variable" [ngModelOptions]="{standalone:true}" placeholder="userId" />
+                          <input pInputText [(ngModel)]="row.param" [ngModelOptions]="{standalone:true}" [placeholder]="'TECH_EXAMPLES.USER_ID' | translate" />
+                          <input pInputText [(ngModel)]="row.variable" [ngModelOptions]="{standalone:true}" [placeholder]="'TECH_EXAMPLES.USER_ID' | translate" />
                           <button class="nt-icon-btn nt-icon-btn--danger" (click)="removeAttachmentMappingRow(i)"><i class="pi pi-trash"></i></button>
                         </div>
                       </div>
                     </ng-container>
-                    <div class="nt-hint" *ngIf="!attachmentMappings.length">Map event payload variables to SQL parameters, or click Auto Map.</div>
+                    <div class="nt-hint" *ngIf="!attachmentMappings.length">{{ 'AUTO_SECURITY_UI.MAP_EVENT_PAYLOAD_VARIABLES_TO_SQL_PARAMETERS_OR_CLICK_AUTO_MAP' | translate }}</div>
                   </div>
                 </div>
               </section>
@@ -347,8 +347,8 @@
             <div class="nt-locked-banner" *ngIf="!canEditDetails">
               <i class="pi pi-lock"></i>
               <div>
-                <strong>Create the template first</strong>
-                <span>Go to Compose, fill in the required fields, and click Create Template.</span>
+                <strong>{{ 'DOM_FALLBACK.TEXT_135' | translate }}</strong>
+                <span>{{ 'DOM_FALLBACK.TEXT_136' | translate }}</span>
               </div>
             </div>
 
@@ -358,20 +358,20 @@
               <section class="nt-section">
                 <div class="nt-section-header">
                   <i class="pi pi-users"></i>
-                  <span class="nt-section-title">Recipients</span>
+                  <span class="nt-section-title">{{ 'DOM_FALLBACK.TEXT_046' | translate }}</span>
                   <div class="nt-section-actions">
                     <button class="nt-btn nt-btn--ghost nt-btn--sm" (click)="openAudienceDialog()">
-                      <i class="pi pi-users"></i> Audience List
+                      <i class="pi pi-users"></i> {{ 'DOM_FALLBACK.TEXT_137' | translate }}
                     </button>
                     <button class="nt-btn nt-btn--ghost nt-btn--sm" (click)="openResolverDialog()">
-                      <i class="pi pi-sliders-h"></i> Add Resolver
+                      <i class="pi pi-sliders-h"></i> {{ 'DOM_FALLBACK.TEXT_138' | translate }}
                     </button>
                   </div>
                 </div>
                 <div class="nt-section-body">
                   <div class="nt-empty-state" *ngIf="!selected?.targetResolvers?.length">
                     <i class="pi pi-users"></i>
-                    <span>No recipients configured — add a resolver to define who receives this notification</span>
+                    <span>{{ 'AUTO_SECURITY_UI.NO_RECIPIENTS_CONFIGURED_ADD_A_RESOLVER_TO_DEFINE_WHO_RECEIVES_T' | translate }}</span>
                   </div>
                   <div class="nt-resolver-list" *ngIf="selected?.targetResolvers?.length">
                     <div class="nt-resolver-item" *ngFor="let r of selected?.targetResolvers">
@@ -382,7 +382,7 @@
                         <div class="nt-resolver-type">{{ getResolverLabel(r.resolverType) }}</div>
                         <div class="nt-resolver-meta">{{ getResolverConfigSummary(r) }}</div>
                       </div>
-                      <button class="nt-icon-btn nt-icon-btn--danger" (click)="removeResolver(r)" title="Remove">
+                      <button class="nt-icon-btn nt-icon-btn--danger" (click)="removeResolver(r)" [title]="'AUTO_SECURITY_UI.REMOVE' | translate">
                         <i class="pi pi-trash"></i>
                       </button>
                     </div>
@@ -394,21 +394,21 @@
               <section class="nt-section">
                 <div class="nt-section-header">
                   <i class="pi pi-database"></i>
-                  <span class="nt-section-title">Data Bindings</span>
+                  <span class="nt-section-title">{{ 'DOM_FALLBACK.TEXT_139' | translate }}</span>
                   <div class="nt-section-actions">
                     <button class="nt-btn nt-btn--ghost nt-btn--sm" (click)="openBindingDialog()">
-                      <i class="pi pi-link"></i> Add Binding
+                      <i class="pi pi-link"></i> {{ 'DOM_FALLBACK.TEXT_140' | translate }}
                     </button>
                   </div>
                 </div>
                 <div class="nt-section-body">
                   <div class="nt-hint-block">
                     <i class="pi pi-info-circle"></i>
-                    Data bindings let you query a SQL data source and inject columns as template variables — e.g. <code>customerName</code> becomes available in your body.
+                    {{ 'AUTO_SECURITY_UI.DATA_BINDINGS_LET_YOU_QUERY_A_SQL_DATA_SOURCE_AND_INJECT_COLUMNS' | translate }} <code>{{ 'TECH_EXAMPLES.CUSTOMER_NAME' | translate }}</code> {{ 'AUTO_SECURITY_UI.BECOMES_AVAILABLE_IN_YOUR_BODY' | translate }}
                   </div>
                   <div class="nt-empty-state" *ngIf="!selected?.dataBindings?.length">
                     <i class="pi pi-database"></i>
-                    <span>No data bindings — attach a data source to enrich your notification with dynamic data</span>
+                    <span>{{ 'AUTO_SECURITY_UI.NO_DATA_BINDINGS_ATTACH_A_DATA_SOURCE_TO_ENRICH_YOUR_NOTIFICATIO' | translate }}</span>
                   </div>
                   <div class="nt-binding-list" *ngIf="selected?.dataBindings?.length">
                     <div class="nt-binding-item" *ngFor="let b of selected?.dataBindings">
@@ -419,7 +419,7 @@
                         <div class="nt-binding-name">{{ getDataSourceName(b.dataSourceId) }}</div>
                         <div class="nt-binding-meta">Order {{ b.executionOrder }} &bull; {{ getBindingSummary(b) }}</div>
                       </div>
-                      <button class="nt-icon-btn nt-icon-btn--danger" (click)="removeBinding(b)" title="Remove">
+                      <button class="nt-icon-btn nt-icon-btn--danger" (click)="removeBinding(b)" [title]="'AUTO_SECURITY_UI.REMOVE' | translate">
                         <i class="pi pi-trash"></i>
                       </button>
                     </div>
@@ -435,8 +435,8 @@
             <div class="nt-locked-banner" *ngIf="!canEditDetails">
               <i class="pi pi-lock"></i>
               <div>
-                <strong>Create the template first</strong>
-                <span>Go to Compose, fill in the required fields, and click Create Template.</span>
+                <strong>{{ 'DOM_FALLBACK.TEXT_135' | translate }}</strong>
+                <span>{{ 'DOM_FALLBACK.TEXT_136' | translate }}</span>
               </div>
             </div>
 
@@ -444,17 +444,17 @@
               <section class="nt-section">
                 <div class="nt-section-header">
                   <i class="pi pi-globe"></i>
-                  <span class="nt-section-title">Translated Content</span>
+                  <span class="nt-section-title">{{ 'DOM_FALLBACK.TEXT_141' | translate }}</span>
                   <div class="nt-section-actions">
                     <button class="nt-btn nt-btn--ghost nt-btn--sm" (click)="openLocaleDialog()">
-                      <i class="pi pi-language"></i> Add Locale
+                      <i class="pi pi-language"></i> {{ 'DOM_FALLBACK.TEXT_142' | translate }}
                     </button>
                   </div>
                 </div>
                 <div class="nt-section-body">
                   <div class="nt-empty-state" *ngIf="!selected?.locales?.length">
                     <i class="pi pi-globe"></i>
-                    <span>No localisations yet — add translations for other languages</span>
+                    <span>{{ 'AUTO_SECURITY_UI.NO_LOCALISATIONS_YET_ADD_TRANSLATIONS_FOR_OTHER_LANGUAGES' | translate }}</span>
                   </div>
                   <div class="nt-locale-list" *ngIf="selected?.locales?.length">
                     <div class="nt-locale-item" *ngFor="let l of selected?.locales">
@@ -463,7 +463,7 @@
                         <div class="nt-locale-title">{{ l.title }}</div>
                         <div class="nt-locale-preview" [innerHTML]="l.body"></div>
                       </div>
-                      <button class="nt-icon-btn" (click)="editLocale(l)" title="Edit">
+                      <button class="nt-icon-btn" (click)="editLocale(l)" [title]="'COMMON.EDIT' | translate">
                         <i class="pi pi-pencil"></i>
                       </button>
                     </div>
@@ -478,8 +478,8 @@
             <div class="nt-locked-banner" *ngIf="!canEditDetails">
               <i class="pi pi-lock"></i>
               <div>
-                <strong>Create the template first</strong>
-                <span>Go to Compose, fill in the required fields, and click Create Template.</span>
+                <strong>{{ 'DOM_FALLBACK.TEXT_135' | translate }}</strong>
+                <span>{{ 'DOM_FALLBACK.TEXT_136' | translate }}</span>
               </div>
             </div>
 
@@ -489,27 +489,27 @@
               <section class="nt-section">
                 <div class="nt-section-header">
                   <i class="pi pi-sliders-h"></i>
-                  <span class="nt-section-title">Sample Data</span>
+                  <span class="nt-section-title">{{ 'DOM_FALLBACK.TEXT_144' | translate }}</span>
                   <div class="nt-section-actions">
                     <button class="nt-btn nt-btn--ghost nt-btn--sm" (click)="autoFillPreviewRows()">
-                      <i class="pi pi-bolt"></i> Auto Fill
+                      <i class="pi pi-bolt"></i> {{ 'DOM_FALLBACK.TEXT_145' | translate }}
                     </button>
                     <button class="nt-btn nt-btn--ghost nt-btn--sm" (click)="addPreviewRow()">
-                      <i class="pi pi-plus"></i> Add Row
+                      <i class="pi pi-plus"></i> {{ 'DOM_FALLBACK.TEXT_132' | translate }}
                     </button>
                   </div>
                 </div>
                 <div class="nt-section-body">
                   <form [formGroup]="previewForm">
                     <div class="nt-field" style="max-width:280px">
-                      <label class="nt-label">Language Override</label>
+                      <label class="nt-label">{{ 'DOM_FALLBACK.TEXT_146' | translate }}</label>
                       <p-select [options]="selected?.locales || []" optionLabel="languageCode" optionValue="languageCode"
-                        formControlName="languageCode" placeholder="Default template language" [showClear]="true"></p-select>
+                        formControlName="languageCode" [placeholder]="'AUTO_SECURITY_UI.DEFAULT_TEMPLATE_LANGUAGE' | translate" [showClear]="true"></p-select>
                     </div>
                   </form>
 
                   <div *ngIf="availableTemplateVariables.length > 0" style="margin:14px 0 6px">
-                    <div class="nt-hint" style="margin-bottom:8px"><i class="pi pi-tags" style="font-size:10px"></i> Click to add known variables</div>
+                    <div class="nt-hint" style="margin-bottom:8px"><i class="pi pi-tags" style="font-size:10px"></i> {{ 'DOM_FALLBACK.TEXT_147' | translate }}</div>
                     <div class="nt-token-row">
                       <button class="nt-token" type="button" *ngFor="let key of availableTemplateVariables"
                         (click)="addVariableToPreview(key)">
@@ -520,12 +520,12 @@
 
                   <div *ngIf="previewRows.length > 0" style="margin-top:14px">
                     <div class="nt-kv-header">
-                      <span>Variable</span><span>Sample Value</span><span></span>
+                      <span>{{ 'DOM_FALLBACK.TEXT_148' | translate }}</span><span>{{ 'DOM_FALLBACK.TEXT_149' | translate }}</span><span></span>
                     </div>
                     <div class="nt-kv-list">
                       <div class="nt-kv-row" *ngFor="let row of previewRows; let i = index">
-                        <input pInputText [(ngModel)]="row.key" [ngModelOptions]="{standalone:true}" placeholder="variableName" />
-                        <input pInputText [(ngModel)]="row.value" [ngModelOptions]="{standalone:true}" placeholder="sample value" />
+                        <input pInputText [(ngModel)]="row.key" [ngModelOptions]="{standalone:true}" [placeholder]="'TECH_EXAMPLES.VARIABLE_NAME' | translate" />
+                        <input pInputText [(ngModel)]="row.value" [ngModelOptions]="{standalone:true}" [placeholder]="'AUTO_SECURITY_UI.SAMPLE_VALUE' | translate" />
                         <button class="nt-icon-btn nt-icon-btn--danger" (click)="removePreviewRow(i)">
                           <i class="pi pi-trash"></i>
                         </button>
@@ -535,7 +535,7 @@
 
                   <div style="margin-top:16px;display:flex;justify-content:flex-end">
                     <button class="nt-btn nt-btn--primary" (click)="preview()">
-                      <i class="pi pi-play"></i> Run Preview
+                      <i class="pi pi-play"></i> {{ 'DOM_FALLBACK.TEXT_150' | translate }}
                     </button>
                   </div>
                 </div>
@@ -545,12 +545,12 @@
               <section class="nt-section">
                 <div class="nt-section-header">
                   <i class="pi pi-eye"></i>
-                  <span class="nt-section-title">Rendered Output</span>
+                  <span class="nt-section-title">{{ 'DOM_FALLBACK.TEXT_151' | translate }}</span>
                 </div>
                 <div class="nt-section-body">
                   <div class="nt-empty-state" *ngIf="!renderedPreview">
                     <i class="pi pi-play-circle"></i>
-                    <span>Fill in sample data and click Run Preview</span>
+                    <span>{{ 'DOM_FALLBACK.TEXT_152' | translate }}</span>
                   </div>
                   <ng-container *ngIf="renderedPreview">
                     <div class="nt-preview-card">
@@ -560,7 +560,7 @@
                     </div>
                     <div *ngIf="renderedPreview.unresolvedPlaceholders.length > 0" style="margin-top:14px">
                       <div class="nt-hint" style="margin-bottom:6px;color:var(--s-amber)">
-                        <i class="pi pi-exclamation-triangle" style="font-size:11px"></i> Missing values:
+                        <i class="pi pi-exclamation-triangle" style="font-size:11px"></i> {{ 'DOM_FALLBACK.TEXT_153' | translate }}
                       </div>
                       <div class="nt-token-row">
                         <span class="nt-token nt-token--warn" *ngFor="let key of renderedPreview.unresolvedPlaceholders">{{ key }}</span>
@@ -586,36 +586,36 @@
 ═══════════════════════════════════════════════════════════════════════ -->
 
 <!-- Audience dialog -->
-<p-dialog header="Select Recipients" [(visible)]="showAudienceDialog" [modal]="true"
+<p-dialog [header]="'AUTO_SECURITY_UI.SELECT_RECIPIENTS' | translate" [(visible)]="showAudienceDialog" [modal]="true"
   [draggable]="false" [style]="{ width: '760px', maxWidth: '95vw' }">
   <div class="nt-dialog-body">
     <div class="nt-field">
-      <label class="nt-label">Source Type</label>
+      <label class="nt-label">{{ 'AUTO_SECURITY_UI.SOURCE_TYPE' | translate }}</label>
       <p-selectButton [options]="audienceTypes" optionLabel="label" optionValue="value"
         [ngModel]="audienceType" (onChange)="setAudienceType($event.value)"
         [ngModelOptions]="{standalone:true}"></p-selectButton>
     </div>
     <div class="nt-row-2">
       <div class="nt-field" *ngIf="audienceType === 'role'">
-        <label class="nt-label">Role</label>
+        <label class="nt-label">{{ 'SECU.PERMISSIONS.ROLE_LABEL' | translate }}</label>
         <p-select [options]="audienceRoles" optionLabel="roleName" optionValue="roleCode"
           [(ngModel)]="selectedAudienceRole" [ngModelOptions]="{standalone:true}"
-          placeholder="Select role" (onChange)="onAudienceRoleChange()"></p-select>
+          [placeholder]="'AUTO_SECURITY_UI.SELECT_ROLE' | translate" (onChange)="onAudienceRoleChange()"></p-select>
       </div>
       <div class="nt-field" *ngIf="audienceType === 'group'">
-        <label class="nt-label">Group</label>
+        <label class="nt-label">{{ 'SECU.DATA_FILTERS.COLUMNS.GROUP' | translate }}</label>
         <p-select [options]="audienceGroups" optionLabel="groupName" optionValue="groupCode"
           [(ngModel)]="selectedAudienceGroup" [ngModelOptions]="{standalone:true}"
-          placeholder="Select group" (onChange)="onAudienceGroupChange()"></p-select>
+          [placeholder]="'AUTO_SECURITY_UI.SELECT_GROUP' | translate" (onChange)="onAudienceGroupChange()"></p-select>
       </div>
       <div class="nt-field">
-        <label class="nt-label">Search</label>
-        <input pInputText [(ngModel)]="audienceSearch" [ngModelOptions]="{standalone:true}" placeholder="Name, email or ID" />
+        <label class="nt-label">{{ 'AUTO_SECURITY_UI.SEARCH' | translate }}</label>
+        <input pInputText [(ngModel)]="audienceSearch" [ngModelOptions]="{standalone:true}" [placeholder]="'AUTO_SECURITY_UI.NAME_EMAIL_OR_ID' | translate" />
       </div>
     </div>
     <div class="nt-audience-meta">
       <strong>{{ selectedAudienceCount }}</strong> of {{ audienceUsers.length }} selected
-      <span *ngIf="audienceLoading"><i class="pi pi-spin pi-spinner"></i> Loading�</span>
+      <span *ngIf="audienceLoading"><i class="pi pi-spin pi-spinner"></i> {{ 'COMMON.LOADING' | translate }}</span>
     </div>
     <div class="nt-audience-list" *ngIf="filteredAudienceUsers.length > 0">
       <div class="nt-audience-user" *ngFor="let user of filteredAudienceUsers">
@@ -627,145 +627,145 @@
           <div class="nt-audience-name">{{ user.fullName || user.userId }}</div>
           <div class="nt-audience-email">{{ user.email || 'No email' }}</div>
         </div>
-        <span class="nt-status-pill nt-status-pill--draft" *ngIf="user.isActive === false">Inactive</span>
+        <span class="nt-status-pill nt-status-pill--draft" *ngIf="user.isActive === false">{{ 'COMMON.INACTIVE' | translate }}</span>
       </div>
     </div>
     <div class="nt-empty-state" *ngIf="!audienceLoading && filteredAudienceUsers.length === 0">
-      <i class="pi pi-users"></i><span>No users match your filter</span>
+      <i class="pi pi-users"></i><span>{{ 'AUTO_SECURITY_UI.NO_USERS_MATCH_YOUR_FILTER' | translate }}</span>
     </div>
   </div>
   <ng-template pTemplate="footer">
     <div class="nt-dialog-footer">
-      <button class="nt-btn nt-btn--ghost" (click)="selectAllAudienceUsers()"><i class="pi pi-check-square"></i> Select All</button>
-      <button class="nt-btn nt-btn--ghost" (click)="clearAudienceUsers()"><i class="pi pi-times-circle"></i> Clear</button>
+      <button class="nt-btn nt-btn--ghost" (click)="selectAllAudienceUsers()"><i class="pi pi-check-square"></i> {{ 'AUTO_SECURITY_UI.SELECT_ALL' | translate }}</button>
+      <button class="nt-btn nt-btn--ghost" (click)="clearAudienceUsers()"><i class="pi pi-times-circle"></i> {{ 'AUTO_SECURITY_UI.CLEAR' | translate }}</button>
       <div style="flex:1"></div>
-      <button class="nt-btn nt-btn--ghost" (click)="showAudienceDialog = false">Cancel</button>
-      <button class="nt-btn nt-btn--primary" (click)="addAudienceResolver()"><i class="pi pi-user-plus"></i> Add Recipients</button>
+      <button class="nt-btn nt-btn--ghost" (click)="showAudienceDialog = false">{{ 'DOM_FALLBACK.TEXT_062' | translate }}</button>
+      <button class="nt-btn nt-btn--primary" (click)="addAudienceResolver()"><i class="pi pi-user-plus"></i> {{ 'AUTO_SECURITY_UI.ADD_RECIPIENTS' | translate }}</button>
     </div>
   </ng-template>
 </p-dialog>
 
 <!-- Binding dialog -->
-<p-dialog header="Add Data Binding" [(visible)]="showBindingDialog" [modal]="true"
+<p-dialog [header]="'AUTO_SECURITY_UI.ADD_DATA_BINDING' | translate" [(visible)]="showBindingDialog" [modal]="true"
   [draggable]="false" [style]="{ width: '720px', maxWidth: '95vw' }">
   <div class="nt-dialog-body">
     <form [formGroup]="bindingForm">
       <div class="nt-row-2">
         <div class="nt-field">
-          <label class="nt-label">Data Source <span class="nt-req">*</span></label>
+          <label class="nt-label">{{ 'DOM_FALLBACK.TEXT_044' | translate }} <span class="nt-req">*</span></label>
           <p-select [options]="dataSourceOptions" formControlName="dataSourceId"
-            placeholder="Select data source" (onChange)="onBindingDataSourceChange()"></p-select>
+            [placeholder]="'AUTO_SECURITY_UI.SELECT_DATA_SOURCE' | translate" (onChange)="onBindingDataSourceChange()"></p-select>
         </div>
         <div class="nt-field">
-          <label class="nt-label">Execution Order</label>
+          <label class="nt-label">{{ 'AUTO_SECURITY_UI.EXECUTION_ORDER' | translate }}</label>
           <p-inputNumber formControlName="executionOrder" [min]="1" [showButtons]="true"></p-inputNumber>
-          <span class="nt-hint">Lower order runs first</span>
+          <span class="nt-hint">{{ 'AUTO_SECURITY_UI.LOWER_ORDER_RUNS_FIRST' | translate }}</span>
         </div>
       </div>
       <div *ngIf="selectedBindingColumns.length > 0" class="nt-columns-preview">
-        <div class="nt-hint" style="margin-bottom:6px"><i class="pi pi-table" style="font-size:10px"></i> Variables added by this source:</div>
+        <div class="nt-hint" style="margin-bottom:6px"><i class="pi pi-table" style="font-size:10px"></i> {{ 'AUTO_SECURITY_UI.VARIABLES_ADDED_BY_THIS_SOURCE' | translate }}</div>
         <div class="nt-token-row">
           <span class="nt-token" *ngFor="let col of selectedBindingColumns">{{ col }}</span>
         </div>
       </div>
       <div class="nt-field" style="margin-top:4px">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-          <label class="nt-label" style="margin:0">Parameter Mappings</label>
+          <label class="nt-label" style="margin:0">{{ 'DOM_FALLBACK.TEXT_130' | translate }}</label>
           <div style="display:flex;gap:8px">
             <button type="button" class="nt-btn nt-btn--ghost nt-btn--sm" (click)="autoFillBindingMappings()">
-              <i class="pi pi-bolt"></i> Auto Map
+              <i class="pi pi-bolt"></i> {{ 'DOM_FALLBACK.TEXT_131' | translate }}
             </button>
             <button type="button" class="nt-btn nt-btn--ghost nt-btn--sm" (click)="addBindingMappingRow()">
-              <i class="pi pi-plus"></i> Add Row
+              <i class="pi pi-plus"></i> {{ 'DOM_FALLBACK.TEXT_132' | translate }}
             </button>
           </div>
         </div>
         <ng-container *ngIf="bindingMappings.length > 0">
-          <div class="nt-kv-header"><span>SQL Parameter</span><span>Template Variable</span><span></span></div>
+          <div class="nt-kv-header"><span>{{ 'DOM_FALLBACK.TEXT_133' | translate }}</span><span>{{ 'DOM_FALLBACK.TEXT_134' | translate }}</span><span></span></div>
           <div class="nt-kv-list">
             <div class="nt-kv-row" *ngFor="let row of bindingMappings; let i = index">
-              <input pInputText [(ngModel)]="row.param" [ngModelOptions]="{standalone:true}" placeholder="userId" />
-              <input pInputText [(ngModel)]="row.variable" [ngModelOptions]="{standalone:true}" placeholder="userId" />
+              <input pInputText [(ngModel)]="row.param" [ngModelOptions]="{standalone:true}" [placeholder]="'TECH_EXAMPLES.USER_ID' | translate" />
+              <input pInputText [(ngModel)]="row.variable" [ngModelOptions]="{standalone:true}" [placeholder]="'TECH_EXAMPLES.USER_ID' | translate" />
               <button class="nt-icon-btn nt-icon-btn--danger" (click)="removeBindingMappingRow(i)"><i class="pi pi-trash"></i></button>
             </div>
           </div>
         </ng-container>
-        <div class="nt-hint" *ngIf="!bindingMappings.length">Click Auto Map if the data source has known parameters, or add rows manually.</div>
+        <div class="nt-hint" *ngIf="!bindingMappings.length">{{ 'AUTO_SECURITY_UI.CLICK_AUTO_MAP_IF_THE_DATA_SOURCE_HAS_KNOWN_PARAMETERS_OR_ADD_RO' | translate }}</div>
       </div>
     </form>
   </div>
   <ng-template pTemplate="footer">
     <div class="nt-dialog-footer">
-      <button class="nt-btn nt-btn--ghost" (click)="showBindingDialog = false">Cancel</button>
-      <button class="nt-btn nt-btn--primary" (click)="addBinding()"><i class="pi pi-link"></i> Add Binding</button>
+      <button class="nt-btn nt-btn--ghost" (click)="showBindingDialog = false">{{ 'DOM_FALLBACK.TEXT_062' | translate }}</button>
+      <button class="nt-btn nt-btn--primary" (click)="addBinding()"><i class="pi pi-link"></i> {{ 'DOM_FALLBACK.TEXT_140' | translate }}</button>
     </div>
   </ng-template>
 </p-dialog>
 
 <!-- Resolver dialog -->
-<p-dialog header="Add Resolver" [(visible)]="showResolverDialog" [modal]="true"
+<p-dialog [header]="'DOM_FALLBACK.TEXT_138' | translate" [(visible)]="showResolverDialog" [modal]="true"
   [draggable]="false" [style]="{ width: '720px', maxWidth: '95vw' }">
   <div class="nt-dialog-body">
     <form [formGroup]="resolverForm">
       <div class="nt-field">
-        <label class="nt-label">Resolver Type <span class="nt-req">*</span></label>
+        <label class="nt-label">{{ 'AUTO_SECURITY_UI.RESOLVER_TYPE' | translate }} <span class="nt-req">*</span></label>
         <p-select [options]="resolverTypes" optionLabel="label" optionValue="id"
           formControlName="resolverType" (onChange)="onResolverTypeChange()"></p-select>
         <span class="nt-hint" *ngIf="resolverTypeDescription">{{ resolverTypeDescription }}</span>
       </div>
 
       <div class="nt-field" *ngIf="resolverTypeValue === 1">
-        <label class="nt-label">User ID Field <span class="nt-req">*</span></label>
+        <label class="nt-label">{{ 'AUTO_SECURITY_UI.USER_ID_FIELD' | translate }} <span class="nt-req">*</span></label>
         <p-select [options]="availableTemplateVariables" formControlName="userIdField"
-          placeholder="Choose a variable from event payload" [editable]="true"
+          [placeholder]="'AUTO_SECURITY_UI.CHOOSE_A_VARIABLE_FROM_EVENT_PAYLOAD' | translate" [editable]="true"
           (onChange)="setResolverConfigValue('field', $event.value)"></p-select>
-        <span class="nt-hint">The event payload field that contains the target user's ID</span>
+        <span class="nt-hint">{{ 'AUTO_SECURITY_UI.THE_EVENT_PAYLOAD_FIELD_THAT_CONTAINS_THE_TARGET_USER_S_ID' | translate }}</span>
       </div>
 
       <div class="nt-field" *ngIf="resolverTypeValue === 2">
-        <label class="nt-label">Role <span class="nt-req">*</span></label>
+        <label class="nt-label">{{ 'SECU.PERMISSIONS.ROLE_LABEL' | translate }} <span class="nt-req">*</span></label>
         <p-select [options]="audienceRoles" optionLabel="roleName" optionValue="roleCode"
-          formControlName="role" placeholder="Choose a role" [filter]="true"
+          formControlName="role" [placeholder]="'AUTO_SECURITY_UI.CHOOSE_A_ROLE' | translate" [filter]="true"
           (onChange)="setResolverConfigValue('role', $event.value)"></p-select>
       </div>
 
       <div class="nt-field" *ngIf="resolverTypeValue === 3">
-        <label class="nt-label">Group <span class="nt-req">*</span></label>
+        <label class="nt-label">{{ 'SECU.DATA_FILTERS.COLUMNS.GROUP' | translate }} <span class="nt-req">*</span></label>
         <p-select [options]="audienceGroups" optionLabel="groupName" optionValue="groupCode"
-          formControlName="groupCode" placeholder="Choose a group" [filter]="true"
+          formControlName="groupCode" [placeholder]="'AUTO_SECURITY_UI.CHOOSE_A_GROUP' | translate" [filter]="true"
           (onChange)="setResolverConfigValue('groupCode', $event.value)"></p-select>
       </div>
 
       <ng-container *ngIf="resolverTypeValue === 4">
         <div class="nt-field">
-          <label class="nt-label">Data Source <span class="nt-req">*</span></label>
+          <label class="nt-label">{{ 'DOM_FALLBACK.TEXT_044' | translate }} <span class="nt-req">*</span></label>
           <p-select [options]="dataSourceOptions" formControlName="dataSourceId"
-            placeholder="Select SQL data source" (onChange)="onResolverDataSourceChange()"></p-select>
+            [placeholder]="'AUTO_SECURITY_UI.SELECT_SQL_DATA_SOURCE' | translate" (onChange)="onResolverDataSourceChange()"></p-select>
         </div>
         <div *ngIf="selectedResolverColumns.length > 0" class="nt-columns-preview">
-          <div class="nt-hint" style="margin-bottom:6px">Returned columns (must include a user ID column):</div>
+          <div class="nt-hint" style="margin-bottom:6px">{{ 'AUTO_SECURITY_UI.RETURNED_COLUMNS_MUST_INCLUDE_A_USER_ID_COLUMN' | translate }}</div>
           <div class="nt-token-row">
             <span class="nt-token" *ngFor="let col of selectedResolverColumns">{{ col }}</span>
           </div>
         </div>
         <div class="nt-field">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-            <label class="nt-label" style="margin:0">Parameters</label>
+            <label class="nt-label" style="margin:0">{{ 'AUTO_SECURITY_UI.PARAMETERS' | translate }}</label>
             <div style="display:flex;gap:8px">
               <button type="button" class="nt-btn nt-btn--ghost nt-btn--sm" (click)="autoFillResolverMappings()">
-                <i class="pi pi-bolt"></i> Auto Map
+                <i class="pi pi-bolt"></i> {{ 'DOM_FALLBACK.TEXT_131' | translate }}
               </button>
               <button type="button" class="nt-btn nt-btn--ghost nt-btn--sm" (click)="addResolverMappingRow()">
-                <i class="pi pi-plus"></i> Add Row
+                <i class="pi pi-plus"></i> {{ 'DOM_FALLBACK.TEXT_132' | translate }}
               </button>
             </div>
           </div>
           <ng-container *ngIf="resolverMappings.length > 0">
-            <div class="nt-kv-header"><span>SQL Parameter</span><span>Template Variable</span><span></span></div>
+            <div class="nt-kv-header"><span>{{ 'DOM_FALLBACK.TEXT_133' | translate }}</span><span>{{ 'DOM_FALLBACK.TEXT_134' | translate }}</span><span></span></div>
             <div class="nt-kv-list">
               <div class="nt-kv-row" *ngFor="let row of resolverMappings; let i = index">
-                <input pInputText [(ngModel)]="row.param" [ngModelOptions]="{standalone:true}" placeholder="userId" />
-                <input pInputText [(ngModel)]="row.variable" [ngModelOptions]="{standalone:true}" placeholder="userId" />
+                <input pInputText [(ngModel)]="row.param" [ngModelOptions]="{standalone:true}" [placeholder]="'TECH_EXAMPLES.USER_ID' | translate" />
+                <input pInputText [(ngModel)]="row.variable" [ngModelOptions]="{standalone:true}" [placeholder]="'TECH_EXAMPLES.USER_ID' | translate" />
                 <button class="nt-icon-btn nt-icon-btn--danger" (click)="removeResolverMappingRow(i)"><i class="pi pi-trash"></i></button>
               </div>
             </div>
@@ -775,23 +775,23 @@
 
       <div class="nt-hint-block" *ngIf="resolverTypeValue === 5">
         <i class="pi pi-broadcast"></i>
-        All active users in the tenant will receive this notification.
+        {{ 'AUTO_SECURITY_UI.ALL_ACTIVE_USERS_IN_THE_TENANT_WILL_RECEIVE_THIS_NOTIFICATION' | translate }}
       </div>
 
       <!-- Extra config rows for all resolver types -->
       <div class="nt-field" *ngIf="resolverTypeValue !== 5">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-          <label class="nt-label" style="margin:0">Extra Settings</label>
+          <label class="nt-label" style="margin:0">{{ 'AUTO_SECURITY_UI.EXTRA_SETTINGS' | translate }}</label>
           <button type="button" class="nt-btn nt-btn--ghost nt-btn--sm" (click)="addResolverConfigRow()">
-            <i class="pi pi-plus"></i> Add Setting
+            <i class="pi pi-plus"></i> {{ 'AUTO_SECURITY_UI.ADD_SETTING' | translate }}
           </button>
         </div>
         <ng-container *ngIf="resolverConfigRows.length > 0">
-          <div class="nt-kv-header"><span>Key</span><span>Value</span><span></span></div>
+          <div class="nt-kv-header"><span>{{ 'AUTO_SECURITY_UI.KEY' | translate }}</span><span>{{ 'SECU.DATA_FILTERS.COLUMNS.VALUE' | translate }}</span><span></span></div>
           <div class="nt-kv-list">
             <div class="nt-kv-row" *ngFor="let row of resolverConfigRows; let i = index">
-              <input pInputText [(ngModel)]="row.key" [ngModelOptions]="{standalone:true}" placeholder="field" />
-              <input pInputText [(ngModel)]="row.value" [ngModelOptions]="{standalone:true}" placeholder="value" />
+              <input pInputText [(ngModel)]="row.key" [ngModelOptions]="{standalone:true}" [placeholder]="'AUTO_SECURITY_UI.FIELD' | translate" />
+              <input pInputText [(ngModel)]="row.value" [ngModelOptions]="{standalone:true}" [placeholder]="'AUTO_SECURITY_UI.VALUE' | translate" />
               <button class="nt-icon-btn nt-icon-btn--danger" (click)="removeResolverConfigRow(i)"><i class="pi pi-trash"></i></button>
             </div>
           </div>
@@ -801,8 +801,8 @@
   </div>
   <ng-template pTemplate="footer">
     <div class="nt-dialog-footer">
-      <button class="nt-btn nt-btn--ghost" (click)="showResolverDialog = false">Cancel</button>
-      <button class="nt-btn nt-btn--primary" (click)="addResolver()"><i class="pi pi-user-plus"></i> Add Resolver</button>
+      <button class="nt-btn nt-btn--ghost" (click)="showResolverDialog = false">{{ 'DOM_FALLBACK.TEXT_062' | translate }}</button>
+      <button class="nt-btn nt-btn--primary" (click)="addResolver()"><i class="pi pi-user-plus"></i> {{ 'DOM_FALLBACK.TEXT_138' | translate }}</button>
     </div>
   </ng-template>
 </p-dialog>
@@ -815,27 +815,27 @@
     <form [formGroup]="localeForm">
       <div class="nt-row-2">
         <div class="nt-field">
-          <label class="nt-label">Language Code <span class="nt-req">*</span></label>
-          <input pInputText formControlName="languageCode" placeholder="en, fr, ar, de�" />
-          <span class="nt-hint">ISO 639-1 code (2 letters)</span>
+          <label class="nt-label">{{ 'AUTO_SECURITY_UI.LANGUAGE_CODE' | translate }} <span class="nt-req">*</span></label>
+          <input pInputText formControlName="languageCode" [placeholder]="'AUTO_SECURITY_UI.EN_FR_AR_DE' | translate" />
+          <span class="nt-hint">{{ 'AUTO_SECURITY_UI.ISO_639_1_CODE_2_LETTERS' | translate }}</span>
         </div>
         <div class="nt-field">
-          <label class="nt-label">Subject <span class="nt-req">*</span></label>
-          <input pInputText formControlName="title" placeholder="Localised subject line" />
+          <label class="nt-label">{{ 'DOM_FALLBACK.TEXT_096' | translate }} <span class="nt-req">*</span></label>
+          <input pInputText formControlName="title" [placeholder]="'AUTO_SECURITY_UI.LOCALISED_SUBJECT_LINE' | translate" />
         </div>
       </div>
       <div class="nt-field">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
-          <label class="nt-label" style="margin:0">Body <span class="nt-req">*</span></label>
-          <span class="nt-hint" style="margin:0">HTML or plain text</span>
+          <label class="nt-label" style="margin:0">{{ 'DOM_FALLBACK.TEXT_097' | translate }} <span class="nt-req">*</span></label>
+          <span class="nt-hint" style="margin:0">{{ 'AUTO_SECURITY_UI.HTML_OR_PLAIN_TEXT' | translate }}</span>
         </div>
         <textarea pTextarea formControlName="body" [rows]="14"
-          placeholder="Translated body — drag or click variables below to insert them"
+          [placeholder]="'AUTO_SECURITY_UI.TRANSLATED_BODY_DRAG_OR_CLICK_VARIABLES_BELOW_TO_INSERT_THEM' | translate"
           (drop)="onLocaleBodyDrop($event)" (dragover)="onBodyDragOver($event)"
           style="font-family:var(--s-font-mono, monospace);font-size:13px;line-height:1.6;resize:vertical"></textarea>
       </div>
       <div *ngIf="availableTemplateVariables.length > 0" style="margin-top:10px">
-        <div class="nt-hint" style="margin-bottom:6px"><i class="pi pi-code" style="font-size:10px"></i> Click to insert variable</div>
+        <div class="nt-hint" style="margin-bottom:6px"><i class="pi pi-code" style="font-size:10px"></i> {{ 'AUTO_SECURITY_UI.CLICK_TO_INSERT_VARIABLE' | translate }}</div>
         <div class="nt-token-row">
           <button class="nt-token" type="button" *ngFor="let key of availableTemplateVariables"
             draggable="true" (dragstart)="onColumnDragStart($event, key)"
@@ -848,7 +848,7 @@
   </div>
   <ng-template pTemplate="footer">
     <div class="nt-dialog-footer">
-      <button class="nt-btn nt-btn--ghost" (click)="showLocaleDialog = false">Cancel</button>
+      <button class="nt-btn nt-btn--ghost" (click)="showLocaleDialog = false">{{ 'DOM_FALLBACK.TEXT_062' | translate }}</button>
       <button class="nt-btn nt-btn--primary" (click)="addLocale()">
         <i class="pi" [class.pi-check]="editingLocaleId" [class.pi-language]="!editingLocaleId"></i>
         {{ editingLocaleId ? 'Update Locale' : 'Add Locale' }}

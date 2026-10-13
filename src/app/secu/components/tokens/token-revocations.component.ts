@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+﻿import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { catchError, of } from 'rxjs';
@@ -9,14 +9,19 @@ import {
   SecuTokenSessionDto,
 } from '../../models/secu.models';
 import { SecuApiService } from '../../services/secu-api.service';
+import { PermissionService } from '../../services/permission.service';
+import { PermActionDirective } from '../../directives/perm-action.directive';
 import { SecuPaginationComponent } from '../shared/secu-pagination.component';
+import { TranslatePipe } from '@ngx-translate/core';
+
+const PAGE_CODE = 'TOKEN_REVOCATIONS';
 
 type TokenTab = 'sessions' | 'revocations' | 'manual';
 
 @Component({
   selector: 'app-token-revocations',
   standalone: true,
-  imports: [CommonModule, FormsModule, SecuPaginationComponent],
+  imports: [CommonModule, FormsModule, SecuPaginationComponent, PermActionDirective, TranslatePipe],
   styles: [`
     .token-panel { padding: 16px; display: flex; flex-direction: column; gap: 14px; }
     .token-toolbar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
@@ -26,53 +31,56 @@ type TokenTab = 'sessions' | 'revocations' | 'manual';
   template: `
     <div class="s-page-header">
       <div>
-        <h1 class="s-page-title">Token Revocations</h1>
-        <p class="s-page-subtitle">Manage active users and revoked tokens</p>
+        <h1 class="s-page-title">{{ 'SECU.TOKENS.TITLE' | translate }}</h1>
+        <p class="s-page-subtitle">{{ 'SECU.TOKENS.SUBTITLE' | translate }}</p>
       </div>
-      <button class="s-btn s-btn-ghost" (click)="refresh()">Refresh</button>
+      <button class="s-btn s-btn-ghost" (click)="refresh()">{{ 'COMMON.REFRESH' | translate }}</button>
     </div>
 
     <div class="s-card" style="padding:0;overflow:visible;">
       <div class="s-tabs">
         <div class="s-tab" [class.active]="tab() === 'sessions'" (click)="selectTab('sessions')">
-          Active Users
+          {{ 'SECU.TOKENS.TABS.SESSIONS' | translate }}
           <span class="s-tab-count">{{ sessionTotalRecords() }}</span>
         </div>
         <div class="s-tab" [class.active]="tab() === 'revocations'" (click)="selectTab('revocations')">
-          Revocations
+          {{ 'SECU.TOKENS.TABS.REVOCATIONS' | translate }}
           <span class="s-tab-count">{{ revocationTotalRecords() }}</span>
         </div>
-        <div class="s-tab" [class.active]="tab() === 'manual'" (click)="selectTab('manual')">
-          Manual Revoke
-        </div>
+        @if (permissionService.canDelete(PAGE_CODE)) {
+          <div class="s-tab" [class.active]="tab() === 'manual'" (click)="selectTab('manual')">
+            {{ 'SECU.TOKENS.TABS.MANUAL' | translate }}
+          </div>
+        }
       </div>
 
       @if (tab() === 'sessions') {
         <div class="token-panel">
           <div class="token-toolbar">
             <div class="s-search" style="max-width:320px;">
-              <span class="s-search-icon">Search</span>
+              <span class="s-search-icon">🔍</span>
               <input
                 [(ngModel)]="sessionSearch"
                 (keyup.enter)="searchSessions()"
-                placeholder="User, IP, browser..."
+                placeholder="{{ 'AUTO_INLINE_SECURITY_UI.USER_IP_BROWSER' | translate }}"
               />
             </div>
-            <button class="s-btn s-btn-ghost s-btn-sm" (click)="searchSessions()">Search</button>
+            <button class="s-btn s-btn-ghost s-btn-sm" (click)="searchSessions()">{{ 'AUTO_SECURITY_UI.SEARCH' | translate }}</button>
           </div>
 
           @if (sessionsLoading()) {
-            <div class="s-empty"><div class="s-empty-text">Loading active users...</div></div>
+            <div class="s-empty"><div class="s-empty-text">{{ 'COMMON.LOADING' | translate }}</div></div>
           } @else {
             <div class="s-table-wrap">
               <table class="s-table">
                 <thead>
                   <tr>
-                    <th>User</th>
-                    <th>Company</th>
-                    <th>IP</th>
-                    <th>Expires</th>
-                    <th>Browser</th>
+                    <th>{{ 'SECU.TOKENS.COLUMNS.USER' | translate }}</th>
+                    <th>{{ 'SECU.TOKENS.COLUMNS.AUTH' | translate }}</th>
+                    <th>{{ 'SECU.TOKENS.COLUMNS.COMPANY' | translate }}</th>
+                    <th>{{ 'SECU.TOKENS.COLUMNS.IP' | translate }}</th>
+                    <th>{{ 'SECU.TOKENS.COLUMNS.EXPIRES' | translate }}</th>
+                    <th>{{ 'SECU.TOKENS.COLUMNS.BROWSER' | translate }}</th>
                     <th></th>
                   </tr>
                 </thead>
@@ -83,6 +91,11 @@ type TokenTab = 'sessions' | 'revocations' | 'manual';
                         <div class="mono" style="font-size:12px;color:var(--s-accent);font-weight:700;">{{ session.username }}</div>
                         <div style="font-size:11px;color:var(--s-text-2);">{{ session.fullName }}</div>
                       </td>
+                      <td>
+                        <span class="s-badge" [class.active]="session.source === 'oidc'" [class.inactive]="session.source !== 'oidc'" style="font-size:10px;text-transform:uppercase;">
+                          {{ session.source || 'jwt' }}
+                        </span>
+                      </td>
                       <td><span class="chip">{{ companyLabel(session.tenantId) }}</span></td>
                       <td class="mono" style="font-size:11px;color:var(--s-text-2);">{{ session.ipAddress || '-' }}</td>
                       <td style="font-size:11px;color:var(--s-text-2);white-space:nowrap;">{{ session.expiresAt | date:'dd/MM/yy HH:mm' }}</td>
@@ -90,17 +103,18 @@ type TokenTab = 'sessions' | 'revocations' | 'manual';
                       <td>
                         <button
                           class="s-btn s-btn-danger s-btn-sm"
+                          [permAction]="permissionService.canDelete(PAGE_CODE)"
                           (click)="revokeSessionUser(session)"
                           [disabled]="revokingUserId() === session.userId"
                         >
-                          {{ revokingUserId() === session.userId ? 'Revoking...' : 'Revoke' }}
+                          {{ revokingUserId() === session.userId ? ('SECU.TOKENS.REVOKING' | translate) : ('SECU.TOKENS.REVOKE' | translate) }}
                         </button>
                       </td>
                     </tr>
                   } @empty {
                     <tr>
-                      <td colspan="6">
-                        <div class="s-empty" style="padding:40px;"><div class="s-empty-text">No active users found</div></div>
+                      <td colspan="7">
+                        <div class="s-empty" style="padding:40px;"><div class="s-empty-text">{{ 'SECU.TOKENS.EMPTY_SESSIONS' | translate }}</div></div>
                       </td>
                     </tr>
                   }
@@ -122,32 +136,32 @@ type TokenTab = 'sessions' | 'revocations' | 'manual';
         <div class="token-panel">
           <div class="token-toolbar">
             <div class="s-search" style="max-width:260px;">
-              <span class="s-search-icon">Search</span>
+              <span class="s-search-icon">{{ 'AUTO_SECURITY_UI.SEARCH' | translate }}</span>
               <input
                 [(ngModel)]="revocationSearch"
                 (keyup.enter)="searchRevocations()"
-                placeholder="JTI, subject, reason..."
+                placeholder="{{ 'AUTO_INLINE_SECURITY_UI.JTI_SUBJECT_REASON' | translate }}"
               />
             </div>
             <input class="s-input mono" style="width:180px;" [(ngModel)]="filterJti" (keyup.enter)="searchRevocations()" placeholder="JTI" />
-            <input class="s-input mono" style="width:180px;" [(ngModel)]="filterSubject" (keyup.enter)="searchRevocations()" placeholder="Subject" />
-            <button class="s-btn s-btn-ghost s-btn-sm" (click)="searchRevocations()">Search</button>
+            <input class="s-input mono" style="width:180px;" [(ngModel)]="filterSubject" (keyup.enter)="searchRevocations()" placeholder="{{ 'DOM_FALLBACK.TEXT_096' | translate }}" />
+            <button class="s-btn s-btn-ghost s-btn-sm" (click)="searchRevocations()">{{ 'AUTO_SECURITY_UI.SEARCH' | translate }}</button>
           </div>
 
           @if (loading()) {
-            <div class="s-empty"><div class="s-empty-text">Loading revocations...</div></div>
+            <div class="s-empty"><div class="s-empty-text">{{ 'COMMON.LOADING' | translate }}</div></div>
           } @else {
             <div class="s-table-wrap">
               <table class="s-table">
                 <thead>
                   <tr>
                     <th>JTI</th>
-                    <th>Type</th>
-                    <th>Subject</th>
-                    <th>Company</th>
-                    <th>Revoked</th>
-                    <th>Expires</th>
-                    <th>Reason</th>
+                    <th>{{ 'COMMON.STATUS' | translate }}</th>
+                    <th>{{ 'SECU.TOKENS.COLUMNS.SUBJECT' | translate }}</th>
+                    <th>{{ 'SECU.TOKENS.COLUMNS.COMPANY' | translate }}</th>
+                    <th>{{ 'SECU.TOKENS.COLUMNS.REVOKED' | translate }}</th>
+                    <th>{{ 'SECU.TOKENS.COLUMNS.EXPIRES' | translate }}</th>
+                    <th>{{ 'SECU.TOKENS.COLUMNS.REASON' | translate }}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -164,7 +178,7 @@ type TokenTab = 'sessions' | 'revocations' | 'manual';
                   } @empty {
                     <tr>
                       <td colspan="7">
-                        <div class="s-empty" style="padding:40px;"><div class="s-empty-text">No revocations found</div></div>
+                        <div class="s-empty" style="padding:40px;"><div class="s-empty-text">{{ 'SECU.TOKENS.EMPTY_REVOCATIONS' | translate }}</div></div>
                       </td>
                     </tr>
                   }
@@ -185,41 +199,41 @@ type TokenTab = 'sessions' | 'revocations' | 'manual';
       @if (tab() === 'manual') {
         <div class="token-panel" style="max-width:720px;">
           @if (revokeSuccess()) {
-            <div class="s-alert success">Token revoked.</div>
+            <div class="s-alert success">{{ 'SECU.TOKENS.REVOKED_SUCCESS' | translate }}</div>
           }
           @if (revokeError()) {
             <div class="s-alert error">{{ revokeError() }}</div>
           }
 
-          <textarea class="s-input mono" style="height:96px;resize:vertical;font-size:11px;" [(ngModel)]="form.token" placeholder="Paste JWT token"></textarea>
+          <textarea class="s-input mono" style="height:96px;resize:vertical;font-size:11px;" [(ngModel)]="form.token" placeholder="{{ 'DOM_FALLBACK.TEXT_392' | translate }}"></textarea>
           <div class="s-form-row">
             <div class="s-field">
               <label class="s-label">JTI</label>
-              <input class="s-input mono" [(ngModel)]="form.jti" placeholder="Or JTI" />
+              <input class="s-input mono" [(ngModel)]="form.jti" placeholder="{{ 'AUTO_INLINE_SECURITY_UI.OR_JTI' | translate }}" />
             </div>
             <div class="s-field">
-              <label class="s-label">Subject</label>
-              <input class="s-input mono" [(ngModel)]="form.subject" placeholder="Subject / user id" />
+              <label class="s-label">{{ 'SECU.TOKENS.FORM.SUBJECT' | translate }}</label>
+              <input class="s-input mono" [(ngModel)]="form.subject" placeholder="{{ 'DOM_FALLBACK.TEXT_393' | translate }}" />
             </div>
           </div>
           <div class="s-form-row">
             <div class="s-field">
-              <label class="s-label">Company</label>
-              <input class="s-input mono" [(ngModel)]="form.tenantId" list="tokenCompanies" placeholder="Company / tenant" />
+              <label class="s-label">{{ 'SECU.TOKENS.FORM.COMPANY' | translate }}</label>
+              <input class="s-input mono" [(ngModel)]="form.tenantId" list="tokenCompanies" placeholder="{{ 'DOM_FALLBACK.TEXT_394' | translate }}" />
             </div>
             <div class="s-field">
-              <label class="s-label">Expires At</label>
+              <label class="s-label">{{ 'SECU.TOKENS.FORM.EXPIRES_AT' | translate }}</label>
               <input class="s-input" type="datetime-local" [(ngModel)]="form.expiresAt" />
             </div>
           </div>
           <div class="s-form-row single">
             <div class="s-field">
-              <label class="s-label">Reason</label>
-              <input class="s-input" [(ngModel)]="form.reason" placeholder="Reason" />
+              <label class="s-label">{{ 'SECU.TOKENS.FORM.REASON' | translate }}</label>
+              <input class="s-input" [(ngModel)]="form.reason" placeholder="{{ 'DOM_FALLBACK.TEXT_395' | translate }}" />
             </div>
           </div>
-          <button class="s-btn s-btn-primary" (click)="revoke()" [disabled]="revoking() || (!form.token && !form.jti)">
-            {{ revoking() ? 'Revoking...' : 'Revoke Token' }}
+          <button class="s-btn s-btn-primary" [permAction]="permissionService.canDelete(PAGE_CODE)" (click)="revoke()" [disabled]="revoking() || (!form.token && !form.jti)">
+            {{ revoking() ? ('SECU.TOKENS.REVOKING' | translate) : ('SECU.TOKENS.REVOKE_BTN' | translate) }}
           </button>
         </div>
       }
@@ -234,6 +248,8 @@ type TokenTab = 'sessions' | 'revocations' | 'manual';
 })
 export class TokenRevocationsComponent implements OnInit {
   private readonly api = inject(SecuApiService);
+  readonly permissionService = inject(PermissionService);
+  readonly PAGE_CODE = PAGE_CODE;
 
   tab = signal<TokenTab>('sessions');
   revocations = signal<SecuTokenRevocationDto[]>([]);
@@ -412,3 +428,4 @@ export class TokenRevocationsComponent implements OnInit {
       });
   }
 }
+

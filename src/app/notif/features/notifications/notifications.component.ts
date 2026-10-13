@@ -9,6 +9,7 @@ import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { PaginatorModule } from 'primeng/paginator';
 import { CheckboxModule } from 'primeng/checkbox';
+import { TranslatePipe } from '@ngx-translate/core';
 import { PermissionService } from '../../core/services/permission.service';
 import { NotificationsService } from '../../core/services/notifications.service';
 import { RealtimeService } from '../../core/services/realtime.service';
@@ -33,6 +34,7 @@ const PAGE_SETTINGS = 'NOTIF_SETTINGS';
     TagModule,
     PaginatorModule,
     CheckboxModule,
+    TranslatePipe,
   ],
   templateUrl: './notifications.component.html'
 })

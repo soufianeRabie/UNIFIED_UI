@@ -1,17 +1,18 @@
-import { CommonModule } from '@angular/common';
+﻿import { CommonModule } from '@angular/common';
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { catchError, forkJoin, of } from 'rxjs';
 import { RefCompanyDto, SecuAuditLogDto } from '../../models/secu.models';
 import { SecuApiService } from '../../services/secu-api.service';
 import { SecuPaginationComponent } from '../shared/secu-pagination.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 type Operation = 'ALL' | 'INSERT' | 'UPDATE' | 'DELETE';
 
 @Component({
   selector: 'app-audit-log',
   standalone: true,
-  imports: [CommonModule, FormsModule, SecuPaginationComponent],
+  imports: [CommonModule, FormsModule, SecuPaginationComponent, TranslatePipe],
   styles: [`
     .audit-filters { display:grid; grid-template-columns:2fr repeat(5, minmax(120px, 1fr)); gap:8px; padding:10px 14px; border-bottom:1px solid var(--s-border); background:var(--s-bg-3); align-items:end; }
     @media (max-width: 1100px) { .audit-filters { grid-template-columns:1fr 1fr; } }
@@ -37,64 +38,64 @@ type Operation = 'ALL' | 'INSERT' | 'UPDATE' | 'DELETE';
   template: `
     <div class="s-page-header">
       <div>
-        <h1 class="s-page-title">Audit Log</h1>
-        <p class="s-page-subtitle">Security changes with field-level modification details</p>
+        <h1 class="s-page-title">{{ 'DOM_FALLBACK.TEXT_199' | translate }}</h1>
+        <p class="s-page-subtitle">{{ 'DOM_FALLBACK.TEXT_200' | translate }}</p>
       </div>
       <div style="display:flex;gap:8px;">
-        <button class="s-btn s-btn-ghost s-btn-sm" (click)="resetFilters()">Reset</button>
-        <button class="s-btn s-btn-ghost s-btn-sm" (click)="reload()">Refresh</button>
+        <button class="s-btn s-btn-ghost s-btn-sm" (click)="resetFilters()">{{ 'DOM_FALLBACK.TEXT_067' | translate }}</button>
+        <button class="s-btn s-btn-ghost s-btn-sm" (click)="reload()">{{ 'DOM_FALLBACK.TEXT_031' | translate }}</button>
       </div>
     </div>
 
     <div class="s-card" style="padding:0;overflow:visible;">
       <div class="audit-filters">
         <div class="filter-field">
-          <label>Search</label>
+          <label>{{ 'AUTO_SECURITY_UI.SEARCH' | translate }}</label>
           <div class="s-search">
-            <span class="s-search-icon">Search</span>
-            <input [(ngModel)]="filters.search" (ngModelChange)="onFilterChange()" placeholder="User, entity, record id..." />
+            <span class="s-search-icon">{{ 'AUTO_SECURITY_UI.SEARCH' | translate }}</span>
+            <input [(ngModel)]="filters.search" (ngModelChange)="onFilterChange()" placeholder="{{ 'DOM_FALLBACK.TEXT_382' | translate }}" />
           </div>
         </div>
         <div class="filter-field">
-          <label>Company</label>
+          <label>{{ 'DOM_FALLBACK.TEXT_201' | translate }}</label>
           <select class="s-select" [(ngModel)]="filters.tenantId" (change)="onFilterChange()">
-            <option value="">All companies</option>
+            <option value="">{{ 'DOM_FALLBACK.TEXT_202' | translate }}</option>
             @for (company of companies(); track company.companyCode) {
               <option [value]="company.companyCode">{{ company.companyCode }}</option>
             }
           </select>
         </div>
         <div class="filter-field">
-          <label>Table</label>
+          <label>{{ 'DOM_FALLBACK.TEXT_203' | translate }}</label>
           <select class="s-select" [(ngModel)]="filters.tableName" (change)="onFilterChange()">
-            <option value="">All tables</option>
+            <option value="">{{ 'DOM_FALLBACK.TEXT_204' | translate }}</option>
             @for (table of tableOptions(); track table) {
               <option [value]="table">{{ table }}</option>
             }
           </select>
         </div>
         <div class="filter-field">
-          <label>Operation</label>
+          <label>{{ 'DOM_FALLBACK.TEXT_205' | translate }}</label>
           <select class="s-select" [(ngModel)]="filters.operation" (change)="onFilterChange()">
-            <option value="ALL">All</option>
-            <option value="INSERT">Insert</option>
-            <option value="UPDATE">Update</option>
-            <option value="DELETE">Delete</option>
+            <option value="ALL">{{ 'AUTO_INLINE_SECURITY_UI.ALL' | translate }}</option>
+            <option value="INSERT">{{ 'DOM_FALLBACK.TEXT_206' | translate }}</option>
+            <option value="UPDATE">{{ 'COMMON.UPDATE' | translate }}</option>
+            <option value="DELETE">{{ 'COMMON.DELETE' | translate }}</option>
           </select>
         </div>
         <div class="filter-field">
-          <label>From</label>
+          <label>{{ 'DOM_FALLBACK.TEXT_207' | translate }}</label>
           <input class="s-input" type="date" [(ngModel)]="filters.dateFrom" (change)="onFilterChange()" />
         </div>
         <div class="filter-field">
-          <label>To</label>
+          <label>{{ 'DOM_FALLBACK.TEXT_208' | translate }}</label>
           <input class="s-input" type="date" [(ngModel)]="filters.dateTo" (change)="onFilterChange()" />
         </div>
       </div>
 
       @if (!loading()) {
         <div class="audit-summary">
-          <span><strong style="color:var(--s-text);">{{ filtered().length }}</strong> entries</span>
+          <span><strong style="color:var(--s-text);">{{ filtered().length }}</strong> {{ 'DOM_FALLBACK.TEXT_209' | translate }}</span>
           <span>{{ opCount('INSERT') }} inserts</span>
           <span>{{ opCount('UPDATE') }} updates</span>
           <span>{{ opCount('DELETE') }} deletes</span>
@@ -103,7 +104,7 @@ type Operation = 'ALL' | 'INSERT' | 'UPDATE' | 'DELETE';
       }
 
       @if (loading()) {
-        <div class="s-empty"><div class="s-empty-text">Loading...</div></div>
+        <div class="s-empty"><div class="s-empty-text">{{ 'DOM_FALLBACK.TEXT_181' | translate }}</div></div>
       } @else {
         <div class="s-table-wrap">
           <table class="s-table">
@@ -111,11 +112,11 @@ type Operation = 'ALL' | 'INSERT' | 'UPDATE' | 'DELETE';
               <tr>
                 <th style="width:28px;"></th>
                 <th style="width:135px;" (click)="setSort('performedAt')" class="sortable">Date {{ sortIcon('performedAt') }}</th>
-                <th style="width:90px;">Op</th>
-                <th>Entity</th>
-                <th style="width:130px;">Record</th>
-                <th style="width:150px;">Company</th>
-                <th style="width:160px;">Changed By</th>
+                <th style="width:90px;">{{ 'DOM_FALLBACK.TEXT_210' | translate }}</th>
+                <th>{{ 'SECU.DATA_FILTERS.COLUMNS.ENTITY' | translate }}</th>
+                <th style="width:130px;">{{ 'DOM_FALLBACK.TEXT_211' | translate }}</th>
+                <th style="width:150px;">{{ 'DOM_FALLBACK.TEXT_201' | translate }}</th>
+                <th style="width:160px;">{{ 'DOM_FALLBACK.TEXT_212' | translate }}</th>
               </tr>
             </thead>
             <tbody>
@@ -152,7 +153,7 @@ type Operation = 'ALL' | 'INSERT' | 'UPDATE' | 'DELETE';
                       <div class="detail-box">
                         @if (row.fields.length) {
                           <table class="diff-table">
-                            <thead><tr><th>Field</th><th>Before</th><th>After</th></tr></thead>
+                            <thead><tr><th>{{ 'DOM_FALLBACK.TEXT_186' | translate }}</th><th>{{ 'DOM_FALLBACK.TEXT_213' | translate }}</th><th>{{ 'DOM_FALLBACK.TEXT_214' | translate }}</th></tr></thead>
                             <tbody>
                               @for (field of row.fields; track field.idLogField) {
                                 <tr>
@@ -165,7 +166,7 @@ type Operation = 'ALL' | 'INSERT' | 'UPDATE' | 'DELETE';
                           </table>
                         } @else {
                           <table class="diff-table">
-                            <thead><tr><th>Before</th><th>After</th></tr></thead>
+                            <thead><tr><th>{{ 'DOM_FALLBACK.TEXT_213' | translate }}</th><th>{{ 'DOM_FALLBACK.TEXT_214' | translate }}</th></tr></thead>
                             <tbody><tr><td class="diff-val">{{ formatJson(row.oldValue) || '-' }}</td><td class="diff-val">{{ formatJson(row.newValue) || '-' }}</td></tr></tbody>
                           </table>
                         }
@@ -174,7 +175,7 @@ type Operation = 'ALL' | 'INSERT' | 'UPDATE' | 'DELETE';
                   </tr>
                 }
               } @empty {
-                <tr><td colspan="7"><div class="s-empty" style="padding:42px;"><div class="s-empty-text">No audit entries match your filters</div></div></td></tr>
+                <tr><td colspan="7"><div class="s-empty" style="padding:42px;"><div class="s-empty-text">{{ 'DOM_FALLBACK.TEXT_215' | translate }}</div></div></td></tr>
               }
             </tbody>
           </table>
@@ -319,3 +320,4 @@ export class AuditLogComponent implements OnInit {
     }
   }
 }
+

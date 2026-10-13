@@ -1,8 +1,10 @@
-import { Component, OnDestroy, OnInit, effect, inject, signal } from '@angular/core';
-import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+﻿import { Component, OnDestroy, OnInit, computed, effect, inject, signal } from '@angular/core';
+import { RouterOutlet, RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 import { PermissionService } from '../../services/permission.service';
 import type { SecuMenuItemDto, SecuPageType } from '../../models/secu.models';
+import { LangSwitcherComponent } from '../../../shared/components/lang-switcher.component';
 
 interface MenuNode {
   idPage: number;
@@ -18,14 +20,14 @@ interface MenuNode {
 @Component({
   selector: 'app-secu-layout',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, CommonModule],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, CommonModule, TranslatePipe, LangSwitcherComponent],
   template: `
     <div class="secu-layout">
       <!-- Sidebar -->
       <aside class="secu-sidebar" [class.collapsed]="collapsed()" [class.mobile-open]="mobileOpen()">
         <div class="s-brand">
           <div class="s-brand-icon">S</div>
-          <span class="s-brand-label">SECU Admin</span>
+          <span class="s-brand-label">{{ 'SECU.BRAND' | translate }}</span>
         </div>
 
         <nav class="s-nav">
@@ -33,14 +35,29 @@ interface MenuNode {
             <ng-container *ngTemplateOutlet="menuTpl; context: { $implicit: menuTree() }"></ng-container>
           } @else {
             <div class="s-empty">
-              <div class="s-empty-text">No menu items</div>
+              <div class="s-empty-text">{{ 'SECU.NAV.NO_ITEMS' | translate }}</div>
             </div>
           }
+
+          <!-- Static extra links always shown -->
+          <div class="s-nav-group">
+          <div class="s-nav-group-label">{{ 'SECU.NAV.ACCOUNT' | translate }}</div>
+          <a class="s-nav-item" [routerLink]="baseUrl + '/my-security'" routerLinkActive="active" (click)="closeMobile()">
+            <span class="s-nav-icon">🔑</span>
+            <span class="s-nav-text">{{ 'SECU.NAV.MY_SECURITY' | translate }}</span>
+          </a>
+          @if (canAccessAuthSettings()) {
+            <a class="s-nav-item" [routerLink]="baseUrl + '/auth-settings'" routerLinkActive="active" (click)="closeMobile()">
+              <span class="s-nav-icon">⚙</span>
+              <span class="s-nav-text">{{ 'SECU.NAV.AUTH_SETTINGS' | translate }}</span>
+            </a>
+          }
+          </div>
         </nav>
 
         <div style="padding: 12px; border-top: 1px solid var(--s-border); flex-shrink: 0;">
           <button class="s-btn s-btn-ghost" style="width:100%; justify-content: center;" (click)="toggle()">
-            {{ collapsed() ? 'Expand' : 'Collapse' }}
+            {{ (collapsed() ? 'SECU.ACTIONS.EXPAND' : 'SECU.ACTIONS.COLLAPSE') | translate }}
           </button>
         </div>
       </aside>
@@ -53,13 +70,14 @@ interface MenuNode {
             <i class="pi pi-bars"></i>
           </button>
           <div class="s-breadcrumb">
-            <span>Security</span>
+            <span>{{ 'SECU.BREADCRUMB.SECURITY' | translate }}</span>
             <span class="s-breadcrumb-sep">/</span>
-            <span class="s-breadcrumb-current">Module</span>
+            <span class="s-breadcrumb-current">{{ 'SECU.BREADCRUMB.MODULE' | translate }}</span>
           </div>
           <div class="s-topbar-actions">
+            <app-lang-switcher />
             <div style="font-size:12px; color: var(--s-text-3); font-family: var(--s-mono);">
-              SECU v1
+              {{ 'SECU.VERSION' | translate }}
             </div>
           </div>
         </header>
@@ -142,10 +160,23 @@ interface MenuNode {
 })
 export class SecuLayoutComponent implements OnInit, OnDestroy {
   private readonly permissionService = inject(PermissionService);
+  private readonly router = inject(Router);
 
   collapsed = signal(false);
   mobileOpen = signal(false);
   menuTree = signal<MenuNode[]>([]);
+
+  // Base URL of the current secu module mount point (/admin or /admin/security)
+  get baseUrl(): string {
+    const url = this.router.url.split('?')[0];
+    if (url.startsWith('/admin/security')) return '/admin/security';
+    return '/admin';
+  }
+
+  readonly canAccessAuthSettings = computed(() => {
+    this.permissionService.loaded();
+    return this.permissionService.canRead('SETTINGS') || this.permissionService.canUpdate('SETTINGS');
+  });
 
   constructor() {
     this.permissionService.ensureLoaded().subscribe();
@@ -264,3 +295,4 @@ export class SecuLayoutComponent implements OnInit, OnDestroy {
     return { iconText: trimmed || '*', iconClass: undefined };
   }
 }
+

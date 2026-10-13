@@ -4,23 +4,24 @@ import { FormsModule } from '@angular/forms';
 import { catchError, forkJoin, of } from 'rxjs';
 import { SecuApiService } from '../../services/secu-api.service';
 import { AuthSettingsDto, TotpSetupDto } from '../../models/secu.models';
+import { TranslatePipe } from '@ngx-translate/core';
 
 type TotpStep = 'idle' | 'setup' | 'verify' | 'active';
 
 @Component({
   selector: 'app-my-security',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslatePipe],
   template: `
     <div class="s-page-header">
       <div>
-        <h1 class="s-page-title">My Security</h1>
-        <p class="s-page-subtitle">Manage your two-factor authentication methods</p>
+        <h1 class="s-page-title">{{ 'SECU.MY_SECURITY.TITLE' | translate }}</h1>
+        <p class="s-page-subtitle">{{ 'SECU.MY_SECURITY.SUBTITLE' | translate }}</p>
       </div>
     </div>
 
     @if (loadingSettings()) {
-      <div class="s-card"><div class="s-empty"><div class="s-empty-text">Loading�</div></div></div>
+      <div class="s-card"><div class="s-empty"><div class="s-empty-text">{{ 'COMMON.LOADING' | translate }}</div></div></div>
     } @else if (settingsError()) {
       <div class="s-alert error" style="margin:16px;">�  {{ settingsError() }}</div>
     } @else {
@@ -28,37 +29,37 @@ type TotpStep = 'idle' | 'setup' | 'verify' | 'active';
       <!-- TOTP — shown only if admin enabled it in auth settings -->
       @if (settings()?.enableTotp) {
         <div class="s-card" style="margin-bottom:16px;">
-          <div class="s-card-section-header">Authenticator App (TOTP)</div>
+          <div class="s-card-section-header">{{ 'SECU.MY_SECURITY.TOTP.TITLE' | translate }}</div>
           <div class="s-card-body">
 
             @if (totpStep() === 'idle') {
-              <p class="s-help-text">Use an app like Google Authenticator, Authy, or 1Password to generate time-based one-time codes. You will be asked for one at each login.</p>
+              <p class="s-help-text">{{ 'SECU.MY_SECURITY.TOTP.HINT' | translate }}</p>
               <button class="s-btn s-btn-primary" style="width:fit-content;" (click)="startTotpSetup()" [disabled]="totpLoading()">
-                {{ totpLoading() ? 'Loading�' : 'Set Up Authenticator App' }}
+                {{ totpLoading() ? ('COMMON.LOADING' | translate) : ('SECU.MY_SECURITY.TOTP.SETUP_BTN' | translate) }}
               </button>
               @if (totpError()) { <div class="s-alert error mgt">�  {{ totpError() }}</div> }
             }
 
             @if (totpStep() === 'setup' || totpStep() === 'verify') {
               <div style="display:flex;flex-direction:column;gap:16px;max-width:520px;">
-                <p class="s-help-text">Open your authenticator app and add a new account. Enter the secret manually or use the raw URI if your app supports import.</p>
+                <p class="s-help-text">{{ 'SECU.MY_SECURITY.TOTP.SETUP_HINT' | translate }}</p>
 
                 <div class="s-secret-box">
                   <div class="s-secret-row">
-                    <div class="s-secret-label">Secret key (enter manually in app)</div>
+                    <div class="s-secret-label">{{ 'SECU.MY_SECURITY.TOTP.SECRET_LABEL' | translate }}</div>
                     <div style="display:flex;align-items:center;gap:8px;">
                       <code class="s-mono-block">{{ totpSetup()?.secret }}</code>
-                      <button class="s-btn-icon" title="Copy" (click)="copySecret()">{{ secretCopied() ? '✓' : '📋' }}</button>
+                      <button class="s-btn-icon" [title]="'COMMON.COPY' | translate" (click)="copySecret()">{{ secretCopied() ? '✓' : '📋' }}</button>
                     </div>
                   </div>
                   <div class="s-secret-row" style="margin-top:10px;">
-                    <div class="s-secret-label">OTP Auth URI</div>
+                    <div class="s-secret-label">{{ 'SECU.MY_SECURITY.TOTP.URI_LABEL' | translate }}</div>
                     <code class="s-mono-block s-small">{{ totpSetup()?.otpauthUri }}</code>
                   </div>
                 </div>
 
                 <div class="s-field" style="max-width:200px;">
-                  <label class="s-label">Enter the 6-digit code from your app *</label>
+                  <label class="s-label">{{ 'SECU.MY_SECURITY.TOTP.CODE_LABEL' | translate }}</label>
                   <input
                     class="s-input mono"
                     placeholder="000000"
@@ -74,20 +75,20 @@ type TotpStep = 'idle' | 'setup' | 'verify' | 'active';
 
                 <div style="display:flex;gap:8px;">
                   <button class="s-btn s-btn-primary" (click)="verifyTotp()" [disabled]="totpLoading() || totpCode.length < 6">
-                    {{ totpLoading() ? 'Verifying�' : 'Verify & Activate' }}
+                    {{ totpLoading() ? ('SECU.MY_SECURITY.TOTP.VERIFYING' | translate) : ('SECU.MY_SECURITY.TOTP.VERIFY_BTN' | translate) }}
                   </button>
-                  <button class="s-btn s-btn-ghost" (click)="cancelTotpSetup()">Cancel</button>
+                  <button class="s-btn s-btn-ghost" (click)="cancelTotpSetup()">{{ 'SECURITY.CHANGE_PASSWORD.CANCEL' | translate }}</button>
                 </div>
               </div>
             }
 
             @if (totpStep() === 'active') {
               <div style="display:flex;flex-direction:column;gap:12px;max-width:480px;">
-                <div class="s-alert success">✓ Authenticator app is active on your account.✓ </div>
-                <p class="s-help-text">You will be asked for a TOTP code at each login.</p>
+                <div class="s-alert success">{{ 'SECU.MY_SECURITY.TOTP.ACTIVE_MSG' | translate }}✓ </div>
+                <p class="s-help-text">{{ 'SECU.MY_SECURITY.TOTP.ACTIVE_HINT' | translate }}</p>
                 @if (totpError()) { <div class="s-alert error">�  {{ totpError() }}</div> }
                 <button class="s-btn s-btn-danger" style="width:fit-content;" (click)="disableTotp()" [disabled]="totpLoading()">
-                  {{ totpLoading() ? 'Disabling�' : 'Disable Authenticator App' }}
+                  {{ totpLoading() ? ('SECU.MY_SECURITY.TOTP.DISABLING' | translate) : ('SECU.MY_SECURITY.TOTP.DISABLE_BTN' | translate) }}
                 </button>
               </div>
             }
@@ -99,9 +100,9 @@ type TotpStep = 'idle' | 'setup' | 'verify' | 'active';
       <!-- Email OTP — shown only if admin enabled it -->
       @if (settings()?.enableEmailOtp) {
         <div class="s-card" style="margin-bottom:16px;">
-          <div class="s-card-section-header">Email One-Time Code</div>
+          <div class="s-card-section-header">{{ 'SECU.MY_SECURITY.EMAIL_OTP.TITLE' | translate }}</div>
           <div class="s-card-body">
-            <p class="s-help-text">{{ 'When enabled, a one-time code will be emailed to you at each login. Codes expire after {{ttl}} minutes.': { ttl: settings()?.emailOtpTtlMinutes } }}</p>
+            <p class="s-help-text">{{ 'SECU.MY_SECURITY.EMAIL_OTP.HINT' | translate: { ttl: settings()?.emailOtpTtlMinutes } }}</p>
             <div style="display:flex;align-items:center;gap:12px;margin-top:8px;">
               <label class="s-toggle">
                 <input type="checkbox" [checked]="emailOtpEnabled()" (change)="toggleEmailOtp($event)" [disabled]="emailOtpLoading()" />
@@ -109,9 +110,9 @@ type TotpStep = 'idle' | 'setup' | 'verify' | 'active';
                 <div class="s-toggle-thumb"></div>
               </label>
               <span style="font-size:13px;color:var(--s-text);">
-                {{ emailOtpEnabled() ? 'Email OTP is enabled' : 'Email OTP is disabled' }}
+                {{ (emailOtpEnabled() ? 'SECU.MY_SECURITY.EMAIL_OTP.ENABLED' : 'SECU.MY_SECURITY.EMAIL_OTP.DISABLED') | translate }}
               </span>
-              @if (emailOtpLoading()) { <span style="font-size:12px;color:var(--s-text-3);">Saving�</span> }
+              @if (emailOtpLoading()) { <span style="font-size:12px;color:var(--s-text-3);">{{ 'COMMON.SAVING' | translate }}</span> }
             </div>
             @if (emailOtpMessage()) { <div class="s-alert success mgt">✓ {{ emailOtpMessage() }}</div> }
             @if (emailOtpError()) { <div class="s-alert error mgt">�  {{ emailOtpError() }}</div> }
@@ -122,31 +123,31 @@ type TotpStep = 'idle' | 'setup' | 'verify' | 'active';
       <!-- Recovery Codes — shown only if admin enabled it -->
       @if (settings()?.enableRecoveryCodes) {
         <div class="s-card" style="margin-bottom:16px;">
-          <div class="s-card-section-header">Recovery Codes</div>
+          <div class="s-card-section-header">{{ 'SECU.MY_SECURITY.RECOVERY.TITLE' | translate }}</div>
           <div class="s-card-body">
             <p class="s-help-text">
-              One-time-use backup codes you can use if you lose access to your authenticator or email. Store them somewhere safe — they are shown only once.
+              {{ 'AUTO_INLINE_SECURITY_UI.ONE_TIME_USE_BACKUP_CODES_YOU_CAN_USE_IF_YOU_LOSE_ACCESS_TO_YOUR_AUTHE' | translate }}
             </p>
 
             @if (!recoveryCodes()) {
               <button class="s-btn s-btn-primary" style="width:fit-content;margin-top:8px;" (click)="generateRecoveryCodes()" [disabled]="recoveryLoading()">
-                {{ recoveryLoading() ? 'Generating�' : 'Generate Recovery Codes' }}
+                {{ recoveryLoading() ? ('SECU.MY_SECURITY.RECOVERY.GENERATING' | translate) : ('SECU.MY_SECURITY.RECOVERY.GENERATE_BTN' | translate) }}
               </button>
             }
 
             @if (recoveryError()) { <div class="s-alert error mgt">�  {{ recoveryError() }}</div> }
 
             @if (recoveryCodes()) {
-              <div class="s-alert warning mgt">⚠ Save these codes now — they will not be shown again.</div>
+              <div class="s-alert warning mgt">⚠ {{ 'SECU.MY_SECURITY.RECOVERY.SAVE_WARNING' | translate }}</div>
               <div class="s-codes-grid">
                 @for (code of recoveryCodes()!; track code) {
                   <code class="s-mono-block">{{ code }}</code>
                 }
               </div>
               <div style="display:flex;gap:8px;margin-top:12px;">
-                <button class="s-btn s-btn-ghost" (click)="copyRecoveryCodes()">{{ codescopied() ? '✓ Copied' : 'Copy All' }}</button>
+                <button class="s-btn s-btn-ghost" (click)="copyRecoveryCodes()">{{ codescopied() ? ('SECU.MY_SECURITY.RECOVERY.COPIED' | translate) : ('SECU.MY_SECURITY.RECOVERY.COPY_BTN' | translate) }}</button>
                 <button class="s-btn s-btn-ghost" (click)="generateRecoveryCodes()" [disabled]="recoveryLoading()">
-                  Regenerate (invalidates old codes)
+                  {{ 'SECU.MY_SECURITY.RECOVERY.REGENERATE_BTN' | translate }}
                 </button>
               </div>
             }
@@ -160,7 +161,7 @@ type TotpStep = 'idle' | 'setup' | 'verify' | 'active';
           <div class="s-card-body" style="padding:32px;text-align:center;">
             <div style="font-size:32px;margin-bottom:12px;">🔒</div>
             <p style="color:var(--s-text-2);font-size:13px;">
-              No MFA methods are currently enabled by your administrator.
+              {{ 'SECU.MY_SECURITY.NO_MFA' | translate }}
             </p>
           </div>
         </div>

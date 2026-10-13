@@ -152,7 +152,7 @@
               </div>
               <div class="np-mapping-list">
                 <div class="np-mapping-row" *ngFor="let row of testParamRows; let i = index">
-                  <input pInputText [(ngModel)]="row.key" [ngModelOptions]="{standalone:true}" placeholder="userId" />
+                  <input pInputText [(ngModel)]="row.key" [ngModelOptions]="{standalone:true}" [placeholder]="'TECH_EXAMPLES.USER_ID' | translate" />
                   <input pInputText [(ngModel)]="row.value" [ngModelOptions]="{standalone:true}" placeholder="12345" />
                   <button class="np-btn np-btn--danger" style="padding:6px 8px;min-width:34px;justify-content:center" (click)="removeTestParam(i)">
                     <i class="pi pi-trash"></i>

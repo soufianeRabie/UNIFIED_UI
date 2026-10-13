@@ -1,14 +1,15 @@
-import { CommonModule } from '@angular/common';
+﻿import { CommonModule } from '@angular/common';
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { catchError, forkJoin, of } from 'rxjs';
 import { SecuAuditEntityDto, SecuAuditFieldDto, SecuEntityDto, SecuFieldDto } from '../../models/secu.models';
 import { SecuApiService } from '../../services/secu-api.service';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-audit-config',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslatePipe],
   styles: [`
     .ac-grid { display:grid; grid-template-columns:minmax(260px,.34fr) minmax(0,1fr); min-height:60vh; }
     @media (max-width: 900px) { .ac-grid { grid-template-columns:1fr; } }
@@ -31,16 +32,16 @@ import { SecuApiService } from '../../services/secu-api.service';
   template: `
     <div class="s-page-header">
       <div>
-        <h1 class="s-page-title">Audit Configuration</h1>
-        <p class="s-page-subtitle">Choose entities, then move tracked fields between available and tracked lists.</p>
+        <h1 class="s-page-title">{{ 'DOM_FALLBACK.TEXT_175' | translate }}</h1>
+        <p class="s-page-subtitle">{{ 'DOM_FALLBACK.TEXT_176' | translate }}</p>
       </div>
-      <button class="s-btn s-btn-primary" (click)="openCreate()">+ Track Entity</button>
+      <button class="s-btn s-btn-primary" (click)="openCreate()">{{ 'DOM_FALLBACK.TEXT_177' | translate }}</button>
     </div>
 
     <div class="s-stats-grid" style="margin-bottom:20px;">
-      <div class="s-stat-card"><div class="s-stat-icon blue">E</div><div><div class="s-stat-value">{{ auditEntities().length }}</div><div class="s-stat-label">Tracked Entities</div></div></div>
-      <div class="s-stat-card"><div class="s-stat-icon amber">F</div><div><div class="s-stat-value">{{ totalFields() }}</div><div class="s-stat-label">Tracked Fields</div></div></div>
-      <div class="s-stat-card"><div class="s-stat-icon green">A</div><div><div class="s-stat-value">{{ activeCount() }}</div><div class="s-stat-label">Active</div></div></div>
+      <div class="s-stat-card"><div class="s-stat-icon blue">E</div><div><div class="s-stat-value">{{ auditEntities().length }}</div><div class="s-stat-label">{{ 'DOM_FALLBACK.TEXT_178' | translate }}</div></div></div>
+      <div class="s-stat-card"><div class="s-stat-icon amber">F</div><div><div class="s-stat-value">{{ totalFields() }}</div><div class="s-stat-label">{{ 'DOM_FALLBACK.TEXT_179' | translate }}</div></div></div>
+      <div class="s-stat-card"><div class="s-stat-icon green">A</div><div><div class="s-stat-value">{{ activeCount() }}</div><div class="s-stat-label">{{ 'DOM_FALLBACK.TEXT_092' | translate }}</div></div></div>
     </div>
 
     <div class="s-card" style="padding:0;overflow:visible;">
@@ -48,8 +49,8 @@ import { SecuApiService } from '../../services/secu-api.service';
         <div class="ac-list">
           <div class="s-toolbar">
             <div class="s-search" style="flex:1;">
-              <span class="s-search-icon">Search</span>
-              <input [(ngModel)]="search" placeholder="Entity or table..." />
+              <span class="s-search-icon">{{ 'AUTO_SECURITY_UI.SEARCH' | translate }}</span>
+              <input [(ngModel)]="search" placeholder="{{ 'DOM_FALLBACK.TEXT_383' | translate }}" />
             </div>
             <label class="s-toggle">
               <input type="checkbox" [(ngModel)]="includeInactive" (change)="loadAuditEntities()" />
@@ -58,7 +59,7 @@ import { SecuApiService } from '../../services/secu-api.service';
           </div>
 
           @if (loading()) {
-            <div class="s-empty"><div class="s-empty-text">Loading...</div></div>
+            <div class="s-empty"><div class="s-empty-text">{{ 'DOM_FALLBACK.TEXT_181' | translate }}</div></div>
           } @else {
             @for (entity of filteredAuditEntities(); track entity.idEntity) {
               <div class="ac-item" [class.active]="selected()?.idEntity === entity.idEntity" (click)="select(entity)">
@@ -70,14 +71,14 @@ import { SecuApiService } from '../../services/secu-api.service';
                 <span class="s-badge" [class.active]="entity.isActive" [class.inactive]="!entity.isActive">{{ entity.isActive ? 'On' : 'Off' }}</span>
               </div>
             } @empty {
-              <div class="s-empty" style="padding:42px;"><div class="s-empty-text">No tracked entities</div></div>
+              <div class="s-empty" style="padding:42px;"><div class="s-empty-text">{{ 'DOM_FALLBACK.TEXT_182' | translate }}</div></div>
             }
           }
         </div>
 
         <div class="ac-detail">
           @if (!selected()) {
-            <div class="s-empty" style="padding:80px 20px;"><div class="s-empty-text">Select an entity to manage tracked fields</div></div>
+            <div class="s-empty" style="padding:80px 20px;"><div class="s-empty-text">{{ 'DOM_FALLBACK.TEXT_183' | translate }}</div></div>
           } @else {
             <div class="ac-header">
               <div>
@@ -89,25 +90,25 @@ import { SecuApiService } from '../../services/secu-api.service';
                 </div>
               </div>
               <div style="display:flex;gap:6px;flex-wrap:wrap;">
-                <button class="s-btn s-btn-primary s-btn-sm" (click)="openFieldManager()">Manage Fields</button>
+                <button class="s-btn s-btn-primary s-btn-sm" (click)="openFieldManager()">{{ 'DOM_FALLBACK.TEXT_184' | translate }}</button>
                 <button class="s-btn s-btn-ghost s-btn-sm" (click)="toggleEntityActive()">{{ selected()!.isActive ? 'Deactivate' : 'Activate' }}</button>
-                <button class="s-btn-icon danger" (click)="askDeleteEntity()">Del</button>
+                <button class="s-btn-icon danger" (click)="askDeleteEntity()">{{ 'DOM_FALLBACK.TEXT_185' | translate }}</button>
               </div>
             </div>
 
             <div class="s-table-wrap">
               <table class="s-table">
-                <thead><tr><th>Field</th><th>Column</th><th>Status</th><th style="width:52px;"></th></tr></thead>
+                <thead><tr><th>{{ 'DOM_FALLBACK.TEXT_186' | translate }}</th><th>{{ 'DOM_FALLBACK.TEXT_187' | translate }}</th><th>{{ 'DOM_FALLBACK.TEXT_026' | translate }}</th><th style="width:52px;"></th></tr></thead>
                 <tbody>
                   @for (field of selected()!.fields; track field.idField) {
                     <tr>
                       <td class="mono" style="font-size:11px;color:var(--s-accent);">{{ field.fieldName || ('Field #' + field.fieldId) }}</td>
                       <td class="mono" style="font-size:11px;color:var(--s-text-2);">{{ field.columnName || '-' }}</td>
                       <td><span class="s-badge" [class.active]="field.isActive" [class.inactive]="!field.isActive">{{ field.isActive ? 'Active' : 'Inactive' }}</span></td>
-                      <td><button class="s-btn-icon danger" (click)="deleteField(field)">Del</button></td>
+                      <td><button class="s-btn-icon danger" (click)="deleteField(field)">{{ 'DOM_FALLBACK.TEXT_185' | translate }}</button></td>
                     </tr>
                   } @empty {
-                    <tr><td colspan="4"><div class="s-empty" style="padding:32px;"><div class="s-empty-text">No fields explicitly tracked. Use Manage Fields to choose them.</div></div></td></tr>
+                    <tr><td colspan="4"><div class="s-empty" style="padding:32px;"><div class="s-empty-text">{{ 'DOM_FALLBACK.TEXT_188' | translate }}</div></div></td></tr>
                   }
                 </tbody>
               </table>
@@ -127,26 +128,26 @@ import { SecuApiService } from '../../services/secu-api.service';
       <div class="s-modal-backdrop" (click)="onBd($event)">
         <div class="s-modal narrow" (click)="$event.stopPropagation()">
           <div class="s-modal-header">
-            <span class="s-modal-title">Track Entity</span>
+            <span class="s-modal-title">{{ 'DOM_FALLBACK.TEXT_189' | translate }}</span>
             <button class="s-btn-icon" (click)="createModal.set(false)">x</button>
           </div>
           <div class="s-modal-body">
             @if (saveError()) { <div class="s-alert error" style="margin-bottom:12px;">{{ saveError() }}</div> }
             <div class="s-form-row single">
               <div class="s-field">
-                <label class="s-label">Entity *</label>
-                <input class="s-input mono" [ngModel]="newEntityText" (ngModelChange)="onEntityInput($event)" list="auditEntityCatalog" placeholder="Search entity..." />
+                <label class="s-label">{{ 'DOM_FALLBACK.TEXT_190' | translate }}</label>
+                <input class="s-input mono" [ngModel]="newEntityText" (ngModelChange)="onEntityInput($event)" list="auditEntityCatalog" placeholder="{{ 'DOM_FALLBACK.TEXT_381' | translate }}" />
               </div>
             </div>
             <div class="s-form-row single">
               <div class="s-field" style="flex-direction:row;align-items:center;gap:10px;">
                 <label class="s-toggle"><input type="checkbox" [(ngModel)]="newEntityActive" /><div class="s-toggle-track"></div><div class="s-toggle-thumb"></div></label>
-                <span style="font-size:13px;color:var(--s-text-2);">Active</span>
+                <span style="font-size:13px;color:var(--s-text-2);">{{ 'DOM_FALLBACK.TEXT_092' | translate }}</span>
               </div>
             </div>
           </div>
           <div class="s-modal-footer">
-            <button class="s-btn s-btn-ghost" (click)="createModal.set(false)">Cancel</button>
+            <button class="s-btn s-btn-ghost" (click)="createModal.set(false)">{{ 'SECURITY.CHANGE_PASSWORD.CANCEL' | translate }}</button>
             <button class="s-btn s-btn-primary" (click)="saveEntity()" [disabled]="saving()">{{ saving() ? 'Saving...' : 'Track' }}</button>
           </div>
         </div>
@@ -164,39 +165,39 @@ import { SecuApiService } from '../../services/secu-api.service';
             @if (saveError()) { <div class="s-alert error" style="margin-bottom:12px;">{{ saveError() }}</div> }
             <div class="field-manager">
               <div class="field-list">
-                <div class="field-list-head"><span>Available</span><span>{{ availableFields().length }}</span></div>
+                <div class="field-list-head"><span>{{ 'DOM_FALLBACK.TEXT_191' | translate }}</span><span>{{ availableFields().length }}</span></div>
                 @for (field of availableFields(); track field.idField) {
                   <div class="field-row" [class.selected]="availableSelection().has(field.idField)" (click)="toggleAvailable(field.idField)">
                     <span class="mono" style="font-size:11px;">{{ field.fieldName }}</span>
                     <span style="font-size:11px;color:var(--s-text-3);">{{ field.columnName || '-' }}</span>
                   </div>
                 } @empty {
-                  <div class="s-empty" style="padding:32px;"><div class="s-empty-text">No available fields</div></div>
+                  <div class="s-empty" style="padding:32px;"><div class="s-empty-text">{{ 'DOM_FALLBACK.TEXT_192' | translate }}</div></div>
                 }
               </div>
 
               <div class="move-buttons">
-                <button class="s-btn s-btn-primary s-btn-sm" (click)="addSelectedFields()" [disabled]="saving() || !availableSelection().size">Add</button>
-                <button class="s-btn s-btn-ghost s-btn-sm" (click)="addAllFields()" [disabled]="saving() || !availableFields().length">All</button>
-                <button class="s-btn s-btn-ghost s-btn-sm" (click)="removeSelectedFields()" [disabled]="saving() || !trackedSelection().size">Remove</button>
-                <button class="s-btn s-btn-danger s-btn-sm" (click)="removeAllFields()" [disabled]="saving() || !selected()!.fields.length">Clear</button>
+                <button class="s-btn s-btn-primary s-btn-sm" (click)="addSelectedFields()" [disabled]="saving() || !availableSelection().size">{{ 'DOM_FALLBACK.TEXT_193' | translate }}</button>
+                <button class="s-btn s-btn-ghost s-btn-sm" (click)="addAllFields()" [disabled]="saving() || !availableFields().length">{{ 'AUTO_INLINE_SECURITY_UI.ALL' | translate }}</button>
+                <button class="s-btn s-btn-ghost s-btn-sm" (click)="removeSelectedFields()" [disabled]="saving() || !trackedSelection().size">{{ 'AUTO_SECURITY_UI.REMOVE' | translate }}</button>
+                <button class="s-btn s-btn-danger s-btn-sm" (click)="removeAllFields()" [disabled]="saving() || !selected()!.fields.length">{{ 'AUTO_SECURITY_UI.CLEAR' | translate }}</button>
               </div>
 
               <div class="field-list">
-                <div class="field-list-head"><span>Tracked</span><span>{{ selected()!.fields.length }}</span></div>
+                <div class="field-list-head"><span>{{ 'DOM_FALLBACK.TEXT_195' | translate }}</span><span>{{ selected()!.fields.length }}</span></div>
                 @for (field of selected()!.fields; track field.idField) {
                   <div class="field-row" [class.selected]="trackedSelection().has(field.idField)" (click)="toggleTracked(field.idField)">
                     <span class="mono" style="font-size:11px;">{{ field.fieldName }}</span>
                     <span style="font-size:11px;color:var(--s-text-3);">{{ field.columnName || '-' }}</span>
                   </div>
                 } @empty {
-                  <div class="s-empty" style="padding:32px;"><div class="s-empty-text">No tracked fields</div></div>
+                  <div class="s-empty" style="padding:32px;"><div class="s-empty-text">{{ 'DOM_FALLBACK.TEXT_196' | translate }}</div></div>
                 }
               </div>
             </div>
           </div>
           <div class="s-modal-footer">
-            <button class="s-btn s-btn-ghost" (click)="fieldManagerModal.set(false)">Close</button>
+            <button class="s-btn s-btn-ghost" (click)="fieldManagerModal.set(false)">{{ 'AUTO_INLINE_SECURITY_UI.CLOSE' | translate }}</button>
           </div>
         </div>
       </div>
@@ -206,15 +207,15 @@ import { SecuApiService } from '../../services/secu-api.service';
       <div class="s-modal-backdrop" (click)="onBd($event)">
         <div class="s-modal narrow" (click)="$event.stopPropagation()">
           <div class="s-modal-header">
-            <span class="s-modal-title">Remove Tracking</span>
+            <span class="s-modal-title">{{ 'DOM_FALLBACK.TEXT_197' | translate }}</span>
             <button class="s-btn-icon" (click)="deleteModal.set(false)">x</button>
           </div>
           <div class="s-modal-body">
-            <p style="font-size:13px;color:var(--s-text-2);">Stop audit tracking for <strong class="mono" style="color:var(--s-accent);">{{ selected()?.entityName }}</strong>?</p>
+            <p style="font-size:13px;color:var(--s-text-2);">{{ 'DOM_FALLBACK.TEXT_198' | translate }} <strong class="mono" style="color:var(--s-accent);">{{ selected()?.entityName }}</strong>?</p>
           </div>
           <div class="s-modal-footer">
-            <button class="s-btn s-btn-ghost" (click)="deleteModal.set(false)">Cancel</button>
-            <button class="s-btn s-btn-danger" (click)="doDeleteEntity()">Remove</button>
+            <button class="s-btn s-btn-ghost" (click)="deleteModal.set(false)">{{ 'SECURITY.CHANGE_PASSWORD.CANCEL' | translate }}</button>
+            <button class="s-btn s-btn-danger" (click)="doDeleteEntity()">{{ 'AUTO_SECURITY_UI.REMOVE' | translate }}</button>
           </div>
         </div>
       </div>
@@ -449,3 +450,4 @@ export class AuditConfigComponent implements OnInit {
     return next;
   }
 }
+

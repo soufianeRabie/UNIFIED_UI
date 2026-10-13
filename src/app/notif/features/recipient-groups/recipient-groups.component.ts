@@ -14,6 +14,7 @@ import { RecipientGroupsService } from '../../core/services/recipient-groups.ser
 import { RecipientGroup, RecipientGroupMember } from '../../core/models/recipient-group';
 import { PermActionDirective } from '../../../secu/directives/perm-action.directive';
 import { formatHttpError } from '../../shared/utils/api-utils';
+import { TranslatePipe } from '@ngx-translate/core';
 
 const PAGE_CODE = 'NOTIF_GROUPS';
 
@@ -31,7 +32,8 @@ const PAGE_CODE = 'NOTIF_GROUPS';
     MessageModule,
     TableModule,
     TagModule,
-    PermActionDirective
+    PermActionDirective,
+    TranslatePipe
   ],
   templateUrl: './recipient-groups.component.html'
 })

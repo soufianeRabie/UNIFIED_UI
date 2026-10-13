@@ -1,12 +1,12 @@
 <div class="np-page">
   <div class="np-page-header">
     <div>
-      <div class="np-eyebrow"><i class="pi pi-send"></i> Eyebrow</div>
-      <div class="np-page-title">Page Title</div>
-      <div class="np-page-subtitle">Page Subtitle</div>
+      <div class="np-eyebrow"><i class="pi pi-send"></i> {{ 'NOTIF.EVENTS.EYEBROW' | translate }}</div>
+      <div class="np-page-title">{{ 'NOTIF.EVENTS.PAGE_TITLE' | translate }}</div>
+      <div class="np-page-subtitle">{{ 'NOTIF.EVENTS.PAGE_SUBTITLE' | translate }}</div>
     </div>
     <button class="np-btn np-btn--primary" [permAction]="perm.canCreate(PAGE_CODE)" (click)="publish()">
-      <i class="pi pi-send"></i> Publish Btn
+      <i class="pi pi-send"></i> {{ 'NOTIF.EVENTS.PUBLISH_BTN' | translate }}
     </button>
   </div>
 
@@ -16,51 +16,51 @@
     <!-- Payload form -->
     <div class="np-card">
       <div class="np-card-header">
-        <div class="np-card-title"><i class="pi pi-bolt"></i> Payload Title</div>
+        <div class="np-card-title"><i class="pi pi-bolt"></i> {{ 'NOTIF.EVENTS.PAYLOAD_TITLE' | translate }}</div>
       </div>
       <div class="np-card-body">
         <form class="np-form" [formGroup]="form">
           <div class="np-form-row">
             <div class="np-field">
-              <label class="np-label">Tenant Id <span class="np-muted" style="font-size:11px">(Optional)</span></label>
-              <input pInputText formControlName="tenantId" placeholder="Tenant Id Placeholder" />
+              <label class="np-label">{{ 'NOTIF.EVENTS.FORM.TENANT_ID' | translate }} <span class="np-muted" style="font-size:11px">({{ 'COMMON.OPTIONAL' | translate }})</span></label>
+              <input pInputText formControlName="tenantId" [placeholder]="'NOTIF.EVENTS.FORM.TENANT_ID_PLACEHOLDER' | translate" />
             </div>
             <div class="np-field">
-              <label class="np-label">Event Type <span style="color:var(--s-red)">*</span></label>
+              <label class="np-label">{{ 'NOTIF.EVENTS.FORM.EVENT_TYPE' | translate }} <span style="color:var(--s-red)">*</span></label>
               <p-select
                 [options]="eventTypeOptions"
                 formControlName="eventType"
-                placeholder="Event Type Placeholder"
+                [placeholder]="'NOTIF.EVENTS.FORM.EVENT_TYPE_PLACEHOLDER' | translate"
                 [filter]="true"
               ></p-select>
               <span class="np-hint" *ngIf="selectedEventType">
-                Expected: <span class="np-code">{{ selectedEventType.expectedPayload || '{}' }}</span>
+                {{ 'AUTO_SECURITY_UI.EXPECTED' | translate }} <span class="np-code">{{ selectedEventType.expectedPayload || '{}' }}</span>
               </span>
             </div>
           </div>
           <div class="np-field">
-            <label class="np-label">Data <span class="np-muted" style="font-size:11px">(Data Hint Inline)</span></label>
+            <label class="np-label">{{ 'NOTIF.EVENTS.FORM.DATA' | translate }} <span class="np-muted" style="font-size:11px">({{ 'NOTIF.EVENTS.FORM.DATA_HINT_INLINE' | translate }})</span></label>
             <textarea pTextarea formControlName="data" rows="6"
               placeholder='{ "userId": "123", "orderId": "456" }'></textarea>
-            <span class="np-hint">Data Hint</span>
+            <span class="np-hint">{{ 'NOTIF.EVENTS.FORM.DATA_HINT' | translate }}</span>
           </div>
           <div class="np-form-row">
             <div class="np-field">
-              <label class="np-label">Correlation Id</label>
+              <label class="np-label">{{ 'NOTIF.EVENTS.FORM.CORRELATION_ID' | translate }}</label>
               <input pInputText formControlName="correlationId" />
             </div>
             <div class="np-field">
-              <label class="np-label">Override Recipient</label>
+              <label class="np-label">{{ 'NOTIF.EVENTS.FORM.OVERRIDE_RECIPIENT' | translate }}</label>
               <input pInputText formControlName="overrideRecipientId" />
             </div>
           </div>
           <div class="np-form-row">
             <div class="np-field">
-              <label class="np-label">Language Code</label>
-              <input pInputText formControlName="languageCode" placeholder="en" />
+              <label class="np-label">{{ 'NOTIF.EVENTS.FORM.LANGUAGE_CODE' | translate }}</label>
+              <input pInputText formControlName="languageCode" [placeholder]="'AUTO_SECURITY_UI.EN' | translate" />
             </div>
             <div class="np-field">
-              <label class="np-label">Scheduled At <span class="np-muted" style="font-size:11px">(Scheduled At Hint Inline)</span></label>
+              <label class="np-label">{{ 'NOTIF.EVENTS.FORM.SCHEDULED_AT' | translate }} <span class="np-muted" style="font-size:11px">({{ 'NOTIF.EVENTS.FORM.SCHEDULED_AT_HINT_INLINE' | translate }})</span></label>
               <input pInputText formControlName="scheduledAt" placeholder="2026-03-24T08:00:00Z" />
             </div>
           </div>
@@ -71,13 +71,13 @@
     <!-- Result -->
     <div class="np-card">
       <div class="np-card-header">
-        <div class="np-card-title"><i class="pi pi-eye"></i> Result Title</div>
+        <div class="np-card-title"><i class="pi pi-eye"></i> {{ 'NOTIF.EVENTS.RESULT_TITLE' | translate }}</div>
       </div>
       <div class="np-card-body">
         <div *ngIf="!result" class="np-empty">
           <i class="pi pi-send"></i>
-          <div class="np-empty-title">No Result Title</div>
-          <p class="np-muted" style="font-size:12px">No Result Desc</p>
+          <div class="np-empty-title">{{ 'NOTIF.EVENTS.NO_RESULT_TITLE' | translate }}</div>
+          <p class="np-muted" style="font-size:12px">{{ 'NOTIF.EVENTS.NO_RESULT_DESC' | translate }}</p>
         </div>
         <pre *ngIf="result" style="font-size:12px;color:var(--s-text);background:var(--s-bg-3);padding:14px;border-radius:6px;overflow:auto;margin:0">{{ result | json }}</pre>
       </div>
@@ -86,15 +86,15 @@
           <div class="np-row-item">
             <div class="np-row-icon"><i class="pi pi-code"></i></div>
             <div class="np-row-body">
-              <div class="np-row-name">Vars Title</div>
-              <div class="np-row-meta">Vars Desc</div>
+              <div class="np-row-name">{{ 'NOTIF.EVENTS.INFO.VARS_TITLE' | translate }}</div>
+              <div class="np-row-meta">{{ 'NOTIF.EVENTS.INFO.VARS_DESC' | translate }}</div>
             </div>
           </div>
           <div class="np-row-item">
             <div class="np-row-icon"><i class="pi pi-clock"></i></div>
             <div class="np-row-body">
-              <div class="np-row-name">Scheduled Title</div>
-              <div class="np-row-meta">Scheduled Desc</div>
+              <div class="np-row-name">{{ 'NOTIF.EVENTS.INFO.SCHEDULED_TITLE' | translate }}</div>
+              <div class="np-row-meta">{{ 'NOTIF.EVENTS.INFO.SCHEDULED_DESC' | translate }}</div>
             </div>
           </div>
         </div>

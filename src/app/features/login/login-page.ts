@@ -3,14 +3,16 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { MessageModule } from 'primeng/message';
+import { TranslatePipe } from '@ngx-translate/core';
 
 import { AuthStore } from '../../core/stores/auth.store';
 import { OidcAuthService } from '../../core/services/oidc-auth.service';
+import { LangSwitcherComponent } from '../../shared/components/lang-switcher.component';
 
 @Component({
   selector: 'app-login-page',
   standalone: true,
-  imports: [CommonModule, ButtonModule, MessageModule],
+  imports: [CommonModule, ButtonModule, MessageModule, TranslatePipe, LangSwitcherComponent],
   templateUrl: './login-page.html',
   styleUrl: './login-page.scss',
 })

@@ -1,10 +1,10 @@
 <div class="np-page">
   <div class="np-page-header">
     <div>
-      <div class="np-eyebrow"><i class="pi pi-user"></i> Personal</div>
-      <div class="np-page-title">My Notification Preferences</div>
+      <div class="np-eyebrow"><i class="pi pi-user"></i> {{ 'DOM_FALLBACK.TEXT_013' | translate }}</div>
+      <div class="np-page-title">{{ 'DOM_FALLBACK.TEXT_014' | translate }}</div>
       <div class="np-page-subtitle">
-        Choose how you receive notifications. Signed in as <strong style="color:var(--s-text)">{{ userId() || 'unknown' }}</strong>.
+        {{ 'DOM_FALLBACK.TEXT_015' | translate }} <strong style="color:var(--s-text)">{{ userId() || 'unknown' }}</strong>.
       </div>
     </div>
   </div>
@@ -15,12 +15,12 @@
     <!-- Channel preferences -->
     <div class="np-card">
       <div class="np-card-header">
-        <div class="np-card-title"><i class="pi pi-send"></i> Notification Channels</div>
+        <div class="np-card-title"><i class="pi pi-send"></i> {{ 'DOM_FALLBACK.TEXT_016' | translate }}</div>
       </div>
       <div class="np-card-body">
         <div class="np-empty np-empty--compact" *ngIf="channels().length === 0">
           <i class="pi pi-send"></i>
-          <div>No channels available.</div>
+          <div>{{ 'DOM_FALLBACK.TEXT_017' | translate }}</div>
         </div>
         <div class="np-toggle-list">
           <div class="np-toggle-item" *ngFor="let pref of channels()">
@@ -41,14 +41,14 @@
     <!-- Browser push + devices -->
     <div class="np-card">
       <div class="np-card-header">
-        <div class="np-card-title"><i class="pi pi-bell"></i> Browser Notifications</div>
+        <div class="np-card-title"><i class="pi pi-bell"></i> {{ 'DOM_FALLBACK.TEXT_018' | translate }}</div>
         <ng-container *ngIf="webPush.isSupported; else unsupportedBadge">
           <span [class]="'np-badge ' + (webPush.permission === 'granted' ? 'np-badge--green' : 'np-badge--gray')">
             {{ webPush.permission === 'granted' ? 'Enabled' : 'Not enabled' }}
           </span>
         </ng-container>
         <ng-template #unsupportedBadge>
-          <span class="np-badge np-badge--amber">Unsupported</span>
+          <span class="np-badge np-badge--amber">{{ 'DOM_FALLBACK.TEXT_019' | translate }}</span>
         </ng-template>
       </div>
       <div class="np-card-body">
@@ -57,27 +57,27 @@
             <i class="pi pi-bell" [style.color]="webPush.permission === 'granted' ? 'var(--s-green)' : 'var(--s-text-2)'"></i>
           </div>
           <div class="np-row-body">
-            <div class="np-row-name">Web Push</div>
-            <div class="np-row-meta">Receive notifications on this device even when the app is closed.</div>
+            <div class="np-row-name">{{ 'DOM_FALLBACK.TEXT_020' | translate }}</div>
+            <div class="np-row-meta">{{ 'DOM_FALLBACK.TEXT_021' | translate }}</div>
           </div>
         </div>
         <button class="np-btn np-btn--primary" style="width:100%"
           [disabled]="!webPush.isSupported || busy()" (click)="enableBrowserPush()">
-          <i class="pi pi-bell"></i> Enable Browser Notifications
+          <i class="pi pi-bell"></i> {{ 'DOM_FALLBACK.TEXT_022' | translate }}
         </button>
       </div>
 
       <div class="np-card-header" style="border-top:1px solid var(--s-border);padding-top:12px">
-        <div class="np-card-title"><i class="pi pi-desktop"></i> My Devices</div>
+        <div class="np-card-title"><i class="pi pi-desktop"></i> {{ 'DOM_FALLBACK.TEXT_023' | translate }}</div>
         <span class="np-badge np-badge--gray">{{ devices().length }}</span>
       </div>
       <div class="np-card-body np-card-body--flush">
         <p-table [value]="devices()" styleClass="p-datatable-sm">
           <ng-template pTemplate="header">
             <tr>
-              <th>Device</th>
-              <th>Platform</th>
-              <th style="width:80px">Status</th>
+              <th>{{ 'DOM_FALLBACK.TEXT_024' | translate }}</th>
+              <th>{{ 'DOM_FALLBACK.TEXT_025' | translate }}</th>
+              <th style="width:80px">{{ 'DOM_FALLBACK.TEXT_026' | translate }}</th>
               <th style="width:80px"></th>
             </tr>
           </ng-template>
@@ -101,7 +101,7 @@
           </ng-template>
           <ng-template pTemplate="emptymessage">
             <tr><td colspan="4">
-              <div class="np-empty np-empty--compact"><i class="pi pi-desktop"></i><div>No registered devices.</div></div>
+              <div class="np-empty np-empty--compact"><i class="pi pi-desktop"></i><div>{{ 'DOM_FALLBACK.TEXT_027' | translate }}</div></div>
             </td></tr>
           </ng-template>
         </p-table>

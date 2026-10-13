@@ -16,6 +16,7 @@ import { ReferenceItem } from '../../core/models/reference';
 import { UserPreference } from '../../core/models/user-preference';
 import { UserDevice } from '../../core/models/user-device';
 import { formatHttpError } from '../../shared/utils/api-utils';
+import { TranslatePipe } from '@ngx-translate/core';
 
 interface ChannelPref {
   channelId: number;
@@ -34,7 +35,8 @@ interface ChannelPref {
     ToggleSwitchModule,
     TableModule,
     TagModule,
-    MessageModule
+    MessageModule,
+    TranslatePipe
   ],
   templateUrl: './my-preferences.component.html'
 })

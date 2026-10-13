@@ -1,19 +1,21 @@
 ﻿import { Component, OnDestroy, OnInit, signal, inject, computed } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive, Router, NavigationEnd } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 import { filter } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { PermissionService, SecuMenuItem } from './core/services/permission.service';
 import { AuthStore } from '../core/stores/auth.store';
 import { NotificationsService } from './core/services/notifications.service';
 import { RealtimeService } from './core/services/realtime.service';
+import { LangSwitcherComponent } from '../shared/components/lang-switcher.component';
 
 interface NavItem { label: string; path: string; icon: string; }
 
 @Component({
   selector: 'notif-layout',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, CommonModule],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, CommonModule, TranslatePipe, LangSwitcherComponent],
   template: `
     <div class="nl-shell">
       <!-- Sidebar -->
@@ -22,7 +24,7 @@ interface NavItem { label: string; path: string; icon: string; }
           <div class="nl-brand-icon">
             <i class="pi pi-bell"></i>
           </div>
-          <span class="nl-brand-name">Notifications</span>
+          <span class="nl-brand-name">{{ 'NOTIF.BRAND' | translate }}</span>
         </div>
 
         <nav class="nl-nav">
@@ -43,7 +45,7 @@ interface NavItem { label: string; path: string; icon: string; }
         <div class="nl-sidebar-footer">
           <button class="nl-collapse-btn" (click)="toggle()" type="button">
             <i class="pi" [class.pi-chevron-left]="!collapsed()" [class.pi-chevron-right]="collapsed()"></i>
-            <span class="nl-nav-label">Collapse</span>
+            <span class="nl-nav-label">{{ 'NOTIF.COLLAPSE' | translate }}</span>
           </button>
         </div>
       </aside>
@@ -54,7 +56,7 @@ interface NavItem { label: string; path: string; icon: string; }
           <div class="nl-topbar-left">
             <i class="pi pi-bell nl-topbar-icon"></i>
             <div class="nl-topbar-breadcrumb">
-              <span class="nl-topbar-module">Notifications</span>
+              <span class="nl-topbar-module">{{ 'NOTIF.MODULE_LABEL' | translate }}</span>
               @if (currentPageLabel()) {
                 <i class="pi pi-chevron-right nl-topbar-sep"></i>
                 <span class="nl-topbar-page">{{ currentPageLabel() }}</span>
@@ -65,9 +67,10 @@ interface NavItem { label: string; path: string; icon: string; }
             @if (unreadCount() > 0) {
               <div class="nl-topbar-badge">
                 <i class="pi pi-inbox"></i>
-                <span>{{ '{{count}} unread': { count: unreadCount() } }}</span>
+                <span>{{ 'NOTIF.UNREAD_COUNT' | translate: { count: unreadCount() } }}</span>
               </div>
             }
+            <app-lang-switcher />
             <a class="nl-topbar-btn" routerLink="/notif/settings">
               <i class="pi pi-cog"></i>
             </a>

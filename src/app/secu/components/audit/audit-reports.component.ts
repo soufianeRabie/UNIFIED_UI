@@ -1,14 +1,15 @@
-import { CommonModule } from '@angular/common';
+﻿import { CommonModule } from '@angular/common';
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { catchError, of } from 'rxjs';
 import { SecuAuditLogDto } from '../../models/secu.models';
 import { SecuApiService } from '../../services/secu-api.service';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-audit-reports',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslatePipe],
   styles: [`
     .report-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px; margin-bottom:18px; }
     @media (max-width: 980px) { .report-grid { grid-template-columns:1fr 1fr; } }
@@ -23,30 +24,30 @@ import { SecuApiService } from '../../services/secu-api.service';
   template: `
     <div class="s-page-header">
       <div>
-        <h1 class="s-page-title">Audit Reports</h1>
-        <p class="s-page-subtitle">Operational summary generated from audit log entries.</p>
+        <h1 class="s-page-title">{{ 'DOM_FALLBACK.TEXT_216' | translate }}</h1>
+        <p class="s-page-subtitle">{{ 'DOM_FALLBACK.TEXT_217' | translate }}</p>
       </div>
-      <button class="s-btn s-btn-ghost" (click)="load()">Refresh</button>
+      <button class="s-btn s-btn-ghost" (click)="load()">{{ 'DOM_FALLBACK.TEXT_031' | translate }}</button>
     </div>
 
     <div class="s-toolbar" style="margin-bottom:16px;gap:8px;flex-wrap:wrap;">
       <input class="s-input" style="width:180px;" type="date" [(ngModel)]="dateFrom" />
       <input class="s-input" style="width:180px;" type="date" [(ngModel)]="dateTo" />
-      <button class="s-btn s-btn-primary s-btn-sm" (click)="load()">Apply</button>
+      <button class="s-btn s-btn-primary s-btn-sm" (click)="load()">{{ 'DOM_FALLBACK.TEXT_218' | translate }}</button>
     </div>
 
     @if (loading()) {
-      <div class="s-card"><div class="s-empty"><div class="s-empty-text">Loading reports...</div></div></div>
+      <div class="s-card"><div class="s-empty"><div class="s-empty-text">{{ 'DOM_FALLBACK.TEXT_219' | translate }}</div></div></div>
     } @else {
       <div class="report-grid">
-        <div class="report-card"><div class="report-title">Total Entries</div><div class="report-value">{{ logs().length }}</div></div>
-        <div class="report-card"><div class="report-title">Updates</div><div class="report-value">{{ countOp('UPDATE') }}</div></div>
-        <div class="report-card"><div class="report-title">Deletes</div><div class="report-value">{{ countOp('DELETE') }}</div></div>
-        <div class="report-card"><div class="report-title">Active Users</div><div class="report-value">{{ usersCount() }}</div></div>
+        <div class="report-card"><div class="report-title">{{ 'DOM_FALLBACK.TEXT_220' | translate }}</div><div class="report-value">{{ logs().length }}</div></div>
+        <div class="report-card"><div class="report-title">{{ 'DOM_FALLBACK.TEXT_221' | translate }}</div><div class="report-value">{{ countOp('UPDATE') }}</div></div>
+        <div class="report-card"><div class="report-title">{{ 'DOM_FALLBACK.TEXT_222' | translate }}</div><div class="report-value">{{ countOp('DELETE') }}</div></div>
+        <div class="report-card"><div class="report-title">{{ 'DOM_FALLBACK.TEXT_223' | translate }}</div><div class="report-value">{{ usersCount() }}</div></div>
       </div>
 
       <div class="s-card">
-        <h2 style="font-size:14px;margin:0 0 12px;color:var(--s-text);">Top Changed Entities</h2>
+        <h2 style="font-size:14px;margin:0 0 12px;color:var(--s-text);">{{ 'DOM_FALLBACK.TEXT_224' | translate }}</h2>
         @for (row of entityReport(); track row.name) {
           <div class="bar-row">
             <span class="mono" style="font-size:11px;color:var(--s-accent);overflow:hidden;text-overflow:ellipsis;">{{ row.name }}</span>
@@ -54,7 +55,7 @@ import { SecuApiService } from '../../services/secu-api.service';
             <span class="mono" style="font-size:11px;color:var(--s-text-2);text-align:right;">{{ row.count }}</span>
           </div>
         } @empty {
-          <div class="s-empty"><div class="s-empty-text">No audit data for this period</div></div>
+          <div class="s-empty"><div class="s-empty-text">{{ 'DOM_FALLBACK.TEXT_225' | translate }}</div></div>
         }
       </div>
     }
@@ -107,3 +108,4 @@ export class AuditReportsComponent implements OnInit {
     return Math.max(6, (count / max) * 100);
   }
 }
+

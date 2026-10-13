@@ -1,61 +1,62 @@
-import { Component, DestroyRef, OnInit, signal, inject } from '@angular/core';
+﻿import { Component, DestroyRef, OnInit, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterLink, NavigationEnd } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { Subject, debounceTime, switchMap, catchError, of, filter } from 'rxjs';
+import { Subject, debounceTime, switchMap, catchError, of } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SecuApiService } from '../../services/secu-api.service';
 import { SecuPaginationComponent } from '../shared/secu-pagination.component';
 import { SecuGroupDto } from '../../models/secu.models';
 import { PermActionDirective } from '../../directives/perm-action.directive';
 import { PermissionService } from '../../services/permission.service';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-groups-list',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule, SecuPaginationComponent, PermActionDirective],
+  imports: [CommonModule, RouterLink, FormsModule, SecuPaginationComponent, PermActionDirective, TranslatePipe],
   template: `
     <div class="s-page-header">
       <div>
-        <h1 class="s-page-title">Groups</h1>
-        <p class="s-page-subtitle">Organize users into groups with shared roles</p>
+        <h1 class="s-page-title">{{ 'SECU.GROUPS.TITLE' | translate }}</h1>
+        <p class="s-page-subtitle">{{ 'SECU.GROUPS.SUBTITLE' | translate }}</p>
       </div>
       <button
         class="s-btn s-btn-primary"
-        [permAction]="permissionService.canCreate(effectivePageCode)"
+        [permAction]="permissionService.canCreate(effectivePageCode())"
         (click)="openCreate()"
       >
-        + New Group
+        {{ 'SECU.GROUPS.NEW' | translate }}
       </button>
     </div>
 
     <div class="s-card">
       <div class="s-toolbar">
         <div class="s-search">
-          <span class="s-search-icon">🔍</span>
-          <input placeholder="Search groups…" [(ngModel)]="searchTerm" (ngModelChange)="reload()" />
+          <span class="s-search-icon">�</span>
+          <input [placeholder]="'SECU.GROUPS.SEARCH_PLACEHOLDER' | translate" [(ngModel)]="searchTerm" (ngModelChange)="reload()" />
         </div>
         <label class="s-toggle">
           <input type="checkbox" [(ngModel)]="includeInactive" (change)="reload()" />
           <div class="s-toggle-track"></div>
           <div class="s-toggle-thumb"></div>
         </label>
-        <span style="font-size:12px; color: var(--s-text-2);">Show inactive</span>
+        <span style="font-size:12px; color: var(--s-text-2);">{{ 'COMMON.SHOW_INACTIVE' | translate }}</span>
       </div>
 
       @if (loading()) {
-        <div class="s-empty"><div class="s-empty-text">Loading…</div></div>
+        <div class="s-empty"><div class="s-empty-text">{{ 'COMMON.LOADING' | translate }}</div></div>
       } @else {
         <div class="s-table-wrap">
           <table class="s-table">
             <thead>
               <tr>
                 <th>#</th>
-                <th>Code</th>
-                <th>Name</th>
-                <th>App</th>
-                <th>Status</th>
-                <th>Created</th>
+                <th>{{ 'COMMON.CODE' | translate }}</th>
+                <th>{{ 'COMMON.NAME' | translate }}</th>
+                <th>{{ 'COMMON.APP' | translate }}</th>
+                <th>{{ 'COMMON.STATUS' | translate }}</th>
+                <th>{{ 'COMMON.CREATED' | translate }}</th>
                 <th></th>
               </tr>
             </thead>
@@ -75,7 +76,7 @@ import { PermissionService } from '../../services/permission.service';
                       class="s-badge"
                       [class.active]="g.isActive"
                       [class.inactive]="!g.isActive"
-                      >{{ g.isActive ? 'Active' : 'Inactive' }}</span
+                      >{{ (g.isActive ? 'COMMON.ACTIVE' : 'COMMON.INACTIVE') | translate }}</span
                     >
                   </td>
                   <td style="color:var(--s-text-2);font-size:12px">
@@ -85,24 +86,24 @@ import { PermissionService } from '../../services/permission.service';
                     <div style="display:flex;gap:6px;justify-content:flex-end">
                       <a
                         class="s-btn-icon"
-                        [permAction]="permissionService.canRead(effectivePageCode)"
+                        [permAction]="permissionService.canRead(effectivePageCode())"
                         [routerLink]="[g.idGroup]"
-                        title="Manage roles"
-                        >👁</a
+                        [title]="'SECU.GROUPS.MANAGE_ROLES_TITLE' | translate"
+                        >�</a
                       >
                       <button
                         class="s-btn-icon"
-                        [permAction]="permissionService.canUpdate(effectivePageCode)"
+                        [permAction]="permissionService.canUpdate(effectivePageCode())"
                         (click)="openEdit(g)"
                       >
-                        ✏
+                        �
                       </button>
                       <button
                         class="s-btn-icon danger"
-                        [permAction]="permissionService.canDelete(effectivePageCode)"
+                        [permAction]="permissionService.canDelete(effectivePageCode())"
                         (click)="confirmDelete(g)"
                       >
-                        🗑
+                        �—‘
                       </button>
                     </div>
                   </td>
@@ -110,7 +111,7 @@ import { PermissionService } from '../../services/permission.service';
               } @empty {
                 <tr>
                   <td colspan="7">
-                    <div class="s-empty"><div class="s-empty-text">No groups found</div></div>
+                    <div class="s-empty"><div class="s-empty-text">{{ 'SECU.GROUPS.EMPTY' | translate }}</div></div>
                   </td>
                 </tr>
               }
@@ -131,16 +132,16 @@ import { PermissionService } from '../../services/permission.service';
       <div class="s-modal-backdrop" (click)="onBackdrop($event)">
         <div class="s-modal narrow">
           <div class="s-modal-header">
-            <span class="s-modal-title">{{ editGroup() ? 'Edit Group' : 'Create Group' }}</span>
+            <span class="s-modal-title">{{ (editGroup() ? 'SECU.GROUPS.MODAL.EDIT_TITLE' : 'SECU.GROUPS.MODAL.CREATE_TITLE') | translate }}</span>
             <button class="s-btn-icon" (click)="closeModal()">✕</button>
           </div>
           <div class="s-modal-body">
             @if (saveError()) {
-              <div class="s-alert error">⚠ {{ saveError() }}</div>
+              <div class="s-alert error">�  {{ saveError() }}</div>
             }
             <div class="s-form-row single">
               <div class="s-field">
-                <label class="s-label">Group Code *</label>
+                <label class="s-label">{{ 'SECU.GROUPS.MODAL.GROUP_CODE' | translate }}</label>
                 <input
                   class="s-input mono"
                   [(ngModel)]="form.groupCode"
@@ -151,11 +152,11 @@ import { PermissionService } from '../../services/permission.service';
             </div>
             <div class="s-form-row single">
               <div class="s-field">
-                <label class="s-label">Group Name *</label>
+                <label class="s-label">{{ 'SECU.GROUPS.MODAL.GROUP_NAME' | translate }}</label>
                 <input
                   class="s-input"
                   [(ngModel)]="form.groupName"
-                  placeholder="Fleet Team"
+                  placeholder="{{ 'AUTO_INLINE_SECURITY_UI.FLEET_TEAM' | translate }}"
                   maxlength="150"
                 />
               </div>
@@ -170,14 +171,14 @@ import { PermissionService } from '../../services/permission.service';
                   <div class="s-toggle-track"></div>
                   <div class="s-toggle-thumb"></div>
                 </label>
-                <span class="s-label">Active</span>
+                <span class="s-label">{{ 'COMMON.ACTIVE' | translate }}</span>
               </div>
             }
           </div>
           <div class="s-modal-footer">
-            <button class="s-btn s-btn-ghost" (click)="closeModal()">Cancel</button>
+            <button class="s-btn s-btn-ghost" (click)="closeModal()">{{ 'COMMON.CANCEL' | translate }}</button>
             <button class="s-btn s-btn-primary" (click)="save()" [disabled]="saving()">
-              {{ saving() ? 'Saving…' : editGroup() ? 'Update' : 'Create' }}
+              {{ saving() ? ('COMMON.SAVING' | translate) : editGroup() ? ('COMMON.UPDATE' | translate) : ('COMMON.CREATE' | translate) }}
             </button>
           </div>
         </div>
@@ -188,21 +189,19 @@ import { PermissionService } from '../../services/permission.service';
       <div class="s-modal-backdrop" (click)="onBackdrop($event)">
         <div class="s-modal narrow">
           <div class="s-modal-header">
-            <span class="s-modal-title">Delete Group</span>
+            <span class="s-modal-title">{{ 'SECU.GROUPS.DELETE.TITLE' | translate }}</span>
             <button class="s-btn-icon" (click)="deleteTarget.set(null)">✕</button>
           </div>
           <div class="s-modal-body">
             <p style="font-size:13px;color:var(--s-text-2)">
-              Deactivate group
-              <strong style="color:var(--s-purple);font-family:var(--s-mono)">{{
-                deleteTarget()!.groupCode
-              }}</strong
-              >?
-            </p>
+                            <p style="font-size:13px;color:var(--s-text-2)">
+              {{ 'SECU.GROUPS.DELETE.CONFIRM_PREFIX' | translate }}
+              <strong style="color:var(--s-purple);font-family:var(--s-mono)">{{ deleteTarget()!.groupCode }}</strong>?
+              </p>
           </div>
           <div class="s-modal-footer">
-            <button class="s-btn s-btn-ghost" (click)="deleteTarget.set(null)">Cancel</button>
-            <button class="s-btn s-btn-danger" (click)="doDelete()">Delete</button>
+            <button class="s-btn s-btn-ghost" (click)="deleteTarget.set(null)">{{ 'COMMON.CANCEL' | translate }}</button>
+            <button class="s-btn s-btn-danger" (click)="doDelete()">{{ 'COMMON.DELETE' | translate }}</button>
           </div>
         </div>
       </div>
@@ -215,9 +214,7 @@ export class GroupsListComponent implements OnInit {
   public permissionService = inject(PermissionService);
   private destroyRef = inject(DestroyRef);
 
-  /** Fallback for required permission checks */
-  readonly defaultPageCode = 'GROUPS_MANAGEMENT';
-  currentPageCode = signal<string | null>(null);
+  readonly defaultPageCode = 'GROUPS_LIST';
 
   groups = signal<SecuGroupDto[]>([]);
   loading = signal(true);
@@ -237,11 +234,6 @@ export class GroupsListComponent implements OnInit {
   private search$ = new Subject<void>();
 
   ngOnInit() {
-    this.setPageCodeFromUrl(this.router.url);
-    this.router.events.pipe(filter((e) => e instanceof NavigationEnd)).subscribe((event: any) => {
-      this.setPageCodeFromUrl(event.urlAfterRedirects || event.url || this.router.url);
-    });
-
     this.search$
       .pipe(
         debounceTime(300),
@@ -269,14 +261,10 @@ export class GroupsListComponent implements OnInit {
     this.reload();
   }
 
-  private setPageCodeFromUrl(url: string): void {
-    const pageCode = this.permissionService.getPageCodeForUrl(url);
-    this.currentPageCode.set(pageCode);
-  }
-
-  get effectivePageCode(): string {
-    return this.currentPageCode() ?? this.defaultPageCode;
-  }
+  readonly effectivePageCode = computed(() => {
+    this.permissionService.loaded();
+    return this.permissionService.getPageCodeForUrl(this.router.url) ?? this.defaultPageCode;
+  });
 
   reload() {
     this.page = 1;
@@ -352,3 +340,4 @@ export class GroupsListComponent implements OnInit {
       });
   }
 }
+

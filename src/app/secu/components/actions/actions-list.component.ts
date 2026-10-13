@@ -1,31 +1,32 @@
-import { Component, DestroyRef, OnInit, signal, inject } from '@angular/core';
+﻿import { Component, DestroyRef, OnInit, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterLink, NavigationEnd } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { Subject, debounceTime, switchMap, catchError, of, filter } from 'rxjs';
+import { Subject, debounceTime, switchMap, catchError, of } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SecuApiService } from '../../services/secu-api.service';
 import { SecuPaginationComponent } from '../shared/secu-pagination.component';
 import { SecuActionDto } from '../../models/secu.models';
 import { PermActionDirective } from '../../directives/perm-action.directive';
 import { PermissionService } from '../../services/permission.service';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-actions-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, SecuPaginationComponent, PermActionDirective],
+  imports: [CommonModule, FormsModule, SecuPaginationComponent, PermActionDirective, TranslatePipe],
   template: `
     <div class="s-page-header">
       <div>
-        <h1 class="s-page-title">Actions</h1>
-        <p class="s-page-subtitle">Action catalog — VIEW, CREATE, EDIT, DELETE and custom codes</p>
+        <h1 class="s-page-title">{{ 'SECU.ACTIONS.TITLE' | translate }}</h1>
+        <p class="s-page-subtitle">{{ 'SECU.ACTIONS.SUBTITLE' | translate }}</p>
       </div>
       <button
         class="s-btn s-btn-primary"
-        [permAction]="permissionService.canCreate(effectivePageCode)"
+        [permAction]="permissionService.canCreate(effectivePageCode())"
         (click)="openCreate()"
       >
-        + New Action
+        {{ 'SECU.ACTIONS.NEW' | translate }}
       </button>
     </div>
 
@@ -34,7 +35,7 @@ import { PermissionService } from '../../services/permission.service';
         <div class="s-search">
           <span class="s-search-icon">🔍</span>
           <input
-            placeholder="Search actions…"
+            [placeholder]="'SECU.ACTIONS.SEARCH_PLACEHOLDER' | translate"
             [(ngModel)]="searchTerm"
             (ngModelChange)="reload()"
           />
@@ -44,20 +45,20 @@ import { PermissionService } from '../../services/permission.service';
           <div class="s-toggle-track"></div>
           <div class="s-toggle-thumb"></div>
         </label>
-        <span style="font-size:12px;color:var(--s-text-2)">Show inactive</span>
+        <span style="font-size:12px;color:var(--s-text-2)">{{ 'COMMON.SHOW_INACTIVE' | translate }}</span>
       </div>
 
       @if (loading()) {
-        <div class="s-empty"><div class="s-empty-text">Loading…</div></div>
+        <div class="s-empty"><div class="s-empty-text">{{ 'COMMON.LOADING' | translate }}</div></div>
       } @else {
         <div class="s-table-wrap">
           <table class="s-table">
             <thead>
               <tr>
                 <th>#</th>
-                <th>Code</th>
-                <th>Name</th>
-                <th>Status</th>
+                <th>{{ 'COMMON.CODE' | translate }}</th>
+                <th>{{ 'COMMON.NAME' | translate }}</th>
+                <th>{{ 'COMMON.STATUS' | translate }}</th>
                 <th></th>
               </tr>
             </thead>
@@ -74,21 +75,21 @@ import { PermissionService } from '../../services/permission.service';
                       class="s-badge"
                       [class.active]="a.isActive"
                       [class.inactive]="!a.isActive"
-                      >{{ a.isActive ? 'Active' : 'Inactive' }}</span
+                      >{{ (a.isActive ? 'COMMON.ACTIVE' : 'COMMON.INACTIVE') | translate }}</span
                     >
                   </td>
                   <td>
                     <div style="display:flex;gap:6px;justify-content:flex-end">
                       <button
                         class="s-btn-icon"
-                        [permAction]="permissionService.canUpdate(effectivePageCode)"
+                        [permAction]="permissionService.canUpdate(effectivePageCode())"
                         (click)="openEdit(a)"
                       >
                         ✏
                       </button>
                       <button
                         class="s-btn-icon danger"
-                        [permAction]="permissionService.canDelete(effectivePageCode)"
+                        [permAction]="permissionService.canDelete(effectivePageCode())"
                         (click)="confirmDelete(a)"
                       >
                         🗑
@@ -99,7 +100,7 @@ import { PermissionService } from '../../services/permission.service';
               } @empty {
                 <tr>
                   <td colspan="5">
-                    <div class="s-empty"><div class="s-empty-text">No actions found</div></div>
+                    <div class="s-empty"><div class="s-empty-text">{{ 'SECU.ACTIONS.EMPTY' | translate }}</div></div>
                   </td>
                 </tr>
               }
@@ -120,7 +121,7 @@ import { PermissionService } from '../../services/permission.service';
       <div class="s-modal-backdrop" (click)="onBackdrop($event)">
         <div class="s-modal narrow">
           <div class="s-modal-header">
-            <span class="s-modal-title">{{ editAction() ? 'Edit Action' : 'Create Action' }}</span>
+            <span class="s-modal-title">{{ (editAction() ? 'SECU.ACTIONS.EDIT_TITLE' : 'SECU.ACTIONS.CREATE_TITLE') | translate }}</span>
             <button class="s-btn-icon" (click)="closeModal()">✕</button>
           </div>
           <div class="s-modal-body">
@@ -129,7 +130,7 @@ import { PermissionService } from '../../services/permission.service';
             }
             <div class="s-form-row single">
               <div class="s-field">
-                <label class="s-label">Action Code * (A-Z, _)</label>
+                <label class="s-label">{{ 'SECU.ACTIONS.FIELDS.CODE' | translate }}</label>
                 <input
                   class="s-input mono"
                   [(ngModel)]="form.actionCode"
@@ -141,11 +142,11 @@ import { PermissionService } from '../../services/permission.service';
             </div>
             <div class="s-form-row single">
               <div class="s-field">
-                <label class="s-label">Action Name *</label>
+                <label class="s-label">{{ 'SECU.ACTIONS.FIELDS.NAME' | translate }}</label>
                 <input
                   class="s-input"
                   [(ngModel)]="form.actionName"
-                  placeholder="View"
+                  placeholder="{{ 'AUTO_INLINE_SECURITY_UI.VIEW' | translate }}"
                   maxlength="150"
                 />
               </div>
@@ -160,23 +161,23 @@ import { PermissionService } from '../../services/permission.service';
                   <div class="s-toggle-track"></div>
                   <div class="s-toggle-thumb"></div>
                 </label>
-                <span class="s-label">Active</span>
+                <span class="s-label">{{ 'COMMON.ACTIVE' | translate }}</span>
               </div>
             }
           </div>
           <div class="s-modal-footer">
-            <button class="s-btn s-btn-ghost" (click)="closeModal()">Cancel</button>
+            <button class="s-btn s-btn-ghost" (click)="closeModal()">{{ 'COMMON.CANCEL' | translate }}</button>
             <button
               class="s-btn s-btn-primary"
               [permAction]="
                 editAction()
-                  ? permissionService.canUpdate(effectivePageCode)
-                  : permissionService.canCreate(effectivePageCode)
+                  ? permissionService.canUpdate(effectivePageCode())
+                  : permissionService.canCreate(effectivePageCode())
               "
               (click)="save()"
               [disabled]="saving()"
             >
-              {{ saving() ? 'Saving…' : editAction() ? 'Update' : 'Create' }}
+              {{ saving() ? ('COMMON.SAVING' | translate) : (editAction() ? ('COMMON.UPDATE' | translate) : ('COMMON.CREATE' | translate)) }}
             </button>
           </div>
         </div>
@@ -187,18 +188,18 @@ import { PermissionService } from '../../services/permission.service';
       <div class="s-modal-backdrop" (click)="onBackdrop($event)">
         <div class="s-modal narrow">
           <div class="s-modal-header">
-            <span class="s-modal-title">Delete Action</span>
+            <span class="s-modal-title">{{ 'SECU.ACTIONS.DELETE_TITLE' | translate }}</span>
             <button class="s-btn-icon" (click)="deleteTarget.set(null)">✕</button>
           </div>
           <div class="s-modal-body">
             <p style="font-size:13px;color:var(--s-text-2)">
-              Delete action <strong class="s-badge action">{{ deleteTarget()!.actionCode }}</strong
+              {{ 'AUTO_INLINE_SECURITY_UI.DELETE_ACTION' | translate }} <strong class="s-badge action">{{ deleteTarget()!.actionCode }}</strong
               >?
             </p>
           </div>
           <div class="s-modal-footer">
-            <button class="s-btn s-btn-ghost" (click)="deleteTarget.set(null)">Cancel</button>
-            <button class="s-btn s-btn-danger" (click)="doDelete()">Delete</button>
+            <button class="s-btn s-btn-ghost" (click)="deleteTarget.set(null)">{{ 'COMMON.CANCEL' | translate }}</button>
+            <button class="s-btn s-btn-danger" (click)="doDelete()">{{ 'COMMON.DELETE' | translate }}</button>
           </div>
         </div>
       </div>
@@ -211,9 +212,7 @@ export class ActionsListComponent implements OnInit {
   public permissionService = inject(PermissionService);
   private destroyRef = inject(DestroyRef);
 
-  /** Fallback for required permission checks */
   readonly defaultPageCode = 'SECU_ACTIONS';
-  currentPageCode = signal<string | null>(null);
 
   actions = signal<SecuActionDto[]>([]);
   loading = signal(true);
@@ -233,11 +232,6 @@ export class ActionsListComponent implements OnInit {
   private search$ = new Subject<void>();
 
   ngOnInit() {
-    this.setPageCodeFromUrl(this.router.url);
-    this.router.events.pipe(filter((e) => e instanceof NavigationEnd)).subscribe((event: any) => {
-      this.setPageCodeFromUrl(event.urlAfterRedirects || event.url || this.router.url);
-    });
-
     this.search$
       .pipe(
         debounceTime(300),
@@ -265,14 +259,10 @@ export class ActionsListComponent implements OnInit {
     this.reload();
   }
 
-  private setPageCodeFromUrl(url: string): void {
-    const pageCode = this.permissionService.getPageCodeForUrl(url);
-    this.currentPageCode.set(pageCode);
-  }
-
-  get effectivePageCode(): string {
-    return this.currentPageCode() ?? this.defaultPageCode;
-  }
+  readonly effectivePageCode = computed(() => {
+    this.permissionService.loaded();
+    return this.permissionService.getPageCodeForUrl(this.router.url) ?? this.defaultPageCode;
+  });
 
   reload() {
     this.page = 1;
@@ -351,3 +341,4 @@ export class ActionsListComponent implements OnInit {
       });
   }
 }
+

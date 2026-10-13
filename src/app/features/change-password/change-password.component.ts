@@ -9,27 +9,28 @@ import { PasswordModule } from 'primeng/password';
 
 import { AuthStore } from '../../core/stores/auth.store';
 import { getAppConfig } from '../../core/config/app-config';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-change-password',
   standalone: true,
-  imports: [CommonModule, FormsModule, ButtonModule, InputTextModule, MessageModule, PasswordModule],
+  imports: [CommonModule, FormsModule, ButtonModule, InputTextModule, MessageModule, PasswordModule, TranslatePipe],
   template: `
     <main class="cp-shell">
       <section class="cp-card">
         <div class="cp-header">
           <div class="cp-icon">🔑</div>
-          <h1>{{ forced() ? 'Password Change Required' : 'Change Password' }}</h1>
+          <h1>{{ (forced() ? 'SECURITY.CHANGE_PASSWORD.REQUIRED_TITLE' : 'SECURITY.CHANGE_PASSWORD.TITLE') | translate }}</h1>
           @if (forced()) {
-            <p class="cp-subtitle">Your temporary password must be changed before continuing.</p>
+            <p class="cp-subtitle">{{ 'SECURITY.CHANGE_PASSWORD.FORCED_SUBTITLE' | translate }}</p>
           }
         </div>
 
         @if (success()) {
           <div class="cp-success">
             <span class="cp-success-icon">✓</span>
-            <p>Password changed successfully.</p>
-            <p class="cp-subtitle">Redirecting...</p>
+            <p>{{ 'SECURITY.CHANGE_PASSWORD.SUCCESS' | translate }}</p>
+            <p class="cp-subtitle">{{ 'SECURITY.CHANGE_PASSWORD.REDIRECTING' | translate }}</p>
           </div>
         } @else {
           <form (ngSubmit)="submit()" #f="ngForm" class="cp-form">
@@ -38,53 +39,53 @@ import { getAppConfig } from '../../core/config/app-config';
             }
 
             <div class="cp-field">
-              <label>Current password</label>
+              <label>{{ 'SECURITY.CHANGE_PASSWORD.CURRENT_LABEL' | translate }}</label>
               <p-password
                 [(ngModel)]="currentPassword"
                 name="currentPassword"
                 [feedback]="false"
                 [toggleMask]="true"
                 required
-                placeholder="Current password"
+                [placeholder]="'SECURITY.CHANGE_PASSWORD.CURRENT_PLACEHOLDER' | translate"
                 styleClass="w-full">
               </p-password>
             </div>
 
             <div class="cp-field">
-              <label>New password</label>
+              <label>{{ 'SECURITY.CHANGE_PASSWORD.NEW_LABEL' | translate }}</label>
               <p-password
                 [(ngModel)]="newPassword"
                 name="newPassword"
                 [toggleMask]="true"
                 required
-                placeholder="Minimum 8 characters"
+                [placeholder]="'SECURITY.CHANGE_PASSWORD.NEW_PLACEHOLDER' | translate"
                 styleClass="w-full">
               </p-password>
             </div>
 
             <div class="cp-field">
-              <label>Confirm new password</label>
+              <label>{{ 'SECURITY.CHANGE_PASSWORD.CONFIRM_LABEL' | translate }}</label>
               <p-password
                 [(ngModel)]="confirmPassword"
                 name="confirmPassword"
                 [feedback]="false"
                 [toggleMask]="true"
                 required
-                placeholder="Repeat the new password"
+                [placeholder]="'SECURITY.CHANGE_PASSWORD.CONFIRM_PLACEHOLDER' | translate"
                 styleClass="w-full">
               </p-password>
             </div>
 
             <p-button
               type="submit"
-              label="Change password"
+              [label]="'SECURITY.CHANGE_PASSWORD.SUBMIT' | translate"
               [loading]="loading()"
               [disabled]="loading() || !f.valid"
               styleClass="w-full"
             ></p-button>
 
             @if (!forced()) {
-              <button type="button" class="cp-cancel" (click)="cancel()">Cancel</button>
+              <button type="button" class="cp-cancel" (click)="cancel()">{{ 'SECURITY.CHANGE_PASSWORD.CANCEL' | translate }}</button>
             }
           </form>
         }
@@ -134,6 +135,8 @@ import { getAppConfig } from '../../core/config/app-config';
 export class ChangePasswordComponent implements OnInit {
   private readonly authStore = inject(AuthStore);
   private readonly router = inject(Router);
+  private readonly translate = inject(TranslateService);
+
   currentPassword = '';
   newPassword = '';
   confirmPassword = '';
@@ -167,10 +170,10 @@ export class ChangePasswordComponent implements OnInit {
   async submit(): Promise<void> {
     this.error.set(null);
 
-    if (!this.currentPassword) { this.error.set('Current password is required.'); return; }
-    if (this.newPassword.length < 8) { this.error.set('The new password must contain at least 8 characters.'); return; }
-    if (this.newPassword !== this.confirmPassword) { this.error.set('The two new passwords do not match.'); return; }
-    if (this.newPassword === this.currentPassword) { this.error.set('The new password must be different from the old one.'); return; }
+    if (!this.currentPassword) { this.error.set(this.t('SECURITY.CHANGE_PASSWORD.ERR_CURRENT_REQUIRED')); return; }
+    if (this.newPassword.length < 8) { this.error.set(this.t('SECURITY.CHANGE_PASSWORD.ERR_NEW_MIN')); return; }
+    if (this.newPassword !== this.confirmPassword) { this.error.set(this.t('SECURITY.CHANGE_PASSWORD.ERR_CONFIRM_MISMATCH')); return; }
+    if (this.newPassword === this.currentPassword) { this.error.set(this.t('SECURITY.CHANGE_PASSWORD.ERR_SAME_PASSWORD')); return; }
 
     this.loading.set(true);
     try {
@@ -190,7 +193,7 @@ export class ChangePasswordComponent implements OnInit {
       });
 
       if (!res.ok) {
-        let msg = 'Password change failed.';
+        let msg = this.t('SECURITY.CHANGE_PASSWORD.ERR_CHANGE_FAILED');
         try {
           const body = await res.json() as { message?: string; errors?: Record<string, string[]> };
           msg = body.message ?? Object.values(body.errors ?? {}).flat()[0] ?? msg;
@@ -202,7 +205,7 @@ export class ChangePasswordComponent implements OnInit {
       this.success.set(true);
       setTimeout(() => void this.router.navigateByUrl(this.forced() ? '/admin' : '/admin'), 2000);
     } catch {
-      this.error.set('Network error. Check your connection and try again.');
+      this.error.set(this.t('SECURITY.CHANGE_PASSWORD.ERR_NETWORK'));
     } finally {
       this.loading.set(false);
     }
@@ -212,6 +215,9 @@ export class ChangePasswordComponent implements OnInit {
     void this.router.navigateByUrl('/admin');
   }
 
-
+  private t(key: string): string {
+    const value = this.translate.instant(key);
+    return typeof value === 'string' ? value : key;
+  }
 }
 

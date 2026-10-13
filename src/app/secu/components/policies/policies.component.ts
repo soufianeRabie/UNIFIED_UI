@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, inject, computed } from '@angular/core';
+﻿import { Component, OnInit, signal, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { catchError, of } from 'rxjs';
@@ -7,6 +7,7 @@ import {
   SecuPolicyDto, SecuPolicyRuleDto, SecuPolicyDecisionDto,
   CreateSecuPolicyRequest, CreateSecuPolicyRuleRequest, EvaluateSecuPolicyRequest,
 } from '../../models/secu.models';
+import { TranslatePipe } from '@ngx-translate/core';
 
 const EFFECTS   = ['Allow', 'Deny'];
 const RULE_TYPES = ['Role', 'Claim', 'Tenant', 'IpRange', 'TimeRange', 'Custom'];
@@ -15,7 +16,7 @@ const OPERATORS  = ['Equals', 'NotEquals', 'Contains', 'StartsWith', 'Regex', 'I
 @Component({
   selector: 'app-policies',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslatePipe],
   styles: [`
     /* ── Policy detail panel ── */
     .policy-panel {
@@ -82,25 +83,25 @@ const OPERATORS  = ['Equals', 'NotEquals', 'Contains', 'StartsWith', 'Regex', 'I
   template: `
     <div class="s-page-header">
       <div>
-        <h1 class="s-page-title">Policies</h1>
-        <p class="s-page-subtitle">Resource access control policies with rule evaluation</p>
+        <h1 class="s-page-title">{{ 'DOM_FALLBACK.TEXT_315' | translate }}</h1>
+        <p class="s-page-subtitle">{{ 'DOM_FALLBACK.TEXT_316' | translate }}</p>
       </div>
-      <button class="s-btn s-btn-primary" (click)="openCreate()">+ New Policy</button>
+      <button class="s-btn s-btn-primary" (click)="openCreate()">{{ 'DOM_FALLBACK.TEXT_317' | translate }}</button>
     </div>
 
     <!-- Stats -->
     <div class="s-stats-grid" style="margin-bottom:20px;">
       <div class="s-stat-card">
         <div class="s-stat-icon blue">📜</div>
-        <div><div class="s-stat-value">{{ policies().length }}</div><div class="s-stat-label">Policies</div></div>
+        <div><div class="s-stat-value">{{ policies().length }}</div><div class="s-stat-label">{{ 'DOM_FALLBACK.TEXT_315' | translate }}</div></div>
       </div>
       <div class="s-stat-card">
         <div class="s-stat-icon green">✓</div>
-        <div><div class="s-stat-value">{{ allowCount() }}</div><div class="s-stat-label">Allow</div></div>
+        <div><div class="s-stat-value">{{ allowCount() }}</div><div class="s-stat-label">{{ 'DOM_FALLBACK.TEXT_318' | translate }}</div></div>
       </div>
       <div class="s-stat-card">
         <div class="s-stat-icon red">✕</div>
-        <div><div class="s-stat-value">{{ denyCount() }}</div><div class="s-stat-label">Deny</div></div>
+        <div><div class="s-stat-value">{{ denyCount() }}</div><div class="s-stat-label">{{ 'DOM_FALLBACK.TEXT_319' | translate }}</div></div>
       </div>
     </div>
 
@@ -111,13 +112,13 @@ const OPERATORS  = ['Equals', 'NotEquals', 'Contains', 'StartsWith', 'Regex', 'I
         <div class="policy-list-col">
           <div class="s-toolbar" style="flex-wrap:wrap;gap:6px;">
             <div class="s-search" style="flex:1;min-width:140px;">
-              <span class="s-search-icon">🔍</span>
-              <input placeholder="Search…" [(ngModel)]="search" />
+              <span class="s-search-icon">�</span>
+              <input placeholder="{{ 'AUTO_INLINE_SECURITY_UI.SEARCH' | translate }}" [(ngModel)]="search" />
             </div>
             <select class="s-select" style="width:110px;" [(ngModel)]="filterEffect">
-              <option value="">All effects</option>
-              <option value="Allow">Allow</option>
-              <option value="Deny">Deny</option>
+              <option value="">{{ 'DOM_FALLBACK.TEXT_320' | translate }}</option>
+              <option value="Allow">{{ 'DOM_FALLBACK.TEXT_318' | translate }}</option>
+              <option value="Deny">{{ 'DOM_FALLBACK.TEXT_319' | translate }}</option>
             </select>
             <label class="s-toggle">
               <input type="checkbox" [(ngModel)]="includeInactive" (change)="load()" />
@@ -126,7 +127,7 @@ const OPERATORS  = ['Equals', 'NotEquals', 'Contains', 'StartsWith', 'Regex', 'I
           </div>
 
           @if (loading()) {
-            <div class="s-empty"><div class="s-empty-text">Loading…</div></div>
+            <div class="s-empty"><div class="s-empty-text">{{ 'COMMON.LOADING' | translate }}</div></div>
           } @else {
             @for (p of filteredPolicies(); track p.idPolicy) {
               <div class="policy-item" [class.selected]="selectedPolicy()?.idPolicy === p.idPolicy"
@@ -141,12 +142,12 @@ const OPERATORS  = ['Equals', 'NotEquals', 'Contains', 'StartsWith', 'Regex', 'I
                   <span style="font-size:10px;background:var(--s-amber-bg);color:var(--s-amber);padding:1px 6px;border-radius:4px;font-family:var(--s-mono)">{{ p.action }}</span>
                 </div>
                 @if (p.description) { <div class="policy-desc">{{ p.description }}</div> }
-                @if (!p.isActive) { <span class="s-badge inactive" style="width:fit-content;margin-top:2px;">Inactive</span> }
+                @if (!p.isActive) { <span class="s-badge inactive" style="width:fit-content;margin-top:2px;">{{ 'COMMON.INACTIVE' | translate }}</span> }
               </div>
             } @empty {
               <div class="s-empty" style="padding:40px 20px;">
                 <div class="s-empty-icon">📜</div>
-                <div class="s-empty-text">No policies match filter</div>
+                <div class="s-empty-text">{{ 'DOM_FALLBACK.TEXT_321' | translate }}</div>
               </div>
             }
           }
@@ -157,7 +158,7 @@ const OPERATORS  = ['Equals', 'NotEquals', 'Contains', 'StartsWith', 'Regex', 'I
           @if (!selectedPolicy()) {
             <div class="s-empty" style="padding:80px 20px;">
               <div class="s-empty-icon">📜</div>
-              <div class="s-empty-text">Select a policy to view details and rules</div>
+              <div class="s-empty-text">{{ 'DOM_FALLBACK.TEXT_322' | translate }}</div>
             </div>
           } @else {
             <!-- Policy header info -->
@@ -167,7 +168,7 @@ const OPERATORS  = ['Equals', 'NotEquals', 'Contains', 'StartsWith', 'Regex', 'I
                   <div style="font-size:16px;font-weight:600;font-family:var(--s-mono);color:var(--s-accent);">{{ selectedPolicy()!.policyCode }}</div>
                   <div style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap;align-items:center;">
                     <span class="effect-badge" [class]="'effect-badge effect-' + selectedPolicy()!.effect">{{ selectedPolicy()!.effect }}</span>
-                    <span style="font-size:11px;color:var(--s-text-3)">Resource:</span>
+                    <span style="font-size:11px;color:var(--s-text-3)">{{ 'DOM_FALLBACK.TEXT_323' | translate }}</span>
                     <span style="font-family:var(--s-mono);font-size:11px;color:var(--s-text-2)">{{ selectedPolicy()!.resource }}</span>
                     <span style="color:var(--s-border-2)">→</span>
                     <span style="font-family:var(--s-mono);font-size:11px;color:var(--s-amber)">{{ selectedPolicy()!.action }}</span>
@@ -180,8 +181,8 @@ const OPERATORS  = ['Equals', 'NotEquals', 'Contains', 'StartsWith', 'Regex', 'I
                   }
                 </div>
                 <div style="display:flex;gap:6px;flex-shrink:0;">
-                  <button class="s-btn s-btn-ghost s-btn-sm" (click)="openEdit(selectedPolicy()!)">✏ Edit</button>
-                  <button class="s-btn-icon danger" (click)="askDelete(selectedPolicy()!)">🗑</button>
+                  <button class="s-btn s-btn-ghost s-btn-sm" (click)="openEdit(selectedPolicy()!)">{{ 'AUTO_INLINE_SECURITY_UI.EDIT' | translate }}</button>
+                  <button class="s-btn-icon danger" (click)="askDelete(selectedPolicy()!)">�—‘</button>
                 </div>
               </div>
             </div>
@@ -189,9 +190,9 @@ const OPERATORS  = ['Equals', 'NotEquals', 'Contains', 'StartsWith', 'Regex', 'I
             <!-- Rules section -->
             <div style="padding:12px 20px;border-bottom:1px solid var(--s-border);display:flex;align-items:center;justify-content:space-between;">
               <span style="font-size:12px;font-weight:500;color:var(--s-text)">
-                Rules <span style="color:var(--s-text-3);font-weight:400">({{ selectedPolicy()!.rules.length }})</span>
+                {{ 'DOM_FALLBACK.TEXT_325' | translate }} <span style="color:var(--s-text-3);font-weight:400">({{ selectedPolicy()!.rules.length }})</span>
               </span>
-              <button class="s-btn s-btn-primary s-btn-sm" (click)="openAddRule()">+ Add Rule</button>
+              <button class="s-btn s-btn-primary s-btn-sm" (click)="openAddRule()">{{ 'DOM_FALLBACK.TEXT_326' | translate }}</button>
             </div>
 
             @if (selectedPolicy()!.rules.length) {
@@ -201,12 +202,12 @@ const OPERATORS  = ['Equals', 'NotEquals', 'Contains', 'StartsWith', 'Regex', 'I
                   @if (rule.ruleKey) { <span class="rule-key">{{ rule.ruleKey }}</span> }
                   <span class="rule-val">{{ rule.ruleValue }}</span>
                   <span class="s-badge" [class.active]="rule.isActive" [class.inactive]="!rule.isActive">{{ rule.isActive?'On':'Off' }}</span>
-                  <button class="s-btn-icon danger" (click)="deleteRule(rule)">🗑</button>
+                  <button class="s-btn-icon danger" (click)="deleteRule(rule)">�—‘</button>
                 </div>
               }
             } @else {
               <div class="s-empty" style="padding:24px;">
-                <div class="s-empty-text">No rules — policy applies to all requests</div>
+                <div class="s-empty-text">{{ 'AUTO_INLINE_SECURITY_UI.NO_RULES_POLICY_APPLIES_TO_ALL_REQUESTS' | translate }}</div>
               </div>
             }
           }
@@ -216,44 +217,44 @@ const OPERATORS  = ['Equals', 'NotEquals', 'Contains', 'StartsWith', 'Regex', 'I
 
     <!-- ── Policy Evaluator ────────────────────────────────────────────── -->
     <div style="margin-top:20px;">
-      <div style="font-size:11px;font-weight:600;color:var(--s-text-3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px;">🧪 Policy Evaluator</div>
+      <div style="font-size:11px;font-weight:600;color:var(--s-text-3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px;">{{ 'AUTO_INLINE_SECURITY_UI.POLICY_EVALUATOR' | translate }}</div>
       <div class="eval-panel">
         <div style="padding:14px 20px;border-bottom:1px solid var(--s-border);background:var(--s-bg-3);">
           <div class="s-form-row">
             <div class="s-field">
-              <label class="s-label">Resource *</label>
-              <input class="s-input mono" [(ngModel)]="eval.resource" placeholder="api/fleet/vehicles" />
+              <label class="s-label">{{ 'DOM_FALLBACK.TEXT_329' | translate }}</label>
+              <input class="s-input mono" [(ngModel)]="eval.resource" placeholder="{{ 'AUTO_INLINE_SECURITY_UI.API_FLEET_VEHICLES' | translate }}" />
             </div>
             <div class="s-field">
-              <label class="s-label">Action *</label>
-              <input class="s-input mono" [(ngModel)]="eval.action" placeholder="Read" />
+              <label class="s-label">{{ 'DOM_FALLBACK.TEXT_278' | translate }}</label>
+              <input class="s-input mono" [(ngModel)]="eval.action" placeholder="{{ 'AUTO_INLINE_SECURITY_UI.READ' | translate }}" />
             </div>
             <div class="s-field">
-              <label class="s-label">Tenant ID</label>
-              <input class="s-input mono" [(ngModel)]="eval.tenantId" placeholder="optional" />
+              <label class="s-label">{{ 'DOM_FALLBACK.TEXT_078' | translate }}</label>
+              <input class="s-input mono" [(ngModel)]="eval.tenantId" placeholder="{{ 'AUTO_INLINE_SECURITY_UI.OPTIONAL' | translate }}" />
             </div>
           </div>
 
           <!-- Claims -->
           <div style="margin-top:10px;">
-            <div style="font-size:11px;color:var(--s-text-3);margin-bottom:6px;">Claims (key=value)</div>
+            <div style="font-size:11px;color:var(--s-text-3);margin-bottom:6px;">{{ 'DOM_FALLBACK.TEXT_330' | translate }}</div>
             @for (claim of evalClaims; track $index) {
               <div class="claim-row">
-                <input class="s-input mono" style="flex:1;" placeholder="key" [(ngModel)]="claim.key" />
+                <input class="s-input mono" style="flex:1;" placeholder="{{ 'AUTO_INLINE_SECURITY_UI.KEY' | translate }}" [(ngModel)]="claim.key" />
                 <span style="color:var(--s-text-3)">=</span>
-                <input class="s-input mono" style="flex:1;" placeholder="value" [(ngModel)]="claim.value" />
+                <input class="s-input mono" style="flex:1;" placeholder="{{ 'AUTO_SECURITY_UI.VALUE' | translate }}" [(ngModel)]="claim.value" />
                 <button class="s-btn-icon danger" (click)="removeClaim($index)">✕</button>
               </div>
             }
-            <button class="s-btn s-btn-ghost s-btn-sm" (click)="addClaim()">+ Add Claim</button>
+            <button class="s-btn s-btn-ghost s-btn-sm" (click)="addClaim()">{{ 'DOM_FALLBACK.TEXT_331' | translate }}</button>
           </div>
         </div>
 
         <div style="padding:12px 20px;display:flex;gap:8px;align-items:center;border-bottom:1px solid var(--s-border);">
           <button class="s-btn s-btn-primary" (click)="runEval()" [disabled]="!eval.resource || !eval.action || evalLoading()">
-            {{ evalLoading() ? 'Evaluating…' : '▶ Evaluate' }}
+            {{ evalLoading() ? 'Evaluating�¦' : '�–¶ Evaluate' }}
           </button>
-          <button class="s-btn s-btn-ghost" (click)="evalResult.set(null)">Clear</button>
+          <button class="s-btn s-btn-ghost" (click)="evalResult.set(null)">{{ 'AUTO_SECURITY_UI.CLEAR' | translate }}</button>
         </div>
 
         @if (evalResult()) {
@@ -273,7 +274,7 @@ const OPERATORS  = ['Equals', 'NotEquals', 'Contains', 'StartsWith', 'Regex', 'I
                 </div>
               }
               @if (!evalResult()!.matchedAllowPolicies.length && !evalResult()!.matchedDenyPolicies.length) {
-                <div style="font-size:11px;color:var(--s-text-3);">No matching policies</div>
+                <div style="font-size:11px;color:var(--s-text-3);">{{ 'DOM_FALLBACK.TEXT_332' | translate }}</div>
               }
             </div>
           </div>
@@ -290,14 +291,14 @@ const OPERATORS  = ['Equals', 'NotEquals', 'Contains', 'StartsWith', 'Regex', 'I
             <button class="s-btn-icon" (click)="policyModal.set(false)">✕</button>
           </div>
           <div class="s-modal-body">
-            @if (saveError()) { <div class="s-alert error" style="margin-bottom:12px;">⚠ {{ saveError() }}</div> }
+            @if (saveError()) { <div class="s-alert error" style="margin-bottom:12px;">�  {{ saveError() }}</div> }
             <div class="s-form-row">
               <div class="s-field">
-                <label class="s-label">Policy Code *</label>
+                <label class="s-label">{{ 'DOM_FALLBACK.TEXT_333' | translate }}</label>
                 <input class="s-input mono" [(ngModel)]="pf.policyCode" placeholder="FLEET_READ_ALLOW" [disabled]="!!editingPolicy()" (blur)="pf.policyCode=pf.policyCode.toUpperCase()" />
               </div>
               <div class="s-field">
-                <label class="s-label">Effect *</label>
+                <label class="s-label">{{ 'DOM_FALLBACK.TEXT_334' | translate }}</label>
                 <select class="s-select" [(ngModel)]="pf.effect">
                   @for (e of EFFECTS; track e) { <option [value]="e">{{ e }}</option> }
                 </select>
@@ -308,14 +309,14 @@ const OPERATORS  = ['Equals', 'NotEquals', 'Contains', 'StartsWith', 'Regex', 'I
             </div>
             <div class="s-form-row">
               <div class="s-field">
-                <label class="s-label">Resource *</label>
-                <input class="s-input mono" [(ngModel)]="pf.resource" list="policyResources" placeholder="api/fleet/vehicles" />
+                <label class="s-label">{{ 'DOM_FALLBACK.TEXT_329' | translate }}</label>
+                <input class="s-input mono" [(ngModel)]="pf.resource" list="policyResources" placeholder="{{ 'AUTO_INLINE_SECURITY_UI.API_FLEET_VEHICLES' | translate }}" />
                 <datalist id="policyResources">
                   @for (resource of RESOURCE_SUGGESTIONS; track resource) { <option [value]="resource"></option> }
                 </datalist>
               </div>
               <div class="s-field">
-                <label class="s-label">Action *</label>
+                <label class="s-label">{{ 'DOM_FALLBACK.TEXT_278' | translate }}</label>
                 <input class="s-input mono" [(ngModel)]="pf.action" list="policyActions" placeholder="READ" />
                 <datalist id="policyActions">
                   @for (action of ACTION_SUGGESTIONS; track action) { <option [value]="action"></option> }
@@ -324,12 +325,12 @@ const OPERATORS  = ['Equals', 'NotEquals', 'Contains', 'StartsWith', 'Regex', 'I
             </div>
             <div class="s-form-row">
               <div class="s-field">
-                <label class="s-label">Description</label>
-                <input class="s-input" [(ngModel)]="pf.description" placeholder="Optional description…" />
+                <label class="s-label">{{ 'DOM_FALLBACK.TEXT_335' | translate }}</label>
+                <input class="s-input" [(ngModel)]="pf.description" placeholder="{{ 'AUTO_INLINE_SECURITY_UI.OPTIONAL_DESCRIPTION' | translate }}" />
               </div>
               <div class="s-field">
-                <label class="s-label">Company / Tenant</label>
-                <input class="s-input mono" [(ngModel)]="pf.tenantId" placeholder="optional company code" />
+                <label class="s-label">{{ 'DOM_FALLBACK.TEXT_336' | translate }}</label>
+                <input class="s-input mono" [(ngModel)]="pf.tenantId" placeholder="{{ 'DOM_FALLBACK.TEXT_385' | translate }}" />
               </div>
             </div>
             @if (editingPolicy()) {
@@ -339,14 +340,14 @@ const OPERATORS  = ['Equals', 'NotEquals', 'Contains', 'StartsWith', 'Regex', 'I
                     <input type="checkbox" [(ngModel)]="pf.isActive" />
                     <div class="s-toggle-track"></div><div class="s-toggle-thumb"></div>
                   </label>
-                  <span style="font-size:13px;color:var(--s-text-2)">Active</span>
+                  <span style="font-size:13px;color:var(--s-text-2)">{{ 'DOM_FALLBACK.TEXT_092' | translate }}</span>
                 </div>
               </div>
             }
           </div>
           <div class="s-modal-footer">
-            <button class="s-btn s-btn-ghost" (click)="policyModal.set(false)">Cancel</button>
-            <button class="s-btn s-btn-primary" (click)="savePolicy()" [disabled]="saving()">{{ saving()?'Saving…':(editingPolicy()?'Update':'Create') }}</button>
+            <button class="s-btn s-btn-ghost" (click)="policyModal.set(false)">{{ 'SECURITY.CHANGE_PASSWORD.CANCEL' | translate }}</button>
+            <button class="s-btn s-btn-primary" (click)="savePolicy()" [disabled]="saving()">{{ saving()?'Saving�¦':(editingPolicy()?'Update':'Create') }}</button>
           </div>
         </div>
       </div>
@@ -361,10 +362,10 @@ const OPERATORS  = ['Equals', 'NotEquals', 'Contains', 'StartsWith', 'Regex', 'I
             <button class="s-btn-icon" (click)="ruleModal.set(false)">✕</button>
           </div>
           <div class="s-modal-body">
-            @if (saveError()) { <div class="s-alert error" style="margin-bottom:12px;">⚠ {{ saveError() }}</div> }
+            @if (saveError()) { <div class="s-alert error" style="margin-bottom:12px;">�  {{ saveError() }}</div> }
             <div class="s-form-row single">
               <div class="s-field">
-                <label class="s-label">Rule Type *</label>
+                <label class="s-label">{{ 'DOM_FALLBACK.TEXT_337' | translate }}</label>
                 <select class="s-select" [(ngModel)]="rf.ruleType">
                   @for (t of RULE_TYPES; track t) { <option [value]="t">{{ t }}</option> }
                 </select>
@@ -372,20 +373,20 @@ const OPERATORS  = ['Equals', 'NotEquals', 'Contains', 'StartsWith', 'Regex', 'I
             </div>
             <div class="s-form-row single">
               <div class="s-field">
-                <label class="s-label">Rule Key <span style="color:var(--s-text-3);font-size:11px">(claim name, field, etc.)</span></label>
-                <input class="s-input mono" [(ngModel)]="rf.ruleKey" placeholder="e.g. department" />
+                <label class="s-label">{{ 'DOM_FALLBACK.TEXT_338' | translate }} <span style="color:var(--s-text-3);font-size:11px">{{ 'DOM_FALLBACK.TEXT_339' | translate }}</span></label>
+                <input class="s-input mono" [(ngModel)]="rf.ruleKey" placeholder="{{ 'AUTO_INLINE_SECURITY_UI.E_G_DEPARTMENT' | translate }}" />
               </div>
             </div>
             <div class="s-form-row single">
               <div class="s-field">
-                <label class="s-label">Rule Value *</label>
-                <input class="s-input mono" [(ngModel)]="rf.ruleValue" placeholder="e.g. fleet-team" />
+                <label class="s-label">{{ 'DOM_FALLBACK.TEXT_340' | translate }}</label>
+                <input class="s-input mono" [(ngModel)]="rf.ruleValue" placeholder="{{ 'AUTO_INLINE_SECURITY_UI.E_G_FLEET_TEAM' | translate }}" />
               </div>
             </div>
           </div>
           <div class="s-modal-footer">
-            <button class="s-btn s-btn-ghost" (click)="ruleModal.set(false)">Cancel</button>
-            <button class="s-btn s-btn-primary" (click)="saveRule()" [disabled]="saving()">{{ saving()?'Saving…':'Add Rule' }}</button>
+            <button class="s-btn s-btn-ghost" (click)="ruleModal.set(false)">{{ 'SECURITY.CHANGE_PASSWORD.CANCEL' | translate }}</button>
+            <button class="s-btn s-btn-primary" (click)="saveRule()" [disabled]="saving()">{{ saving()?'Saving�¦':'Add Rule' }}</button>
           </div>
         </div>
       </div>
@@ -396,16 +397,16 @@ const OPERATORS  = ['Equals', 'NotEquals', 'Contains', 'StartsWith', 'Regex', 'I
       <div class="s-modal-backdrop" (click)="onBd($event)">
         <div class="s-modal narrow" (click)="$event.stopPropagation()">
           <div class="s-modal-header">
-            <span class="s-modal-title">Delete Policy</span>
+            <span class="s-modal-title">{{ 'AUTO_INLINE_SECURITY_UI.DELETE_POLICY' | translate }}</span>
             <button class="s-btn-icon" (click)="deleteModal.set(null)">✕</button>
           </div>
           <div class="s-modal-body">
-            <p style="font-size:13px;color:var(--s-text-2);">Delete policy <strong class="mono" style="color:var(--s-accent)">{{ deleteModal() }}</strong>?<br><br>
-              <span style="font-size:12px;color:var(--s-amber)">⚠ All associated rules will be removed.</span></p>
+            <p style="font-size:13px;color:var(--s-text-2);">{{ 'AUTO_INLINE_SECURITY_UI.DELETE_POLICY_2' | translate }} <strong class="mono" style="color:var(--s-accent)">{{ deleteModal() }}</strong>?<br><br>
+              <span style="font-size:12px;color:var(--s-amber)">{{ 'AUTO_INLINE_SECURITY_UI.ALL_ASSOCIATED_RULES_WILL_BE_REMOVED' | translate }}</span></p>
           </div>
           <div class="s-modal-footer">
-            <button class="s-btn s-btn-ghost" (click)="deleteModal.set(null)">Cancel</button>
-            <button class="s-btn s-btn-danger" (click)="doDelete()">Delete</button>
+            <button class="s-btn s-btn-ghost" (click)="deleteModal.set(null)">{{ 'SECURITY.CHANGE_PASSWORD.CANCEL' | translate }}</button>
+            <button class="s-btn s-btn-danger" (click)="doDelete()">{{ 'COMMON.DELETE' | translate }}</button>
           </div>
         </div>
       </div>
@@ -540,3 +541,4 @@ export class PoliciesComponent implements OnInit {
     }
   }
 }
+

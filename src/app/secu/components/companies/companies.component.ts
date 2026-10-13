@@ -1,8 +1,10 @@
-import { Component, OnInit, signal, inject } from '@angular/core';
+﻿import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { catchError, of } from 'rxjs';
 import { SecuApiService } from '../../services/secu-api.service';
+import { PermissionService } from '../../services/permission.service';
+import { PermActionDirective } from '../../directives/perm-action.directive';
 import { SecuPaginationComponent } from '../shared/secu-pagination.component';
 import {
   RefCompanyDto,
@@ -11,13 +13,16 @@ import {
   UpdateRefCompanyRequest,
   CreateRefCompanyTypeRequest,
 } from '../../models/secu.models';
+import { TranslatePipe } from '@ngx-translate/core';
+
+const PAGE_CODE = 'COMPANIES';
 
 type Tab = 'companies' | 'types';
 
 @Component({
   selector: 'app-companies',
   standalone: true,
-  imports: [CommonModule, FormsModule, SecuPaginationComponent],
+  imports: [CommonModule, FormsModule, SecuPaginationComponent, PermActionDirective, TranslatePipe],
   styles: [
     `
       .add-select {
@@ -39,30 +44,30 @@ type Tab = 'companies' | 'types';
   template: `
     <div class="s-page-header">
       <div>
-        <h1 class="s-page-title">Companies</h1>
-        <p class="s-page-subtitle">Company registry and type management</p>
+        <h1 class="s-page-title">{{ 'DOM_FALLBACK.TEXT_226' | translate }}</h1>
+        <p class="s-page-subtitle">{{ 'DOM_FALLBACK.TEXT_227' | translate }}</p>
       </div>
     </div>
 
     <div class="s-card" style="overflow:visible;">
       <div class="s-tabs">
         <div class="s-tab" [class.active]="tab() === 'companies'" (click)="tab.set('companies')">
-          🏢 Companies
+          {{ 'AUTO_INLINE_SECURITY_UI.COMPANIES' | translate }}
           <span class="s-tab-count">{{ companiesTotalRecords() }}</span>
         </div>
         <div class="s-tab" [class.active]="tab() === 'types'" (click)="tab.set('types')">
-          🏷 Company Types
+          {{ 'AUTO_INLINE_SECURITY_UI.COMPANY_TYPES' | translate }}
           <span class="s-tab-count">{{ typesTotalRecords() }}</span>
         </div>
       </div>
 
-      <!-- ══ COMPANIES ═══════════════════════════════════════════════════ -->
+      <!-- �� COMPANIES ��������������������������������������������������� -->
       @if (tab() === 'companies') {
         <div class="s-toolbar" style="justify-content:space-between;">
           <div class="s-search">
-            <span class="s-search-icon">🔍</span>
+            <span class="s-search-icon">�</span>
             <input
-              placeholder="Search companies…"
+              placeholder="{{ 'AUTO_INLINE_SECURITY_UI.SEARCH_COMPANIES' | translate }}"
               [(ngModel)]="compSearch"
               (ngModelChange)="onCompanySearch()"
             />
@@ -73,9 +78,9 @@ type Tab = 'companies' | 'types';
               <div class="s-toggle-track"></div>
               <div class="s-toggle-thumb"></div>
             </label>
-            <span style="font-size:12px;color:var(--s-text-2)">Inactive</span>
-            <button class="s-btn s-btn-primary s-btn-sm" (click)="openCreateCompany()">
-              + New Company
+            <span style="font-size:12px;color:var(--s-text-2)">{{ 'COMMON.INACTIVE' | translate }}</span>
+            <button class="s-btn s-btn-primary s-btn-sm" [permAction]="permissionService.canCreate(PAGE_CODE)" (click)="openCreateCompany()">
+              {{ 'DOM_FALLBACK.TEXT_229' | translate }}
             </button>
           </div>
         </div>
@@ -84,12 +89,12 @@ type Tab = 'companies' | 'types';
           <table class="s-table">
             <thead>
               <tr>
-                <th>Code</th>
-                <th>Name</th>
-                <th>Parent</th>
-                <th>Type</th>
-                <th style="width:80px">Is Parent</th>
-                <th style="width:80px">Status</th>
+                <th>{{ 'DOM_FALLBACK.TEXT_035' | translate }}</th>
+                <th>{{ 'DOM_FALLBACK.TEXT_043' | translate }}</th>
+                <th>{{ 'DOM_FALLBACK.TEXT_231' | translate }}</th>
+                <th>{{ 'DOM_FALLBACK.TEXT_232' | translate }}</th>
+                <th style="width:80px">{{ 'DOM_FALLBACK.TEXT_233' | translate }}</th>
+                <th style="width:80px">{{ 'DOM_FALLBACK.TEXT_026' | translate }}</th>
                 <th style="width:72px"></th>
               </tr>
             </thead>
@@ -137,15 +142,16 @@ type Tab = 'companies' | 'types';
                   </td>
                   <td>
                     <div style="display:flex;gap:4px;">
-                      <button class="s-btn-icon" (click)="openEditCompany(c)" title="Edit">
-                        ✏
+                      <button class="s-btn-icon" [permAction]="permissionService.canUpdate(PAGE_CODE)" (click)="openEditCompany(c)" title="{{ 'DOM_FALLBACK.TEXT_324' | translate }}">
+                        �
                       </button>
                       <button
                         class="s-btn-icon danger"
+                        [permAction]="permissionService.canDelete(PAGE_CODE)"
                         (click)="askDeleteCompany(c)"
-                        title="Delete"
+                        title="{{ 'COMMON.DELETE' | translate }}"
                       >
-                        🗑
+                        �—‘
                       </button>
                     </div>
                   </td>
@@ -154,8 +160,8 @@ type Tab = 'companies' | 'types';
                 <tr>
                   <td colspan="7">
                     <div class="s-empty">
-                      <div class="s-empty-icon">🏢</div>
-                      <div class="s-empty-text">No companies found</div>
+                      <div class="s-empty-icon">�¢</div>
+                      <div class="s-empty-text">{{ 'DOM_FALLBACK.TEXT_234' | translate }}</div>
                     </div>
                   </td>
                 </tr>
@@ -172,13 +178,13 @@ type Tab = 'companies' | 'types';
         />
       }
 
-      <!-- ══ TYPES ════════════════════════════════════════════════════════ -->
+      <!-- �� TYPES �������������������������������������������������������� -->
       @if (tab() === 'types') {
         <div class="s-toolbar" style="justify-content:space-between;">
           <div class="s-search">
-            <span class="s-search-icon">🔍</span>
+            <span class="s-search-icon">�</span>
             <input
-              placeholder="Search types…"
+              placeholder="{{ 'AUTO_INLINE_SECURITY_UI.SEARCH_TYPES' | translate }}"
               [(ngModel)]="typeSearch"
               (ngModelChange)="onTypeSearch()"
             />
@@ -189,9 +195,9 @@ type Tab = 'companies' | 'types';
               <div class="s-toggle-track"></div>
               <div class="s-toggle-thumb"></div>
             </label>
-            <span style="font-size:12px;color:var(--s-text-2)">Inactive</span>
-            <button class="s-btn s-btn-primary s-btn-sm" (click)="openCreateType()">
-              + New Type
+            <span style="font-size:12px;color:var(--s-text-2)">{{ 'COMMON.INACTIVE' | translate }}</span>
+            <button class="s-btn s-btn-primary s-btn-sm" [permAction]="permissionService.canCreate(PAGE_CODE)" (click)="openCreateType()">
+              {{ 'DOM_FALLBACK.TEXT_230' | translate }}
             </button>
           </div>
         </div>
@@ -201,10 +207,10 @@ type Tab = 'companies' | 'types';
             <thead>
               <tr>
                 <th>ID</th>
-                <th>Code</th>
-                <th>Name</th>
-                <th>Created</th>
-                <th style="width:80px">Status</th>
+                <th>{{ 'DOM_FALLBACK.TEXT_035' | translate }}</th>
+                <th>{{ 'DOM_FALLBACK.TEXT_043' | translate }}</th>
+                <th>{{ 'SECU.USERS.COLUMNS.CREATED' | translate }}</th>
+                <th style="width:80px">{{ 'DOM_FALLBACK.TEXT_026' | translate }}</th>
                 <th style="width:72px"></th>
               </tr>
             </thead>
@@ -229,8 +235,8 @@ type Tab = 'companies' | 'types';
                   </td>
                   <td>
                     <div style="display:flex;gap:4px;">
-                      <button class="s-btn-icon" (click)="openEditType(t)">✏</button>
-                      <button class="s-btn-icon danger" (click)="askDeleteType(t)">🗑</button>
+                      <button class="s-btn-icon" [permAction]="permissionService.canUpdate(PAGE_CODE)" (click)="openEditType(t)">�</button>
+                      <button class="s-btn-icon danger" [permAction]="permissionService.canDelete(PAGE_CODE)" (click)="askDeleteType(t)">�—‘</button>
                     </div>
                   </td>
                 </tr>
@@ -238,8 +244,8 @@ type Tab = 'companies' | 'types';
                 <tr>
                   <td colspan="6">
                     <div class="s-empty">
-                      <div class="s-empty-icon">🏷</div>
-                      <div class="s-empty-text">No company types found</div>
+                      <div class="s-empty-icon">�·</div>
+                      <div class="s-empty-text">{{ 'DOM_FALLBACK.TEXT_235' | translate }}</div>
                     </div>
                   </td>
                 </tr>
@@ -267,11 +273,11 @@ type Tab = 'companies' | 'types';
           </div>
           <div class="s-modal-body">
             @if (saveError()) {
-              <div class="s-alert error" style="margin-bottom:12px;">⚠ {{ saveError() }}</div>
+              <div class="s-alert error" style="margin-bottom:12px;">�  {{ saveError() }}</div>
             }
             <div class="s-form-row">
               <div class="s-field">
-                <label class="s-label">Company Code *</label>
+                <label class="s-label">{{ 'DOM_FALLBACK.TEXT_236' | translate }}</label>
                 <input
                   class="s-input mono"
                   [(ngModel)]="cf.companyCode"
@@ -281,15 +287,15 @@ type Tab = 'companies' | 'types';
                 />
               </div>
               <div class="s-field">
-                <label class="s-label">Company Name *</label>
-                <input class="s-input" [(ngModel)]="cf.companyName" placeholder="Acme Corp" />
+                <label class="s-label">{{ 'DOM_FALLBACK.TEXT_237' | translate }}</label>
+                <input class="s-input" [(ngModel)]="cf.companyName" placeholder="{{ 'AUTO_INLINE_SECURITY_UI.ACME_CORP' | translate }}" />
               </div>
             </div>
             <div class="s-form-row">
               <div class="s-field">
-                <label class="s-label">Parent Company</label>
+                <label class="s-label">{{ 'DOM_FALLBACK.TEXT_238' | translate }}</label>
                 <select class="s-select" [(ngModel)]="cf.parentCompanyCode">
-                  <option [ngValue]="null">None</option>
+                  <option [ngValue]="null">{{ 'AUTO_INLINE_SECURITY_UI.NONE' | translate }}</option>
                   @for (c of companyOptions(); track c.companyCode) {
                     @if (c.companyCode !== editCompany()?.companyCode) {
                       <option [value]="c.companyCode">
@@ -300,9 +306,9 @@ type Tab = 'companies' | 'types';
                 </select>
               </div>
               <div class="s-field">
-                <label class="s-label">Company Type</label>
+                <label class="s-label">{{ 'DOM_FALLBACK.TEXT_239' | translate }}</label>
                 <select class="s-select" [(ngModel)]="cf.companyTypeId">
-                  <option [ngValue]="null">None</option>
+                  <option [ngValue]="null">{{ 'AUTO_INLINE_SECURITY_UI.NONE' | translate }}</option>
                   @for (t of typeOptions(); track t.idCompanyType) {
                     <option [ngValue]="t.idCompanyType">{{ t.typeCode }} — {{ t.typeName }}</option>
                   }
@@ -319,7 +325,7 @@ type Tab = 'companies' | 'types';
                   <div class="s-toggle-track"></div>
                   <div class="s-toggle-thumb"></div>
                 </label>
-                <span style="font-size:13px;color:var(--s-text-2)">Is Parent Company</span>
+                <span style="font-size:13px;color:var(--s-text-2)">{{ 'DOM_FALLBACK.TEXT_240' | translate }}</span>
               </div>
               @if (editCompany()) {
                 <div
@@ -331,15 +337,15 @@ type Tab = 'companies' | 'types';
                     <div class="s-toggle-track"></div>
                     <div class="s-toggle-thumb"></div>
                   </label>
-                  <span style="font-size:13px;color:var(--s-text-2)">Active</span>
+                  <span style="font-size:13px;color:var(--s-text-2)">{{ 'DOM_FALLBACK.TEXT_092' | translate }}</span>
                 </div>
               }
             </div>
           </div>
           <div class="s-modal-footer">
-            <button class="s-btn s-btn-ghost" (click)="compModal.set(false)">Cancel</button>
+            <button class="s-btn s-btn-ghost" (click)="compModal.set(false)">{{ 'COMMON.CANCEL' | translate }}</button>
             <button class="s-btn s-btn-primary" (click)="saveCompany()" [disabled]="saving()">
-              {{ saving() ? 'Saving…' : editCompany() ? 'Update' : 'Create' }}
+              {{ saving() ? 'Saving�¦' : editCompany() ? 'Update' : 'Create' }}
             </button>
           </div>
         </div>
@@ -356,11 +362,11 @@ type Tab = 'companies' | 'types';
           </div>
           <div class="s-modal-body">
             @if (saveError()) {
-              <div class="s-alert error" style="margin-bottom:12px;">⚠ {{ saveError() }}</div>
+              <div class="s-alert error" style="margin-bottom:12px;">�  {{ saveError() }}</div>
             }
             <div class="s-form-row single">
               <div class="s-field">
-                <label class="s-label">Type Code *</label>
+                <label class="s-label">{{ 'DOM_FALLBACK.TEXT_241' | translate }}</label>
                 <input
                   class="s-input mono"
                   [(ngModel)]="tf.typeCode"
@@ -372,8 +378,8 @@ type Tab = 'companies' | 'types';
             </div>
             <div class="s-form-row single">
               <div class="s-field">
-                <label class="s-label">Type Name *</label>
-                <input class="s-input" [(ngModel)]="tf.typeName" placeholder="Holding Company" />
+                <label class="s-label">{{ 'DOM_FALLBACK.TEXT_242' | translate }}</label>
+                <input class="s-input" [(ngModel)]="tf.typeName" placeholder="{{ 'AUTO_INLINE_SECURITY_UI.HOLDING_COMPANY' | translate }}" />
               </div>
             </div>
             @if (editType()) {
@@ -387,15 +393,15 @@ type Tab = 'companies' | 'types';
                     <div class="s-toggle-track"></div>
                     <div class="s-toggle-thumb"></div>
                   </label>
-                  <span style="font-size:13px;color:var(--s-text-2)">Active</span>
+                  <span style="font-size:13px;color:var(--s-text-2)">{{ 'DOM_FALLBACK.TEXT_092' | translate }}</span>
                 </div>
               </div>
             }
           </div>
           <div class="s-modal-footer">
-            <button class="s-btn s-btn-ghost" (click)="typeModal.set(false)">Cancel</button>
+            <button class="s-btn s-btn-ghost" (click)="typeModal.set(false)">{{ 'COMMON.CANCEL' | translate }}</button>
             <button class="s-btn s-btn-primary" (click)="saveType()" [disabled]="saving()">
-              {{ saving() ? 'Saving…' : editType() ? 'Update' : 'Create' }}
+              {{ saving() ? 'Saving�¦' : editType() ? 'Update' : 'Create' }}
             </button>
           </div>
         </div>
@@ -417,8 +423,8 @@ type Tab = 'companies' | 'types';
             ></p>
           </div>
           <div class="s-modal-footer">
-            <button class="s-btn s-btn-ghost" (click)="deleteTarget.set(null)">Cancel</button>
-            <button class="s-btn s-btn-danger" (click)="runDelete()">Delete</button>
+            <button class="s-btn s-btn-ghost" (click)="deleteTarget.set(null)">{{ 'COMMON.CANCEL' | translate }}</button>
+            <button class="s-btn s-btn-danger" (click)="runDelete()">{{ 'COMMON.DELETE' | translate }}</button>
           </div>
         </div>
       </div>
@@ -427,6 +433,8 @@ type Tab = 'companies' | 'types';
 })
 export class CompaniesComponent implements OnInit {
   private api = inject(SecuApiService);
+  readonly permissionService = inject(PermissionService);
+  readonly PAGE_CODE = PAGE_CODE;
 
   tab = signal<Tab>('companies');
   companies = signal<RefCompanyDto[]>([]);
@@ -706,3 +714,4 @@ export class CompaniesComponent implements OnInit {
     }
   }
 }
+

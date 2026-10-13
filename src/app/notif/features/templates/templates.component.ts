@@ -17,6 +17,7 @@ import { SelectButtonModule } from 'primeng/selectbutton';
 import { TableModule } from 'primeng/table';
 import { TabsModule } from 'primeng/tabs';
 import { TagModule } from 'primeng/tag';
+import { TranslatePipe } from '@ngx-translate/core';
 import { PermissionService } from '../../core/services/permission.service';
 import { TemplatesService } from '../../core/services/templates.service';
 import { EventTypesService } from '../../core/services/event-types.service';
@@ -66,6 +67,7 @@ interface TemplatePreviewResult {
     TableModule,
     TabsModule,
     TagModule,
+    TranslatePipe,
     PermActionDirective
   ],
   templateUrl: './templates.component.html'

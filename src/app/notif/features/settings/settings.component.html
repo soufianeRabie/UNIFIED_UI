@@ -1,13 +1,13 @@
 <div class="np-page">
   <div class="np-page-header">
     <div>
-      <div class="np-eyebrow"><i class="pi pi-cog"></i> Configuration</div>
-      <div class="np-page-title">Settings</div>
-      <div class="np-page-subtitle">Configure API connection, tenant context, and authentication.</div>
+      <div class="np-eyebrow"><i class="pi pi-cog"></i> {{ 'DOM_FALLBACK.TEXT_064' | translate }}</div>
+      <div class="np-page-title">{{ 'DOM_FALLBACK.TEXT_065' | translate }}</div>
+      <div class="np-page-subtitle">{{ 'DOM_FALLBACK.TEXT_066' | translate }}</div>
     </div>
     <div class="np-btn-row">
-      <button class="np-btn np-btn--ghost" (click)="resetDefaults()"><i class="pi pi-undo"></i> Reset</button>
-      <button class="np-btn np-btn--primary" [permAction]="perm.canUpdate(PAGE_CODE)" (click)="save()"><i class="pi pi-save"></i> Save Settings</button>
+      <button class="np-btn np-btn--ghost" (click)="resetDefaults()"><i class="pi pi-undo"></i> {{ 'DOM_FALLBACK.TEXT_067' | translate }}</button>
+      <button class="np-btn np-btn--primary" [permAction]="perm.canUpdate(PAGE_CODE)" (click)="save()"><i class="pi pi-save"></i> {{ 'DOM_FALLBACK.TEXT_068' | translate }}</button>
     </div>
   </div>
 
@@ -18,9 +18,9 @@
     style="display:flex;align-items:center;gap:12px;padding:14px 18px;background:var(--s-red-bg);border:1px solid rgba(248,113,113,0.3);border-radius:10px;margin-bottom:4px">
     <i class="pi pi-exclamation-triangle" style="color:var(--s-red);font-size:18px;flex-shrink:0"></i>
     <div>
-      <div style="font-size:13px;font-weight:600;color:var(--s-red)">Tenant ID not resolved</div>
+      <div style="font-size:13px;font-weight:600;color:var(--s-red)">{{ 'DOM_FALLBACK.TEXT_069' | translate }}</div>
       <div style="font-size:12px;color:var(--s-text-2);margin-top:2px">
-        Enter your tenant ID below and click Save — this fixes the <span class="np-code">Missing X-Tenant-Id header</span> error on all API requests.
+        {{ 'AUTO_SECURITY_UI.ENTER_YOUR_TENANT_ID_BELOW_AND_CLICK_SAVE_THIS_FIXES_THE' | translate }} <span class="np-code">{{ 'DOM_FALLBACK.TEXT_071' | translate }}</span> {{ 'DOM_FALLBACK.TEXT_072' | translate }}
       </div>
     </div>
   </div>
@@ -29,33 +29,33 @@
     style="display:flex;align-items:center;gap:12px;padding:12px 18px;background:var(--s-green-bg);border:1px solid rgba(52,211,153,0.2);border-radius:10px;margin-bottom:4px">
     <i class="pi pi-check-circle" style="color:var(--s-green);font-size:16px;flex-shrink:0"></i>
     <div style="font-size:12px;color:var(--s-text-2)">
-      Tenant resolved: <span class="np-code" style="color:var(--s-green)">{{ resolvedTenantId }}</span>
-      <span *ngIf="sessionTenantId" style="margin-left:8px;color:var(--s-text-3)">(from session)</span>
+      {{ 'DOM_FALLBACK.TEXT_073' | translate }} <span class="np-code" style="color:var(--s-green)">{{ resolvedTenantId }}</span>
+      <span *ngIf="sessionTenantId" style="margin-left:8px;color:var(--s-text-3)">{{ 'DOM_FALLBACK.TEXT_074' | translate }}</span>
     </div>
   </div>
 
   <div class="np-grid-2">
     <div class="np-card">
       <div class="np-card-header">
-        <div class="np-card-title"><i class="pi pi-server"></i> API Connection</div>
+        <div class="np-card-title"><i class="pi pi-server"></i> {{ 'DOM_FALLBACK.TEXT_075' | translate }}</div>
       </div>
       <div class="np-card-body">
         <form class="np-form" [formGroup]="form">
           <div class="np-field">
-            <label class="np-label">API Base URL <span style="color:var(--s-red)">*</span></label>
+            <label class="np-label">{{ 'DOM_FALLBACK.TEXT_076' | translate }} <span style="color:var(--s-red)">*</span></label>
             <input pInputText formControlName="apiBaseUrl" placeholder="http://localhost:5003" />
-            <span class="np-hint">Base URL without /api suffix — services append /api/ automatically</span>
+            <span class="np-hint">{{ 'AUTO_SECURITY_UI.BASE_URL_WITHOUT_API_SUFFIX_SERVICES_APPEND_API_AUTOMATICALLY' | translate }}</span>
           </div>
           <div class="np-field">
-            <label class="np-label">Tenant ID <span style="color:var(--s-red)">*</span></label>
-            <input pInputText formControlName="tenantId" placeholder="e.g. DEFAULT or your company code" />
+            <label class="np-label">{{ 'DOM_FALLBACK.TEXT_078' | translate }} <span style="color:var(--s-red)">*</span></label>
+            <input pInputText formControlName="tenantId" [placeholder]="'AUTO_SECURITY_UI.E_G_DEFAULT_OR_YOUR_COMPANY_CODE' | translate" />
             <span class="np-hint">
-              Sent as <span class="np-code">X-Tenant-Id</span> header on every request.
+              {{ 'DOM_FALLBACK.TEXT_079' | translate }} <span class="np-code">{{ 'AUTO_SECURITY_UI.X_TENANT_ID' | translate }}</span> {{ 'AUTO_SECURITY_UI.HEADER_ON_EVERY_REQUEST' | translate }}
               <ng-container *ngIf="sessionTenantId">
-                Current session value: <strong style="color:var(--s-accent)">{{ sessionTenantId }}</strong>
+                {{ 'DOM_FALLBACK.TEXT_081' | translate }} <strong style="color:var(--s-accent)">{{ sessionTenantId }}</strong>
               </ng-container>
               <ng-container *ngIf="!sessionTenantId">
-                Not found in session — enter it manually and save.
+                {{ 'AUTO_SECURITY_UI.NOT_FOUND_IN_SESSION_ENTER_IT_MANUALLY_AND_SAVE' | translate }}
               </ng-container>
             </span>
           </div>
@@ -65,29 +65,29 @@
 
     <div class="np-card">
       <div class="np-card-header">
-        <div class="np-card-title"><i class="pi pi-info-circle"></i> Notes</div>
+        <div class="np-card-title"><i class="pi pi-info-circle"></i> {{ 'DOM_FALLBACK.TEXT_083' | translate }}</div>
       </div>
       <div class="np-card-body">
         <div class="np-row-list">
           <div class="np-row-item" style="background:var(--s-accent-glow);border-color:rgba(79,142,247,0.3)">
             <div class="np-row-icon" style="background:rgba(79,142,247,0.2)"><i class="pi pi-lock"></i></div>
             <div class="np-row-body">
-              <div class="np-row-name">Authentication</div>
-              <div class="np-row-meta">Bearer token is read automatically from your SecurityUi session — no manual input needed.</div>
+              <div class="np-row-name">{{ 'DOM_FALLBACK.TEXT_084' | translate }}</div>
+              <div class="np-row-meta">{{ 'AUTO_SECURITY_UI.BEARER_TOKEN_IS_READ_AUTOMATICALLY_FROM_YOUR_SECURITYUI_SESSION_' | translate }}</div>
             </div>
           </div>
           <div class="np-row-item">
             <div class="np-row-icon"><i class="pi pi-tag"></i></div>
             <div class="np-row-body">
-              <div class="np-row-name">Tenant Header</div>
-              <div class="np-row-meta">All requests include <span class="np-code">X-Tenant-Id</span>. Leaving it blank causes 400 errors from the API.</div>
+              <div class="np-row-name">{{ 'DOM_FALLBACK.TEXT_086' | translate }}</div>
+              <div class="np-row-meta">{{ 'AUTO_SECURITY_UI.ALL_REQUESTS_INCLUDE' | translate }} <span class="np-code">{{ 'AUTO_SECURITY_UI.X_TENANT_ID' | translate }}</span>{{ 'AUTO_SECURITY_UI.LEAVING_IT_BLANK_CAUSES_400_ERRORS_FROM_THE_API' | translate }}</div>
             </div>
           </div>
           <div class="np-row-item">
             <div class="np-row-icon"><i class="pi pi-save"></i></div>
             <div class="np-row-body">
-              <div class="np-row-name">Persistence</div>
-              <div class="np-row-meta">Stored in browser localStorage. Reload the page after saving to apply changes.</div>
+              <div class="np-row-name">{{ 'DOM_FALLBACK.TEXT_087' | translate }}</div>
+              <div class="np-row-meta">{{ 'DOM_FALLBACK.TEXT_088' | translate }}</div>
             </div>
           </div>
         </div>

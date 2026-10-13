@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, inject, computed } from '@angular/core';
+﻿import { Component, OnInit, signal, inject, computed } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -12,6 +12,7 @@ import {
   SecuPermissionDto,
   SecuUserDto,
 } from '../../models/secu.models';
+import { TranslatePipe } from '@ngx-translate/core';
 
 type Tab = 'info' | 'roles' | 'permissions' | 'members';
 
@@ -27,7 +28,7 @@ interface PagePermNode {
 @Component({
   selector: 'app-group-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [CommonModule, RouterLink, FormsModule, TranslatePipe],
   styles: [
     `
       .tab-body {
@@ -133,14 +134,14 @@ interface PagePermNode {
   template: `
     <div style="margin-bottom:16px;">
       <a routerLink="../" style="color:var(--s-text-2);font-size:13px;text-decoration:none"
-        >← Back to Groups</a
+        >{{ 'AUTO_INLINE_SECURITY_UI.BACK_TO_GROUPS' | translate }}</a
       >
     </div>
 
     @if (loading()) {
-      <div class="s-empty"><div class="s-empty-text">Loading…</div></div>
+      <div class="s-empty"><div class="s-empty-text">{{ 'AUTO_INLINE_SECURITY_UI.LOADING' | translate }}</div></div>
     } @else if (!group()) {
-      <div class="s-alert error">Group not found</div>
+      <div class="s-alert error">{{ 'DOM_FALLBACK.TEXT_246' | translate }}</div>
     } @else {
       <!-- Header -->
       <div class="s-page-header">
@@ -169,24 +170,24 @@ interface PagePermNode {
       <!-- Stats -->
       <div class="s-stats-grid" style="margin-bottom:20px;">
         <div class="s-stat-card">
-          <div class="s-stat-icon purple">🎭</div>
+          <div class="s-stat-icon purple">�­</div>
           <div>
             <div class="s-stat-value">{{ groupRoles().length }}</div>
-            <div class="s-stat-label">Roles</div>
+            <div class="s-stat-label">{{ 'DOM_FALLBACK.TEXT_309' | translate }}</div>
           </div>
         </div>
         <div class="s-stat-card">
-          <div class="s-stat-icon blue">🔐</div>
+          <div class="s-stat-icon blue">�</div>
           <div>
             <div class="s-stat-value">{{ effectivePermCount() }}</div>
-            <div class="s-stat-label">Eff. Permissions</div>
+            <div class="s-stat-label">{{ 'DOM_FALLBACK.TEXT_247' | translate }}</div>
           </div>
         </div>
         <div class="s-stat-card">
-          <div class="s-stat-icon green">👤</div>
+          <div class="s-stat-icon green">�¤</div>
           <div>
             <div class="s-stat-value">{{ memberCount() }}</div>
-            <div class="s-stat-label">Members</div>
+            <div class="s-stat-label">{{ 'DOM_FALLBACK.TEXT_250' | translate }}</div>
           </div>
         </div>
       </div>
@@ -195,20 +196,20 @@ interface PagePermNode {
       <div class="s-card" style="overflow:visible;">
         <div class="s-tabs">
           <div class="s-tab" [class.active]="tab() === 'info'" (click)="tab.set('info')">
-            📋 Info
+            {{ 'AUTO_INLINE_SECURITY_UI.INFO' | translate }}
           </div>
           <div class="s-tab" [class.active]="tab() === 'roles'" (click)="tab.set('roles')">
-            🎭 Roles <span class="s-tab-count">{{ groupRoles().length }}</span>
+            {{ 'AUTO_INLINE_SECURITY_UI.ROLES' | translate }} <span class="s-tab-count">{{ groupRoles().length }}</span>
           </div>
           <div
             class="s-tab"
             [class.active]="tab() === 'permissions'"
             (click)="tab.set('permissions')"
           >
-            🔐 Effective Permissions <span class="s-tab-count">{{ effectivePermCount() }}</span>
+            {{ 'AUTO_INLINE_SECURITY_UI.EFFECTIVE_PERMISSIONS' | translate }} <span class="s-tab-count">{{ effectivePermCount() }}</span>
           </div>
           <div class="s-tab" [class.active]="tab() === 'members'" (click)="tab.set('members')">
-            👥 Members <span class="s-tab-count">{{ memberCount() }}</span>
+            {{ 'AUTO_INLINE_SECURITY_UI.MEMBERS' | translate }} <span class="s-tab-count">{{ memberCount() }}</span>
           </div>
         </div>
 
@@ -217,29 +218,29 @@ interface PagePermNode {
           <div class="s-card-body">
             <div class="s-detail-grid">
               <div class="s-detail-field">
-                <label>Group ID</label>
+                <label>{{ 'DOM_FALLBACK.TEXT_251' | translate }}</label>
                 <div class="val" style="font-family:var(--s-mono);color:var(--s-text-3)">
                   {{ group()!.idGroup }}
                 </div>
               </div>
               <div class="s-detail-field">
-                <label>Code</label>
+                <label>{{ 'DOM_FALLBACK.TEXT_035' | translate }}</label>
                 <div class="val" style="font-family:var(--s-mono);color:var(--s-purple)">
                   {{ group()!.groupCode }}
                 </div>
               </div>
               <div class="s-detail-field">
-                <label>Name</label>
+                <label>{{ 'DOM_FALLBACK.TEXT_043' | translate }}</label>
                 <div class="val">{{ group()!.groupName }}</div>
               </div>
               <div class="s-detail-field">
-                <label>App</label>
+                <label>{{ 'AUTO_INLINE_SECURITY_UI.APP' | translate }}</label>
                 <div class="val" style="font-family:var(--s-mono);font-size:12px">
                   {{ group()!.appCode }}
                 </div>
               </div>
               <div class="s-detail-field">
-                <label>Status</label>
+                <label>{{ 'DOM_FALLBACK.TEXT_026' | translate }}</label>
                 <span
                   class="s-badge"
                   [class.active]="group()!.isActive"
@@ -249,7 +250,7 @@ interface PagePermNode {
                 >
               </div>
               <div class="s-detail-field">
-                <label>Created</label>
+                <label>{{ 'SECU.USERS.COLUMNS.CREATED' | translate }}</label>
                 <div class="val">{{ group()!.createdAt | date: 'dd/MM/yyyy HH:mm' }}</div>
               </div>
             </div>
@@ -260,23 +261,23 @@ interface PagePermNode {
         @if (tab() === 'roles') {
           <div class="tab-body">
             <div class="s-toolbar" style="justify-content:space-between;">
-              <span style="font-size:13px;font-weight:500;color:var(--s-text)">Assigned Roles</span>
+              <span style="font-size:13px;font-weight:500;color:var(--s-text)">{{ 'DOM_FALLBACK.TEXT_252' | translate }}</span>
               <button
                 class="s-btn s-btn-primary s-btn-sm"
                 (click)="startAddRole()"
                 [disabled]="addingRole()"
               >
-                + Add Role
+                {{ 'DOM_FALLBACK.TEXT_253' | translate }}
               </button>
             </div>
             <div class="s-table-wrap">
               <table class="s-table">
                 <thead>
                   <tr>
-                    <th>Role</th>
-                    <th>App</th>
-                    <th>Granted At</th>
-                    <th>Status</th>
+                    <th>{{ 'SECU.PERMISSIONS.ROLE_LABEL' | translate }}</th>
+                    <th>{{ 'AUTO_INLINE_SECURITY_UI.APP' | translate }}</th>
+                    <th>{{ 'DOM_FALLBACK.TEXT_254' | translate }}</th>
+                    <th>{{ 'DOM_FALLBACK.TEXT_026' | translate }}</th>
                     <th style="width:48px"></th>
                   </tr>
                 </thead>
@@ -285,14 +286,14 @@ interface PagePermNode {
                     <tr class="row-adding">
                       <td colspan="4" style="padding:10px 14px;">
                         <select class="add-select" [(ngModel)]="addRoleId">
-                          <option [ngValue]="null">Select a role…</option>
+                          <option [ngValue]="null">{{ 'AUTO_INLINE_SECURITY_UI.SELECT_A_ROLE' | translate }}</option>
                           @for (r of availableRoles(); track r.idRole) {
                             <option [ngValue]="r.idRole">
                               {{ r.roleCode }} — {{ r.roleName }}
                             </option>
                           }
                           @if (!availableRoles().length) {
-                            <option disabled>All active roles already assigned</option>
+                            <option disabled>{{ 'DOM_FALLBACK.TEXT_256' | translate }}</option>
                           }
                         </select>
                       </td>
@@ -303,7 +304,7 @@ interface PagePermNode {
                             (click)="confirmAddRole()"
                             [disabled]="!addRoleId"
                           >
-                            Add
+                            {{ 'DOM_FALLBACK.TEXT_193' | translate }}
                           </button>
                           <button class="s-btn s-btn-ghost s-btn-sm" (click)="cancelAddRole()">
                             ✕
@@ -340,9 +341,9 @@ interface PagePermNode {
                         <button
                           class="s-btn-icon danger"
                           (click)="askRemoveRole(gr)"
-                          title="Remove"
+                          title="{{ 'AUTO_SECURITY_UI.REMOVE' | translate }}"
                         >
-                          🗑
+                          �—‘
                         </button>
                       </td>
                     </tr>
@@ -351,8 +352,8 @@ interface PagePermNode {
                       <tr>
                         <td colspan="5">
                           <div class="s-empty">
-                            <div class="s-empty-icon">🎭</div>
-                            <div class="s-empty-text">No roles assigned to this group</div>
+                            <div class="s-empty-icon">�­</div>
+                            <div class="s-empty-text">{{ 'DOM_FALLBACK.TEXT_257' | translate }}</div>
                           </div>
                         </td>
                       </tr>
@@ -370,33 +371,33 @@ interface PagePermNode {
             <div class="s-toolbar" style="justify-content:space-between;flex-wrap:wrap;gap:8px;">
               <div>
                 <span style="font-size:13px;font-weight:500;color:var(--s-text)"
-                  >Effective Permissions</span
+                  >{{ 'DOM_FALLBACK.TEXT_249' | translate }}</span
                 >
                 <span style="font-size:11px;color:var(--s-text-3);margin-left:8px;"
-                  >All permissions granted to this group via its roles (read-only)</span
+                  >{{ 'DOM_FALLBACK.TEXT_258' | translate }}</span
                 >
               </div>
               <div style="display:flex;gap:8px;align-items:center;">
                 <div class="s-search" style="max-width:200px;">
-                  <span class="s-search-icon">🔍</span>
-                  <input placeholder="Filter pages…" [(ngModel)]="permSearch" />
+                  <span class="s-search-icon">�</span>
+                  <input placeholder="{{ 'AUTO_INLINE_SECURITY_UI.FILTER_PAGES' | translate }}" [(ngModel)]="permSearch" />
                 </div>
-                <button class="s-btn s-btn-ghost s-btn-sm" (click)="expandAll()">Expand All</button>
+                <button class="s-btn s-btn-ghost s-btn-sm" (click)="expandAll()">{{ 'DOM_FALLBACK.TEXT_289' | translate }}</button>
                 <button class="s-btn s-btn-ghost s-btn-sm" (click)="collapseAll()">
-                  Collapse All
+                  {{ 'DOM_FALLBACK.TEXT_290' | translate }}
                 </button>
               </div>
             </div>
 
             @if (!groupRoles().length) {
               <div class="s-empty" style="padding:48px;">
-                <div class="s-empty-icon">🔐</div>
+                <div class="s-empty-icon">�</div>
                 <div class="s-empty-text">
-                  Assign roles to this group to see effective permissions
+                  {{ 'DOM_FALLBACK.TEXT_259' | translate }}
                 </div>
               </div>
             } @else if (permTreeLoading()) {
-              <div class="s-empty"><div class="s-empty-text">Loading permissions…</div></div>
+              <div class="s-empty"><div class="s-empty-text">{{ 'AUTO_INLINE_SECURITY_UI.LOADING_PERMISSIONS' | translate }}</div></div>
             } @else {
               <div class="eff-tree">
                 @for (node of filteredPermTree(); track node.idPage) {
@@ -405,7 +406,7 @@ interface PagePermNode {
                   ></ng-container>
                 } @empty {
                   <div class="s-empty" style="padding:40px;">
-                    <div class="s-empty-text">No pages match filter</div>
+                    <div class="s-empty-text">{{ 'DOM_FALLBACK.TEXT_261' | translate }}</div>
                   </div>
                 }
               </div>
@@ -418,22 +419,22 @@ interface PagePermNode {
           <div class="tab-body">
             <div class="s-toolbar">
               <span style="font-size:13px;font-weight:500;color:var(--s-text)"
-                >Users in this group</span
+                >{{ 'DOM_FALLBACK.TEXT_262' | translate }}</span
               >
               <div class="s-search" style="margin-left:auto;max-width:220px;">
-                <span class="s-search-icon">🔍</span>
-                <input placeholder="Search members…" [(ngModel)]="memberSearch" />
+                <span class="s-search-icon">�</span>
+                <input placeholder="{{ 'AUTO_INLINE_SECURITY_UI.SEARCH_MEMBERS' | translate }}" [(ngModel)]="memberSearch" />
               </div>
             </div>
             <div class="s-table-wrap">
               <table class="s-table">
                 <thead>
                   <tr>
-                    <th>User</th>
-                    <th>Email</th>
-                    <th>Granted At</th>
-                    <th>Expires</th>
-                    <th>Status</th>
+                    <th>{{ 'NOTIF.USERS.COLUMNS.USER' | translate }}</th>
+                    <th>{{ 'NOTIF.USERS.COLUMNS.EMAIL' | translate }}</th>
+                    <th>{{ 'DOM_FALLBACK.TEXT_254' | translate }}</th>
+                    <th>{{ 'DOM_FALLBACK.TEXT_355' | translate }}</th>
+                    <th>{{ 'DOM_FALLBACK.TEXT_026' | translate }}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -472,8 +473,8 @@ interface PagePermNode {
                     <tr>
                       <td colspan="5">
                         <div class="s-empty">
-                          <div class="s-empty-icon">👥</div>
-                          <div class="s-empty-text">No members found</div>
+                          <div class="s-empty-icon">�¥</div>
+                          <div class="s-empty-text">{{ 'DOM_FALLBACK.TEXT_263' | translate }}</div>
                         </div>
                       </td>
                     </tr>
@@ -490,7 +491,7 @@ interface PagePermNode {
     <ng-template #pgNodeTpl let-node>
       <div class="pg-row">
         <div class="pg-header" (click)="node.expanded = !node.expanded">
-          <span class="pg-chevron" [class.open]="node.expanded">▶</span>
+          <span class="pg-chevron" [class.open]="node.expanded">�–¶</span>
           <span style="font-size:13px">📄</span>
           <span
             style="font-family:var(--s-mono);font-size:12px;color:var(--s-accent);min-width:100px;flex-shrink:0;"
@@ -544,8 +545,8 @@ interface PagePermNode {
             ></p>
           </div>
           <div class="s-modal-footer">
-            <button class="s-btn s-btn-ghost" (click)="confirmModal.set(null)">Cancel</button>
-            <button class="s-btn s-btn-danger" (click)="runConfirm()">Confirm</button>
+            <button class="s-btn s-btn-ghost" (click)="confirmModal.set(null)">{{ 'SECURITY.CHANGE_PASSWORD.CANCEL' | translate }}</button>
+            <button class="s-btn s-btn-danger" (click)="runConfirm()">{{ 'DOM_FALLBACK.TEXT_375' | translate }}</button>
           </div>
         </div>
       </div>
@@ -577,7 +578,7 @@ export class GroupDetailComponent implements OnInit {
   memberCount = computed(() => this.members().length);
 
   availableRoles = computed(() => {
-    const assigned = new Set(this.groupRoles().map((r) => r.idRole));
+    const assigned = new Set(this.groupRoles().map((r) => r.roleId));
     return this.allRoles().filter((r) => !assigned.has(r.idRole) && r.isActive);
   });
 
@@ -635,7 +636,7 @@ export class GroupDetailComponent implements OnInit {
     ).subscribe((results) => {
       const members: SecuUserDto[] = [];
       results.forEach((res, i) => {
-        if (res?.data.some((ug) => ug.idGroup === groupId && ug.isActive)) {
+        if (res?.data.some((ug) => ug.groupId === groupId && ug.isActive)) {
           members.push(sample[i]);
         }
       });
@@ -652,7 +653,7 @@ export class GroupDetailComponent implements OnInit {
 
     forkJoin(
       groupRoles.map((gr) =>
-        this.api.getRolePermissions(gr.idRole, { size: 500 }).pipe(catchError(() => of(null))),
+        this.api.getRolePermissions(gr.roleId, { size: 500 }).pipe(catchError(() => of(null))),
       ),
     ).subscribe((results) => {
       // Map paId → { actionCode, actionName, pageCode, pageName, idPage, fromRole }
@@ -673,12 +674,12 @@ export class GroupDetailComponent implements OnInit {
         res?.data
           .filter((p) => p.isActive)
           .forEach((p) => {
-            if (!paMap.has(p.idPageAction)) {
-              paMap.set(p.idPageAction, {
-                idPageAction: p.idPageAction,
+            if (!paMap.has(p.pageActionId)) {
+              paMap.set(p.pageActionId, {
+                idPageAction: p.pageActionId,
                 pageCode: p.pageCode,
                 pageName: p.pageName,
-                idPage: p.idPageAction, // use as page key
+                idPage: p.pageActionId, // use as page key
                 actionCode: p.actionCode,
                 actionName: p.actionName,
                 fromRole: roleName,
@@ -778,7 +779,7 @@ export class GroupDetailComponent implements OnInit {
   confirmAddRole() {
     if (!this.addRoleId) return;
     const id = +this.route.snapshot.paramMap.get('id')!;
-    const newIds = [...new Set([...this.groupRoles().map((r) => r.idRole), this.addRoleId])];
+    const newIds = [...new Set([...this.groupRoles().map((r) => r.roleId), this.addRoleId])];
     this.api
       .assignGroupRoles(id, { roleIds: newIds })
       .pipe(catchError(() => of(null)))
@@ -792,12 +793,12 @@ export class GroupDetailComponent implements OnInit {
     this.confirmModal.set({
       title: 'Remove Role',
       message: `Remove role <strong style="color:var(--s-accent);font-family:var(--s-mono)">${gr.roleCode}</strong> from this group?<br><br>
-        <span style="font-size:12px;color:var(--s-amber);">⚠ Users in this group will lose permissions granted by this role.</span>`,
+        <span style="font-size:12px;color:var(--s-amber);">�  Users in this group will lose permissions granted by this role.</span>`,
       onConfirm: () => {
         const id = +this.route.snapshot.paramMap.get('id')!;
         const newIds = this.groupRoles()
           .filter((r) => r.idGroupRole !== gr.idGroupRole)
-          .map((r) => r.idRole);
+          .map((r) => r.roleId);
         this.api
           .assignGroupRoles(id, { roleIds: newIds })
           .pipe(catchError(() => of(null)))
@@ -818,3 +819,4 @@ export class GroupDetailComponent implements OnInit {
     this.confirmModal.set(null);
   }
 }
+

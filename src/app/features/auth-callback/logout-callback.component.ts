@@ -3,13 +3,14 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { MessageModule } from 'primeng/message';
+import { TranslatePipe } from '@ngx-translate/core';
 
 import { OidcAuthService } from '../../core/services/oidc-auth.service';
 
 @Component({
   selector: 'app-logout-callback',
   standalone: true,
-  imports: [CommonModule, ProgressSpinnerModule, MessageModule],
+  imports: [CommonModule, ProgressSpinnerModule, MessageModule, TranslatePipe],
   template: `
     <main class="callback-shell">
       <section class="callback-card">
@@ -17,8 +18,8 @@ import { OidcAuthService } from '../../core/services/oidc-auth.service';
           <p-message severity="error" [text]="error() || ''" styleClass="w-full"></p-message>
         } @else {
           <p-progressSpinner ariaLabel="Completing logout"></p-progressSpinner>
-          <h1>Signing out</h1>
-          <p>Clearing the local session.</p>
+          <h1>{{ 'DOM_FALLBACK.TEXT_171' | translate }}</h1>
+          <p>{{ 'DOM_FALLBACK.TEXT_172' | translate }}</p>
         }
       </section>
     </main>

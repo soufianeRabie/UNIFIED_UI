@@ -1,19 +1,19 @@
 <div class="np-page">
   <div class="np-page-header">
     <div>
-      <div class="np-eyebrow"><i class="pi pi-send"></i> Eyebrow</div>
-      <div class="np-page-title">Page Title</div>
-      <div class="np-page-subtitle">Page Subtitle</div>
+      <div class="np-eyebrow"><i class="pi pi-send"></i> {{ 'NOTIF.PROVIDERS.EYEBROW' | translate }}</div>
+      <div class="np-page-title">{{ 'NOTIF.PROVIDERS.PAGE_TITLE' | translate }}</div>
+      <div class="np-page-subtitle">{{ 'NOTIF.PROVIDERS.PAGE_SUBTITLE' | translate }}</div>
     </div>
-    <button class="np-btn np-btn--ghost" (click)="load()"><i class="pi pi-refresh"></i> Reload</button>
+    <button class="np-btn np-btn--ghost" (click)="load()"><i class="pi pi-refresh"></i> {{ 'COMMON.REFRESH' | translate }}</button>
   </div>
 
   <p-message *ngIf="status" [severity]="status.type" [text]="status.message"></p-message>
 
   <p-tabs [value]="0">
     <p-tablist>
-      <p-tab [value]="0"><i class="pi pi-envelope" style="margin-right:6px"></i> Tab Email</p-tab>
-      <p-tab [value]="1"><i class="pi pi-mobile" style="margin-right:6px"></i> Tab Sms</p-tab>
+      <p-tab [value]="0"><i class="pi pi-envelope" style="margin-right:6px"></i> {{ 'NOTIF.PROVIDERS.TAB_EMAIL' | translate }}</p-tab>
+      <p-tab [value]="1"><i class="pi pi-mobile" style="margin-right:6px"></i> {{ 'NOTIF.PROVIDERS.TAB_SMS' | translate }}</p-tab>
     </p-tablist>
     <p-tabpanels>
 
@@ -23,13 +23,13 @@
           <div style="display:flex;flex-direction:column;gap:14px">
             <div class="np-card">
               <div class="np-card-header">
-                <div class="np-card-title"><i class="pi pi-envelope"></i> {{ selectedEmail ? 'Edit Provider' : 'New Email Provider' }}</div>
+                <div class="np-card-title"><i class="pi pi-envelope"></i> {{ (selectedEmail ? 'NOTIF.PROVIDERS.EDIT_PROVIDER' : 'NOTIF.PROVIDERS.NEW_EMAIL_PROVIDER') | translate }}</div>
                 <div class="np-btn-row">
                   <button *ngIf="selectedEmail" class="np-btn np-btn--ghost" style="padding:3px 10px;font-size:11px" (click)="resetEmailForm()">
-                    <i class="pi pi-times"></i> Cancel
+                    <i class="pi pi-times"></i> {{ 'COMMON.CANCEL' | translate }}
                   </button>
                   <button class="np-btn np-btn--primary" [permAction]="selectedEmail ? perm.canUpdate(PAGE_CODE) : perm.canCreate(PAGE_CODE)" (click)="saveEmail()">
-                    <i class="pi pi-save"></i> {{ selectedEmail ? 'Update' : 'Create' }}
+                    <i class="pi pi-save"></i> {{ (selectedEmail ? 'COMMON.UPDATE' : 'COMMON.CREATE') | translate }}
                   </button>
                 </div>
               </div>
@@ -37,52 +37,52 @@
                 <form class="np-form" [formGroup]="emailForm">
                   <div class="np-form-row">
                     <div class="np-field">
-                      <label class="np-label">Provider Name</label>
-                      <input pInputText formControlName="name" placeholder="Main SMTP" />
+                      <label class="np-label">{{ 'NOTIF.PROVIDERS.FORM.PROVIDER_NAME' | translate }}</label>
+                      <input pInputText formControlName="name" [placeholder]="'AUTO_SECURITY_UI.MAIN_SMTP' | translate" />
                     </div>
                     <div class="np-field">
-                      <label class="np-label">Smtp Host</label>
-                      <input pInputText formControlName="host" placeholder="smtp.example.com" />
+                      <label class="np-label">{{ 'NOTIF.PROVIDERS.FORM.SMTP_HOST' | translate }}</label>
+                      <input pInputText formControlName="host" [placeholder]="'AUTO_SECURITY_UI.SMTP_EXAMPLE_COM' | translate" />
                     </div>
                   </div>
                   <div class="np-form-row">
                     <div class="np-field">
-                      <label class="np-label">Port</label>
+                      <label class="np-label">{{ 'NOTIF.PROVIDERS.FORM.PORT' | translate }}</label>
                       <p-inputNumber formControlName="port" [min]="1" [max]="65535"></p-inputNumber>
                     </div>
                     <div class="np-field">
-                      <label class="np-label">Username</label>
+                      <label class="np-label">{{ 'NOTIF.PROVIDERS.FORM.USERNAME' | translate }}</label>
                       <input pInputText formControlName="username" />
                     </div>
                   </div>
                   <div class="np-field">
-                    <label class="np-label">Password</label>
+                    <label class="np-label">{{ 'NOTIF.PROVIDERS.FORM.PASSWORD' | translate }}</label>
                     <input pInputText type="password" formControlName="password" placeholder="��������" />
                   </div>
                   <div class="np-form-row">
                     <div class="np-field">
-                      <label class="np-label">From Address</label>
+                      <label class="np-label">{{ 'NOTIF.PROVIDERS.FORM.FROM_ADDRESS' | translate }}</label>
                       <input pInputText formControlName="fromAddress" placeholder="noreply@company.com" />
                     </div>
                     <div class="np-field">
-                      <label class="np-label">From Name</label>
-                      <input pInputText formControlName="fromName" placeholder="My Application" />
+                      <label class="np-label">{{ 'NOTIF.PROVIDERS.FORM.FROM_NAME' | translate }}</label>
+                      <input pInputText formControlName="fromName" [placeholder]="'AUTO_SECURITY_UI.MY_APPLICATION' | translate" />
                     </div>
                   </div>
                   <div class="np-form-row">
                     <div class="np-field">
-                      <label class="np-label">Priority Order</label>
+                      <label class="np-label">{{ 'NOTIF.PROVIDERS.FORM.PRIORITY_ORDER' | translate }}</label>
                       <p-inputNumber formControlName="priorityOrder" [min]="1"></p-inputNumber>
                     </div>
                     <div class="np-field" style="justify-content:flex-end;gap:14px;flex-direction:row;align-items:center;padding-top:20px">
                       <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--s-text-2);cursor:pointer">
-                        <p-checkbox formControlName="useSsl" binary="true"></p-checkbox> Ssl
+                        <p-checkbox formControlName="useSsl" binary="true"></p-checkbox> {{ 'NOTIF.PROVIDERS.FORM.SSL' | translate }}
                       </label>
                       <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--s-text-2);cursor:pointer">
-                        <p-checkbox formControlName="isDefault" binary="true"></p-checkbox> Default
+                        <p-checkbox formControlName="isDefault" binary="true"></p-checkbox> {{ 'NOTIF.PROVIDERS.FORM.DEFAULT' | translate }}
                       </label>
                       <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--s-text-2);cursor:pointer">
-                        <p-checkbox formControlName="isActive" binary="true"></p-checkbox> Active
+                        <p-checkbox formControlName="isActive" binary="true"></p-checkbox> {{ 'COMMON.ACTIVE' | translate }}
                       </label>
                     </div>
                   </div>
@@ -94,18 +94,18 @@
           <!-- Email list -->
           <div class="np-card">
             <div class="np-card-header">
-              <div class="np-card-title"><i class="pi pi-list"></i> Configured</div>
+              <div class="np-card-title"><i class="pi pi-list"></i> {{ 'NOTIF.PROVIDERS.CONFIGURED' | translate }}</div>
               <button class="np-btn np-btn--ghost" [permAction]="perm.canCreate(PAGE_CODE)" style="padding:3px 10px;font-size:11px" (click)="resetEmailForm()">
-                <i class="pi pi-plus"></i> New
+                <i class="pi pi-plus"></i> {{ 'COMMON.NEW' | translate }}
               </button>
             </div>
             <div class="np-card-body np-card-body--flush">
               <p-table [value]="emailProviders" styleClass="p-datatable-sm">
                 <ng-template pTemplate="header">
                   <tr>
-                    <th>Col Name</th>
-                    <th>Col Host</th>
-                    <th style="width:80px">Col Default</th>
+                    <th>{{ 'NOTIF.PROVIDERS.COL_NAME' | translate }}</th>
+                    <th>{{ 'NOTIF.PROVIDERS.COL_HOST' | translate }}</th>
+                    <th style="width:80px">{{ 'NOTIF.PROVIDERS.COL_DEFAULT' | translate }}</th>
                     <th style="width:100px"></th>
                   </tr>
                 </ng-template>
@@ -114,7 +114,7 @@
                     <td>{{ p.name }}</td>
                     <td><span class="np-muted">{{ p.host }}</span></td>
                     <td>
-                      <span *ngIf="p.isDefault" class="np-badge np-badge--green">Default</span>
+                      <span *ngIf="p.isDefault" class="np-badge np-badge--green">{{ 'NOTIF.PROVIDERS.FORM.DEFAULT' | translate }}</span>
                     </td>
                     <td>
                       <div class="np-btn-row">
@@ -126,7 +126,7 @@
                 </ng-template>
                 <ng-template pTemplate="emptymessage">
                   <tr><td colspan="4">
-                    <div class="np-empty np-empty--compact"><i class="pi pi-envelope"></i><div>No Email Providers</div></div>
+                    <div class="np-empty np-empty--compact"><i class="pi pi-envelope"></i><div>{{ 'NOTIF.PROVIDERS.NO_EMAIL_PROVIDERS' | translate }}</div></div>
                   </td></tr>
                 </ng-template>
               </p-table>
@@ -141,13 +141,13 @@
           <div style="display:flex;flex-direction:column;gap:14px">
             <div class="np-card">
               <div class="np-card-header">
-                <div class="np-card-title"><i class="pi pi-mobile"></i> {{ selectedSms ? 'Edit Provider' : 'New Sms Provider' }}</div>
+                <div class="np-card-title"><i class="pi pi-mobile"></i> {{ (selectedSms ? 'NOTIF.PROVIDERS.EDIT_PROVIDER' : 'NOTIF.PROVIDERS.NEW_SMS_PROVIDER') | translate }}</div>
                 <div class="np-btn-row">
                   <button *ngIf="selectedSms" class="np-btn np-btn--ghost" style="padding:3px 10px;font-size:11px" (click)="resetSmsForm()">
-                    <i class="pi pi-times"></i> Cancel
+                    <i class="pi pi-times"></i> {{ 'COMMON.CANCEL' | translate }}
                   </button>
                   <button class="np-btn np-btn--primary" [permAction]="selectedSms ? perm.canUpdate(PAGE_CODE) : perm.canCreate(PAGE_CODE)" (click)="saveSms()">
-                    <i class="pi pi-save"></i> {{ selectedSms ? 'Update' : 'Create' }}
+                    <i class="pi pi-save"></i> {{ (selectedSms ? 'COMMON.UPDATE' : 'COMMON.CREATE') | translate }}
                   </button>
                 </div>
               </div>
@@ -155,45 +155,45 @@
                 <form class="np-form" [formGroup]="smsForm">
                   <div class="np-form-row">
                     <div class="np-field">
-                      <label class="np-label">Provider Name</label>
-                      <input pInputText formControlName="name" placeholder="Twilio" />
+                      <label class="np-label">{{ 'NOTIF.PROVIDERS.FORM.PROVIDER_NAME' | translate }}</label>
+                      <input pInputText formControlName="name" [placeholder]="'AUTO_SECURITY_UI.TWILIO' | translate" />
                     </div>
                     <div class="np-field">
-                      <label class="np-label">Provider Type</label>
-                      <input pInputText formControlName="providerType" placeholder="twilio, nexmo�" />
+                      <label class="np-label">{{ 'NOTIF.PROVIDERS.FORM.PROVIDER_TYPE' | translate }}</label>
+                      <input pInputText formControlName="providerType" [placeholder]="'AUTO_SECURITY_UI.TWILIO_NEXMO' | translate" />
                     </div>
                   </div>
                   <div class="np-field">
-                    <label class="np-label">Api Url</label>
+                    <label class="np-label">{{ 'NOTIF.PROVIDERS.FORM.API_URL' | translate }}</label>
                     <input pInputText formControlName="apiUrl" placeholder="https://api.twilio.com/�" />
                   </div>
                   <div class="np-form-row">
                     <div class="np-field">
-                      <label class="np-label">API key</label>
+                      <label class="np-label">{{ 'NOTIF.PROVIDERS.FORM.API_KEY' | translate }}</label>
                       <input pInputText formControlName="apiKey" />
                     </div>
                     <div class="np-field">
-                      <label class="np-label">Api Secret</label>
+                      <label class="np-label">{{ 'NOTIF.PROVIDERS.FORM.API_SECRET' | translate }}</label>
                       <input pInputText type="password" formControlName="apiSecret" placeholder="��������" />
                     </div>
                   </div>
                   <div class="np-form-row">
                     <div class="np-field">
-                      <label class="np-label">Sender Id</label>
+                      <label class="np-label">{{ 'NOTIF.PROVIDERS.FORM.SENDER_ID' | translate }}</label>
                       <input pInputText formControlName="senderId" placeholder="+1234567890" />
                     </div>
                     <div class="np-field">
-                      <label class="np-label">Priority Order</label>
+                      <label class="np-label">{{ 'NOTIF.PROVIDERS.FORM.PRIORITY_ORDER' | translate }}</label>
                       <p-inputNumber formControlName="priorityOrder" [min]="1"></p-inputNumber>
                     </div>
                   </div>
                   <div class="np-form-row">
                     <div class="np-field" style="flex-direction:row;align-items:center;gap:14px;padding-top:4px">
                       <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--s-text-2);cursor:pointer">
-                        <p-checkbox formControlName="isDefault" binary="true"></p-checkbox> Default
+                        <p-checkbox formControlName="isDefault" binary="true"></p-checkbox> {{ 'NOTIF.PROVIDERS.FORM.DEFAULT' | translate }}
                       </label>
                       <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--s-text-2);cursor:pointer">
-                        <p-checkbox formControlName="isActive" binary="true"></p-checkbox> Active
+                        <p-checkbox formControlName="isActive" binary="true"></p-checkbox> {{ 'COMMON.ACTIVE' | translate }}
                       </label>
                     </div>
                   </div>
@@ -205,18 +205,18 @@
           <!-- SMS list -->
           <div class="np-card">
             <div class="np-card-header">
-              <div class="np-card-title"><i class="pi pi-list"></i> Configured</div>
+              <div class="np-card-title"><i class="pi pi-list"></i> {{ 'NOTIF.PROVIDERS.CONFIGURED' | translate }}</div>
               <button class="np-btn np-btn--ghost" [permAction]="perm.canCreate(PAGE_CODE)" style="padding:3px 10px;font-size:11px" (click)="resetSmsForm()">
-                <i class="pi pi-plus"></i> New
+                <i class="pi pi-plus"></i> {{ 'COMMON.NEW' | translate }}
               </button>
             </div>
             <div class="np-card-body np-card-body--flush">
               <p-table [value]="smsProviders" styleClass="p-datatable-sm">
                 <ng-template pTemplate="header">
                   <tr>
-                    <th>Col Name</th>
-                    <th>Col Type</th>
-                    <th style="width:80px">Col Default</th>
+                    <th>{{ 'NOTIF.PROVIDERS.COL_NAME' | translate }}</th>
+                    <th>{{ 'NOTIF.PROVIDERS.COL_TYPE' | translate }}</th>
+                    <th style="width:80px">{{ 'NOTIF.PROVIDERS.COL_DEFAULT' | translate }}</th>
                     <th style="width:100px"></th>
                   </tr>
                 </ng-template>
@@ -225,7 +225,7 @@
                     <td>{{ p.name }}</td>
                     <td><span class="np-muted">{{ p.providerType }}</span></td>
                     <td>
-                      <span *ngIf="p.isDefault" class="np-badge np-badge--green">Default</span>
+                      <span *ngIf="p.isDefault" class="np-badge np-badge--green">{{ 'NOTIF.PROVIDERS.FORM.DEFAULT' | translate }}</span>
                     </td>
                     <td>
                       <div class="np-btn-row">
@@ -237,7 +237,7 @@
                 </ng-template>
                 <ng-template pTemplate="emptymessage">
                   <tr><td colspan="4">
-                    <div class="np-empty np-empty--compact"><i class="pi pi-mobile"></i><div>No Sms Providers</div></div>
+                    <div class="np-empty np-empty--compact"><i class="pi pi-mobile"></i><div>{{ 'NOTIF.PROVIDERS.NO_SMS_PROVIDERS' | translate }}</div></div>
                   </td></tr>
                 </ng-template>
               </p-table>

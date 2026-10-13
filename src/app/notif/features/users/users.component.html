@@ -1,9 +1,9 @@
 <div class="np-page">
   <div class="np-page-header">
     <div>
-      <div class="np-eyebrow"><i class="pi pi-users"></i> Administration</div>
-      <div class="np-page-title">Users</div>
-      <div class="np-page-subtitle">Manage user notification preferences and push device registrations.</div>
+      <div class="np-eyebrow"><i class="pi pi-users"></i> {{ 'DOM_FALLBACK.TEXT_002' | translate }}</div>
+      <div class="np-page-title">{{ 'SECU.ROLES.COLUMNS.USERS' | translate }}</div>
+      <div class="np-page-subtitle">{{ 'AUTO_SECURITY_UI.MANAGE_USER_NOTIFICATION_PREFERENCES_AND_PUSH_DEVICE_REGISTRATIO' | translate }}</div>
     </div>
   </div>
 
@@ -11,8 +11,8 @@
 
   <p-tabs [value]="0">
     <p-tablist>
-      <p-tab [value]="0"><i class="pi pi-sliders-h" style="margin-right:6px"></i> Preferences</p-tab>
-      <p-tab [value]="1"><i class="pi pi-desktop" style="margin-right:6px"></i> Devices</p-tab>
+      <p-tab [value]="0"><i class="pi pi-sliders-h" style="margin-right:6px"></i> {{ 'AUTO_SECURITY_UI.PREFERENCES' | translate }}</p-tab>
+      <p-tab [value]="1"><i class="pi pi-desktop" style="margin-right:6px"></i> {{ 'AUTO_SECURITY_UI.DEVICES' | translate }}</p-tab>
     </p-tablist>
     <p-tabpanels>
 
@@ -23,16 +23,16 @@
           <div style="display:flex;flex-direction:column;gap:14px">
             <div class="np-card">
               <div class="np-card-header">
-                <div class="np-card-title"><i class="pi pi-search"></i> Look Up User</div>
+                <div class="np-card-title"><i class="pi pi-search"></i> {{ 'AUTO_SECURITY_UI.LOOK_UP_USER' | translate }}</div>
               </div>
               <div class="np-card-body">
                 <div class="np-form-row" style="align-items:flex-end">
                   <div class="np-field">
-                    <label class="np-label">User ID</label>
-                    <input pInputText [(ngModel)]="preferenceUserId" placeholder="user-1" />
+                    <label class="np-label">{{ 'AUTO_SECURITY_UI.USER_ID' | translate }}</label>
+                    <input pInputText [(ngModel)]="preferenceUserId" [placeholder]="'AUTO_SECURITY_UI.USER_1' | translate" />
                   </div>
                   <button class="np-btn np-btn--primary" style="white-space:nowrap" (click)="loadPreferences()">
-                    <i class="pi pi-search"></i> Load
+                    <i class="pi pi-search"></i> {{ 'AUTO_SECURITY_UI.LOAD' | translate }}
                   </button>
                 </div>
               </div>
@@ -40,9 +40,9 @@
                 <p-table [value]="preferences" styleClass="p-datatable-sm">
                   <ng-template pTemplate="header">
                     <tr>
-                      <th>Channel</th>
-                      <th style="width:80px">Enabled</th>
-                      <th>Language</th>
+                      <th>{{ 'DOM_FALLBACK.TEXT_098' | translate }}</th>
+                      <th style="width:80px">{{ 'SECU.AUDIT.CONFIG.ENABLED' | translate }}</th>
+                      <th>{{ 'NOTIF.TEMPLATES.FORM.LANGUAGE' | translate }}</th>
                     </tr>
                   </ng-template>
                   <ng-template pTemplate="body" let-pref>
@@ -58,7 +58,7 @@
                   </ng-template>
                   <ng-template pTemplate="emptymessage">
                     <tr><td colspan="3">
-                      <div class="np-empty np-empty--compact"><i class="pi pi-sliders-h"></i><div>No preferences loaded.</div></div>
+                      <div class="np-empty np-empty--compact"><i class="pi pi-sliders-h"></i><div>{{ 'AUTO_SECURITY_UI.NO_PREFERENCES_LOADED' | translate }}</div></div>
                     </td></tr>
                   </ng-template>
                 </p-table>
@@ -67,35 +67,35 @@
 
             <div class="np-card">
               <div class="np-card-header">
-                <div class="np-card-title"><i class="pi pi-save"></i> Set Preference</div>
+                <div class="np-card-title"><i class="pi pi-save"></i> {{ 'AUTO_SECURITY_UI.SET_PREFERENCE' | translate }}</div>
               </div>
               <div class="np-card-body">
                 <form class="np-form" [formGroup]="preferenceForm">
                   <div class="np-form-row">
                     <div class="np-field">
-                      <label class="np-label">User ID</label>
+                      <label class="np-label">{{ 'AUTO_SECURITY_UI.USER_ID' | translate }}</label>
                       <input pInputText formControlName="userId" />
                     </div>
                     <div class="np-field">
-                      <label class="np-label">Channel</label>
+                      <label class="np-label">{{ 'DOM_FALLBACK.TEXT_098' | translate }}</label>
                       <p-select [options]="channels" optionLabel="label" optionValue="id" formControlName="channelId"></p-select>
                     </div>
                   </div>
                   <div class="np-form-row">
                     <div class="np-field">
-                      <label class="np-label">Preferred Language</label>
-                      <input pInputText formControlName="preferredLanguage" placeholder="en" />
+                      <label class="np-label">{{ 'AUTO_SECURITY_UI.PREFERRED_LANGUAGE' | translate }}</label>
+                      <input pInputText formControlName="preferredLanguage" [placeholder]="'AUTO_SECURITY_UI.EN' | translate" />
                     </div>
                     <div class="np-toggle-item" style="padding-top:20px">
                       <p-checkbox formControlName="isEnabled" binary="true" inputId="prefEnabled"></p-checkbox>
                       <label class="np-toggle-label" for="prefEnabled">
-                        <span class="np-toggle-name">Enabled</span>
+                        <span class="np-toggle-name">{{ 'SECU.AUDIT.CONFIG.ENABLED' | translate }}</span>
                       </label>
                     </div>
                   </div>
                   <div class="np-btn-row np-btn-row--end">
                     <button class="np-btn np-btn--primary" (click)="savePreference()">
-                      <i class="pi pi-save"></i> Save Preference
+                      <i class="pi pi-save"></i> {{ 'AUTO_SECURITY_UI.SAVE_PREFERENCE' | translate }}
                     </button>
                   </div>
                 </form>
@@ -111,16 +111,16 @@
           <div style="display:flex;flex-direction:column;gap:14px">
             <div class="np-card">
               <div class="np-card-header">
-                <div class="np-card-title"><i class="pi pi-search"></i> Look Up Devices</div>
+                <div class="np-card-title"><i class="pi pi-search"></i> {{ 'AUTO_SECURITY_UI.LOOK_UP_DEVICES' | translate }}</div>
               </div>
               <div class="np-card-body">
                 <div class="np-form-row" style="align-items:flex-end">
                   <div class="np-field">
-                    <label class="np-label">User ID</label>
-                    <input pInputText [(ngModel)]="deviceUserId" placeholder="user-1" />
+                    <label class="np-label">{{ 'AUTO_SECURITY_UI.USER_ID' | translate }}</label>
+                    <input pInputText [(ngModel)]="deviceUserId" [placeholder]="'AUTO_SECURITY_UI.USER_1' | translate" />
                   </div>
                   <button class="np-btn np-btn--primary" style="white-space:nowrap" (click)="loadDevices()">
-                    <i class="pi pi-search"></i> Load
+                    <i class="pi pi-search"></i> {{ 'AUTO_SECURITY_UI.LOAD' | translate }}
                   </button>
                 </div>
               </div>
@@ -128,9 +128,9 @@
                 <p-table [value]="devices" styleClass="p-datatable-sm">
                   <ng-template pTemplate="header">
                     <tr>
-                      <th>Token</th>
-                      <th>Platform</th>
-                      <th style="width:80px">Active</th>
+                      <th>{{ 'AUTO_SECURITY_UI.TOKEN' | translate }}</th>
+                      <th>{{ 'DOM_FALLBACK.TEXT_025' | translate }}</th>
+                      <th style="width:80px">{{ 'DOM_FALLBACK.TEXT_092' | translate }}</th>
                       <th style="width:140px"></th>
                     </tr>
                   </ng-template>
@@ -157,7 +157,7 @@
                   </ng-template>
                   <ng-template pTemplate="emptymessage">
                     <tr><td colspan="4">
-                      <div class="np-empty np-empty--compact"><i class="pi pi-desktop"></i><div>No devices loaded.</div></div>
+                      <div class="np-empty np-empty--compact"><i class="pi pi-desktop"></i><div>{{ 'AUTO_SECURITY_UI.NO_DEVICES_LOADED' | translate }}</div></div>
                     </td></tr>
                   </ng-template>
                 </p-table>
@@ -166,31 +166,31 @@
 
             <div class="np-card">
               <div class="np-card-header">
-                <div class="np-card-title"><i class="pi pi-plus"></i> Register Device</div>
+                <div class="np-card-title"><i class="pi pi-plus"></i> {{ 'AUTO_SECURITY_UI.REGISTER_DEVICE' | translate }}</div>
               </div>
               <div class="np-card-body">
                 <form class="np-form" [formGroup]="deviceForm">
                   <div class="np-form-row">
                     <div class="np-field">
-                      <label class="np-label">User ID</label>
+                      <label class="np-label">{{ 'AUTO_SECURITY_UI.USER_ID' | translate }}</label>
                       <input pInputText formControlName="userId" />
                     </div>
                     <div class="np-field">
-                      <label class="np-label">Platform</label>
-                      <input pInputText formControlName="platform" placeholder="web, android, ios" />
+                      <label class="np-label">{{ 'DOM_FALLBACK.TEXT_025' | translate }}</label>
+                      <input pInputText formControlName="platform" [placeholder]="'AUTO_SECURITY_UI.WEB_ANDROID_IOS' | translate" />
                     </div>
                   </div>
                   <div class="np-field">
-                    <label class="np-label">Token</label>
+                    <label class="np-label">{{ 'AUTO_SECURITY_UI.TOKEN' | translate }}</label>
                     <input pInputText formControlName="token" />
                   </div>
                   <div class="np-field">
-                    <label class="np-label">Device Name</label>
-                    <input pInputText formControlName="deviceName" placeholder="My Laptop" />
+                    <label class="np-label">{{ 'AUTO_SECURITY_UI.DEVICE_NAME' | translate }}</label>
+                    <input pInputText formControlName="deviceName" [placeholder]="'AUTO_SECURITY_UI.MY_LAPTOP' | translate" />
                   </div>
                   <div class="np-btn-row np-btn-row--end">
                     <button class="np-btn np-btn--primary" (click)="registerDevice()">
-                      <i class="pi pi-plus"></i> Register Device
+                      <i class="pi pi-plus"></i> {{ 'AUTO_SECURITY_UI.REGISTER_DEVICE' | translate }}
                     </button>
                   </div>
                 </form>

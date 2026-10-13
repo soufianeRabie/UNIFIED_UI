@@ -14,7 +14,7 @@
           (onClick)="toggleSidebar()"
         ></p-button>
         <div class="app-context">
-          <span>Security workspace</span>
+          <span>{{ 'DOM_FALLBACK.TEXT_001' | translate }}</span>
           <strong>{{ tenantName() }}</strong>
         </div>
       </div>
@@ -25,7 +25,7 @@
           <span>{{ userName() }}</span>
         </div>
         <p-button
-          label="Logout"
+          [label]="'DOM_FALLBACK.TEXT_003' | translate"
           icon="pi pi-sign-out"
           size="small"
           severity="contrast"
@@ -57,7 +57,7 @@
   <ng-template #sidebarTpl>
     <div class="app-sidebar-brand">
       <ng-container *ngIf="tenantLogo(); else fallbackLogo">
-        <img [src]="tenantLogo()" alt="Logo" class="app-logo" />
+        <img [src]="tenantLogo()" [alt]="'AUTO_SECURITY_UI.LOGO' | translate" class="app-logo" />
       </ng-container>
       <ng-template #fallbackLogo>
         <div class="app-logo-fallback">{{ tenantName() | slice: 0 : 2 | uppercase }}</div>
@@ -74,7 +74,7 @@
 
       @if (adminMenuTree().length) {
         <div class="app-nav-section" [class.is-icon-only]="sidebarCollapsed() && !isMobile()">
-          <span>Administration</span>
+          <span>{{ 'DOM_FALLBACK.TEXT_002' | translate }}</span>
           <i class="pi pi-lock"></i>
         </div>
         <ng-container

@@ -1,10 +1,11 @@
 import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'secu-pagination',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="s-pagination">
@@ -12,13 +13,13 @@ import { CommonModule } from '@angular/common';
         {{ totalRecords ? (page - 1) * size + 1 : 0 }}-{{ min(page * size, totalRecords) }} of {{ totalRecords }} records
       </span>
       <div class="s-pagination-controls">
-        <button class="s-page-btn" [disabled]="page <= 1" (click)="go(1)">&laquo;</button>
-        <button class="s-page-btn" [disabled]="page <= 1" (click)="go(page - 1)">&lsaquo;</button>
+        <button class="s-page-btn" [disabled]="page <= 1" (click)="go(1)">{{ 'AUTO_INLINE_SECURITY_UI.TEXT' | translate }}</button>
+        <button class="s-page-btn" [disabled]="page <= 1" (click)="go(page - 1)">{{ 'AUTO_INLINE_SECURITY_UI.TEXT_2' | translate }}</button>
         @for (p of pages(); track p) {
           <button class="s-page-btn" [class.active]="p === page" (click)="go(p)">{{ p }}</button>
         }
-        <button class="s-page-btn" [disabled]="page >= totalPages" (click)="go(page + 1)">&rsaquo;</button>
-        <button class="s-page-btn" [disabled]="page >= totalPages" (click)="go(totalPages)">&raquo;</button>
+        <button class="s-page-btn" [disabled]="page >= totalPages" (click)="go(page + 1)">{{ 'AUTO_INLINE_SECURITY_UI.TEXT_3' | translate }}</button>
+        <button class="s-page-btn" [disabled]="page >= totalPages" (click)="go(totalPages)">{{ 'AUTO_INLINE_SECURITY_UI.TEXT_4' | translate }}</button>
       </div>
     </div>
   `,

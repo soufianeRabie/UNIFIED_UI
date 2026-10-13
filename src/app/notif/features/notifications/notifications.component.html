@@ -3,23 +3,23 @@
   <!-- Header -->
   <div class="np-page-header">
     <div>
-      <div class="np-eyebrow"><i class="pi pi-inbox"></i> Inbox</div>
+      <div class="np-eyebrow"><i class="pi pi-inbox"></i> {{ 'NOTIF.NOTIFICATIONS.TITLE' | translate }}</div>
       <div class="np-page-title">
-        Inbox
+        {{ 'NOTIF.NOTIFICATIONS.TITLE' | translate }}
         @if (unread() > 0) {
           <span class="np-count-badge">{{ unread() > 99 ? '99+' : unread() }}</span>
         }
       </div>
-      <div class="np-page-subtitle">All received notifications</div>
+      <div class="np-page-subtitle">{{ 'NOTIF.NOTIFICATIONS.SUBTITLE' | translate }}</div>
     </div>
     <div class="np-btn-row">
       @if (unread() > 0) {
         <button class="np-btn np-btn--primary" (click)="markAllRead()">
-          <i class="pi pi-check-circle"></i> Mark all as read
+          <i class="pi pi-check-circle"></i> {{ 'NOTIF.NOTIFICATIONS.MARK_ALL_READ' | translate }}
         </button>
       }
       <button class="np-btn np-btn--ghost" (click)="loadInbox()">
-        <i class="pi pi-refresh"></i> Loading�
+        <i class="pi pi-refresh"></i> {{ 'COMMON.LOADING' | translate }}
       </button>
     </div>
   </div>
@@ -34,11 +34,11 @@
     <!-- ── NOTIFICATION LIST ── -->
     <div class="np-inbox-list np-card">
       @if (loading()) {
-        <div class="np-empty"><i class="pi pi-spin pi-spinner"></i><div>Loading�</div></div>
+        <div class="np-empty"><i class="pi pi-spin pi-spinner"></i><div>{{ 'COMMON.LOADING' | translate }}</div></div>
       } @else if (items().length === 0) {
         <div class="np-empty">
           <i class="pi pi-inbox" style="font-size:2rem;opacity:.3"></i>
-          <div class="np-empty-title">Your inbox is empty.</div>
+          <div class="np-empty-title">{{ 'NOTIF.NOTIFICATIONS.EMPTY' | translate }}</div>
         </div>
       } @else {
         <ul class="np-notif-list">
@@ -88,7 +88,7 @@
             <span class="np-priority-badge np-priority-badge--{{ detail.priority }}">{{ priorityLabel(detail.priority) }}</span>
             <span class="np-badge np-badge--blue">{{ channelLabel(detail.channel) }}</span>
             @if (!detail.readAt) {
-              <p-tag value="Mark as read" severity="warn"></p-tag>
+              <p-tag [value]="'NOTIF.NOTIFICATIONS.MARK_READ' | translate" severity="warn"></p-tag>
             } @else {
               <p-tag value="Lu" severity="success"></p-tag>
             }
@@ -106,18 +106,18 @@
           <div class="np-detail-fields">
             @if (detail.sentAt) {
               <div class="np-detail-field">
-                <span class="np-detail-field-key">Date</span>
+                <span class="np-detail-field-key">{{ 'NOTIF.NOTIFICATIONS.COLUMNS.DATE' | translate }}</span>
                 <span class="np-detail-field-value">{{ detail.sentAt | date:'dd/MM/yyyy HH:mm' }}</span>
               </div>
             }
             @if (detail.readAt) {
               <div class="np-detail-field">
-                <span class="np-detail-field-key">Mark as read</span>
+                <span class="np-detail-field-key">{{ 'NOTIF.NOTIFICATIONS.MARK_READ' | translate }}</span>
                 <span class="np-detail-field-value">{{ detail.readAt | date:'dd/MM/yyyy HH:mm' }}</span>
               </div>
             }
             <div class="np-detail-field">
-              <span class="np-detail-field-key">Event Types</span>
+              <span class="np-detail-field-key">{{ 'NOTIF.EVENT_TYPES.TITLE' | translate }}</span>
               <span class="np-detail-field-value np-mono">{{ detail.eventTypeCode }}</span>
             </div>
           </div>
@@ -138,7 +138,7 @@
                 } @else {
                   <i class="pi pi-download"></i>
                 }
-                Download XLSX
+                {{ 'NOTIF.REPORTS.DOWNLOAD' | translate }}
               </button>
             </div>
           }
@@ -146,7 +146,7 @@
           <div class="np-btn-row" style="margin-top: 20px">
             @if (!detail.readAt) {
               <button class="np-btn np-btn--primary" (click)="markRead()">
-                <i class="pi pi-check"></i> Mark as read
+                <i class="pi pi-check"></i> {{ 'NOTIF.NOTIFICATIONS.MARK_READ' | translate }}
               </button>
             }
           </div>
@@ -154,7 +154,7 @@
       } @else {
         <div class="np-empty" style="padding: 60px 20px">
           <i class="pi pi-inbox" style="font-size:2rem;opacity:.2"></i>
-          <div class="np-empty-title">Nothing to show here.</div>
+          <div class="np-empty-title">{{ 'COMMON.EMPTY' | translate }}</div>
         </div>
       }
     </div>
@@ -165,7 +165,7 @@
   @if (perm.canRead(PAGE_SETTINGS)) {
     <div style="margin-top: 32px">
       <div class="np-section-label">
-        <i class="pi pi-exclamation-circle"></i> Dead Letters (admin)
+        <i class="pi pi-exclamation-circle"></i> {{ 'NOTIF.DASHBOARD.KPI.DEAD_LETTERS' | translate }} (admin)
       </div>
       <div class="np-toolbar" style="background:transparent; padding: 0 0 14px">
         <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--s-text-2);cursor:pointer">
@@ -179,10 +179,10 @@
           <p-table [value]="deadLetters()" styleClass="p-datatable-sm">
             <ng-template pTemplate="header">
               <tr>
-                <th>Code</th>
-                <th>An error occurred.</th>
-                <th style="width:130px">Date</th>
-                <th style="width:160px">Edit</th>
+                <th>{{ 'NOTIF.EVENT_TYPES.COLUMNS.CODE' | translate }}</th>
+                <th>{{ 'COMMON.ERROR' | translate }}</th>
+                <th style="width:130px">{{ 'NOTIF.NOTIFICATIONS.COLUMNS.DATE' | translate }}</th>
+                <th style="width:160px">{{ 'COMMON.EDIT' | translate }}</th>
               </tr>
             </ng-template>
             <ng-template pTemplate="body" let-dl>
@@ -206,7 +206,7 @@
               <tr><td colspan="4">
                 <div class="np-empty">
                   <i class="pi pi-check-circle"></i>
-                  <div class="np-empty-title">Nothing to show here.</div>
+                  <div class="np-empty-title">{{ 'COMMON.EMPTY' | translate }}</div>
                 </div>
               </td></tr>
             </ng-template>

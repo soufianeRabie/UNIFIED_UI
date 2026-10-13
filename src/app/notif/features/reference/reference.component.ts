@@ -7,11 +7,12 @@ import { TableModule } from 'primeng/table';
 import { ReferenceService } from '../../core/services/reference.service';
 import { ReferenceItem } from '../../core/models/reference';
 import { formatHttpError } from '../../shared/utils/api-utils';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'notif-reference',
   standalone: true,
-  imports: [CommonModule, ButtonModule, CardModule, MessageModule, TableModule],
+  imports: [CommonModule, ButtonModule, CardModule, MessageModule, TableModule, TranslatePipe],
   templateUrl: './reference.component.html'
 })
 export class ReferenceComponent {

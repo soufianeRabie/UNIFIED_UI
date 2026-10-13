@@ -1,18 +1,19 @@
-import { Component, OnInit, signal, inject } from '@angular/core';
+﻿import { Component, OnInit, signal, inject } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { catchError, of, forkJoin } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { SecuApiService } from '../../services/secu-api.service';
 import { SecuPermissionDto, SecuRoleDto, SecuPageActionDto } from '../../models/secu.models';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-role-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [CommonModule, RouterLink, FormsModule, TranslatePipe],
   template: `
     <div style="margin-bottom:16px;">
-      <a routerLink="../" style="color:var(--s-text-2);font-size:13px;text-decoration:none">← Back to Roles</a>
+      <a routerLink="../" style="color:var(--s-text-2);font-size:13px;text-decoration:none">{{ 'AUTO_INLINE_SECURITY_UI.BACK_TO_ROLES' | translate }}</a>
     </div>
 
     @if (role()) {
@@ -30,15 +31,15 @@ import { SecuPermissionDto, SecuRoleDto, SecuPageActionDto } from '../../models/
 
       <div class="s-card">
         <div class="s-card-header">
-          <span class="s-card-title">🔐 Permissions</span>
+          <span class="s-card-title">{{ 'AUTO_INLINE_SECURITY_UI.PERMISSIONS' | translate }}</span>
           <div style="margin-left:auto;">
-            <button class="s-btn s-btn-primary s-btn-sm" (click)="openAdd()">+ Add Permission</button>
+            <button class="s-btn s-btn-primary s-btn-sm" (click)="openAdd()">{{ 'AUTO_INLINE_SECURITY_UI.ADD_PERMISSION' | translate }}</button>
           </div>
         </div>
         <div class="s-table-wrap">
           <table class="s-table">
             <thead>
-              <tr><th>Page Code</th><th>Page Name</th><th>Action</th><th>Granted By</th><th>Granted At</th><th>Status</th><th></th></tr>
+              <tr><th>{{ 'AUTO_INLINE_SECURITY_UI.PAGE_CODE' | translate }}</th><th>{{ 'AUTO_INLINE_SECURITY_UI.PAGE_NAME' | translate }}</th><th>{{ 'SECU.PAGE_ACTIONS.COLUMNS.ACTION' | translate }}</th><th>{{ 'AUTO_INLINE_SECURITY_UI.GRANTED_BY' | translate }}</th><th>{{ 'DOM_FALLBACK.TEXT_254' | translate }}</th><th>{{ 'DOM_FALLBACK.TEXT_026' | translate }}</th><th></th></tr>
             </thead>
             <tbody>
               @for (p of permissions(); track p.idPermission) {
@@ -46,18 +47,18 @@ import { SecuPermissionDto, SecuRoleDto, SecuPageActionDto } from '../../models/
                   <td><span class="mono">{{ p.pageCode }}</span></td>
                   <td>{{ p.pageName }}</td>
                   <td><span class="s-badge action">{{ p.actionCode }}</span></td>
-                  <td style="font-size:12px;color:var(--s-text-3);font-family:var(--s-mono)">{{ p.grantedBy?.substring(0,8) ?? '—' }}…</td>
+                  <td style="font-size:12px;color:var(--s-text-3);font-family:var(--s-mono)">{{ p.grantedById ? p.grantedById.substring(0,8) + '�¦' : '—' }}</td>
                   <td style="font-size:12px;color:var(--s-text-2)">{{ p.grantedAt ? (p.grantedAt | date:'dd/MM/yy') : '—' }}</td>
                   <td><span class="s-badge" [class.active]="p.isActive" [class.inactive]="!p.isActive">{{ p.isActive ? 'Active' : 'Inactive' }}</span></td>
                   <td>
-                    <button class="s-btn-icon danger" (click)="removePermission(p)" title="Remove">🗑</button>
+                    <button class="s-btn-icon danger" (click)="removePermission(p)" title="{{ 'AUTO_SECURITY_UI.REMOVE' | translate }}">�—‘</button>
                   </td>
                 </tr>
               } @empty {
                 <tr><td colspan="7">
                   <div class="s-empty">
-                    <div class="s-empty-icon">🔐</div>
-                    <div class="s-empty-text">No permissions assigned to this role</div>
+                    <div class="s-empty-icon">�</div>
+                    <div class="s-empty-text">{{ 'AUTO_INLINE_SECURITY_UI.NO_PERMISSIONS_ASSIGNED_TO_THIS_ROLE' | translate }}</div>
                   </div>
                 </td></tr>
               }
@@ -71,7 +72,7 @@ import { SecuPermissionDto, SecuRoleDto, SecuPageActionDto } from '../../models/
       <div class="s-modal-backdrop" (click)="closeAdd()">
         <div class="s-modal wide" (click)="$event.stopPropagation()">
           <div class="s-modal-header">
-            <span class="s-modal-title">Add Permission</span>
+            <span class="s-modal-title">{{ 'AUTO_INLINE_SECURITY_UI.ADD_PERMISSION_2' | translate }}</span>
             <button class="s-btn-icon" (click)="closeAdd()">✕</button>
           </div>
           <div class="s-modal-body">
@@ -81,13 +82,13 @@ import { SecuPermissionDto, SecuRoleDto, SecuPageActionDto } from '../../models/
                   <span class="mono" style="font-size:12px;color:var(--s-accent);min-width:100px">{{ pa.pageCode }}</span>
                   <span class="s-badge action">{{ pa.actionCode }}</span>
                   <span style="font-size:12px;color:var(--s-text-2)">{{ pa.pageName }}</span>
-                  <span style="margin-left:auto; font-size:11px; color:var(--s-text-3)">+ Grant</span>
+                  <span style="margin-left:auto; font-size:11px; color:var(--s-text-3)">{{ 'AUTO_INLINE_SECURITY_UI.GRANT' | translate }}</span>
                 </div>
               }
             </div>
           </div>
           <div class="s-modal-footer">
-            <button class="s-btn s-btn-ghost" (click)="closeAdd()">Close</button>
+            <button class="s-btn s-btn-ghost" (click)="closeAdd()">{{ 'AUTO_INLINE_SECURITY_UI.CLOSE' | translate }}</button>
           </div>
         </div>
       </div>
@@ -104,7 +105,7 @@ export class RoleDetailComponent implements OnInit {
   allPageActions = signal<SecuPageActionDto[]>([]);
 
   get availablePageActions() {
-    const granted = new Set(this.permissions().map(p => p.idPageAction));
+    const granted = new Set(this.permissions().map(p => p.pageActionId));
     return signal(this.allPageActions().filter(pa => !granted.has(pa.idPageAction)));
   }
 
@@ -144,3 +145,4 @@ export class RoleDetailComponent implements OnInit {
     });
   }
 }
+

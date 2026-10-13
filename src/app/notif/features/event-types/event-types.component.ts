@@ -16,6 +16,7 @@ import { EventTypesService } from '../../core/services/event-types.service';
 import { EventType } from '../../core/models/event-type';
 import { PermActionDirective } from '../../../secu/directives/perm-action.directive';
 import { formatHttpError } from '../../shared/utils/api-utils';
+import { TranslatePipe } from '@ngx-translate/core';
 
 const PAGE_CODE = 'NOTIF_EVENTS';
 
@@ -35,7 +36,8 @@ const PAGE_CODE = 'NOTIF_EVENTS';
     MessageModule,
     TableModule,
     TagModule,
-    PermActionDirective
+    PermActionDirective,
+    TranslatePipe
   ],
   templateUrl: './event-types.component.html'
 })

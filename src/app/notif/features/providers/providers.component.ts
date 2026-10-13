@@ -16,6 +16,7 @@ import { EmailProvider } from '../../core/models/email-provider';
 import { SmsProvider } from '../../core/models/sms-provider';
 import { PermActionDirective } from '../../../secu/directives/perm-action.directive';
 import { formatHttpError } from '../../shared/utils/api-utils';
+import { TranslatePipe } from '@ngx-translate/core';
 
 const PAGE_CODE = 'NOTIF_PROVIDERS';
 
@@ -33,7 +34,8 @@ const PAGE_CODE = 'NOTIF_PROVIDERS';
     MessageModule,
     TabsModule,
     TableModule,
-    PermActionDirective
+    PermActionDirective,
+    TranslatePipe
   ],
   templateUrl: './providers.component.html'
 })

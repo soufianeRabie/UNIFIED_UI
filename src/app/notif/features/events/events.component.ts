@@ -15,6 +15,7 @@ import { EventTypesService } from '../../core/services/event-types.service';
 import { EventType } from '../../core/models/event-type';
 import { PermActionDirective } from '../../../secu/directives/perm-action.directive';
 import { formatHttpError, parseJsonRecord } from '../../shared/utils/api-utils';
+import { TranslatePipe } from '@ngx-translate/core';
 
 const PAGE_CODE = 'NOTIF_PUBLISH';
 
@@ -31,7 +32,8 @@ const PAGE_CODE = 'NOTIF_PUBLISH';
     TextareaModule,
     MessageModule,
     DividerModule,
-    PermActionDirective
+    PermActionDirective,
+    TranslatePipe
   ],
   templateUrl: './events.component.html'
 })

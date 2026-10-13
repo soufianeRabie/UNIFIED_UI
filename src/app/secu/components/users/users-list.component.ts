@@ -1,8 +1,8 @@
-import { Component, DestroyRef, OnInit, signal, inject } from '@angular/core';
+﻿import { Component, DestroyRef, OnInit, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterLink, NavigationEnd } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { debounceTime, Subject, switchMap, catchError, of, filter } from 'rxjs';
+import { debounceTime, Subject, switchMap, catchError, of } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SecuApiService } from '../../services/secu-api.service';
 import { PermissionService } from '../../services/permission.service';
@@ -13,32 +13,33 @@ import {
   UpdateSecuUserRequest,
 } from '../../models/secu.models';
 import { PermActionDirective } from '../../directives/perm-action.directive';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-users-list',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule, SecuPaginationComponent, PermActionDirective],
+  imports: [CommonModule, RouterLink, FormsModule, SecuPaginationComponent, PermActionDirective, TranslatePipe],
   template: `
     <div class="s-page-header">
       <div>
-        <h1 class="s-page-title">Users</h1>
-        <p class="s-page-subtitle">Manage security user profiles</p>
+        <h1 class="s-page-title">{{ 'SECU.USERS.TITLE' | translate }}</h1>
+        <p class="s-page-subtitle">{{ 'SECU.USERS.SUBTITLE' | translate }}</p>
       </div>
       <button
         class="s-btn s-btn-primary"
-        [permAction]="permissionService.canCreate(effectivePageCode)"
+        [permAction]="permissionService.canCreate(effectivePageCode())"
         (click)="openCreate()"
       >
-        + New User
+        {{ 'SECU.USERS.NEW' | translate }}
       </button>
     </div>
 
     <div class="s-card">
       <div class="s-toolbar">
         <div class="s-search">
-          <span class="s-search-icon">🔍</span>
+          <span class="s-search-icon">�</span>
           <input
-            placeholder="Search users…"
+            [placeholder]="'SECU.USERS.SEARCH_PLACEHOLDER' | translate"
             [(ngModel)]="searchTerm"
             (ngModelChange)="onSearch($event)"
           />
@@ -48,26 +49,26 @@ import { PermActionDirective } from '../../directives/perm-action.directive';
           <div class="s-toggle-track"></div>
           <div class="s-toggle-thumb"></div>
         </label>
-        <span style="font-size:12px; color: var(--s-text-2);">Show inactive</span>
+        <span style="font-size:12px; color: var(--s-text-2);">{{ 'COMMON.SHOW_INACTIVE' | translate }}</span>
       </div>
 
       @if (loading()) {
         <div class="s-empty">
-          <div class="s-empty-text">Loading…</div>
+          <div class="s-empty-text">{{ 'COMMON.LOADING' | translate }}</div>
         </div>
       } @else if (error()) {
-        <div class="s-alert error" style="margin:16px;">⚠ {{ error() }}</div>
+        <div class="s-alert error" style="margin:16px;">�  {{ error() }}</div>
       } @else {
         <div class="s-table-wrap">
           <table class="s-table">
             <thead>
               <tr>
-                <th>Username</th>
-                <th>Full Name</th>
-                <th>Email</th>
-                <th>External ID</th>
-                <th>Status</th>
-                <th>Created</th>
+                <th>{{ 'SECU.USERS.COL.USERNAME' | translate }}</th>
+                <th>{{ 'SECU.USERS.COL.FULL_NAME' | translate }}</th>
+                <th>{{ 'SECU.USERS.COL.EMAIL' | translate }}</th>
+                <th>{{ 'SECU.USERS.COL.EXTERNAL_ID' | translate }}</th>
+                <th>{{ 'COMMON.STATUS' | translate }}</th>
+                <th>{{ 'COMMON.CREATED' | translate }}</th>
                 <th></th>
               </tr>
             </thead>
@@ -91,7 +92,7 @@ import { PermActionDirective } from '../../directives/perm-action.directive';
                       [class.active]="user.isActive"
                       [class.inactive]="!user.isActive"
                     >
-                      {{ user.isActive ? 'Active' : 'Inactive' }}
+                      {{ (user.isActive ? 'COMMON.ACTIVE' : 'COMMON.INACTIVE') | translate }}
                     </span>
                   </td>
                   <td style="color: var(--s-text-2); font-size:12px">
@@ -101,27 +102,27 @@ import { PermActionDirective } from '../../directives/perm-action.directive';
                     <div style="display:flex; gap:6px; justify-content: flex-end;">
                       <a
                         class="s-btn-icon"
-                        [permAction]="permissionService.canRead(effectivePageCode)"
+                        [permAction]="permissionService.canRead(effectivePageCode())"
                         [routerLink]="[user.idUser]"
-                        title="Detail"
+                        [title]="'COMMON.DETAIL' | translate"
                       >
-                        👁
+                        �
                       </a>
                       <button
                         class="s-btn-icon"
-                        [permAction]="permissionService.canUpdate(effectivePageCode)"
+                        [permAction]="permissionService.canUpdate(effectivePageCode())"
                         (click)="openEdit(user)"
-                        title="Edit"
+                        [title]="'COMMON.EDIT' | translate"
                       >
-                        ✏
+                        �
                       </button>
                       <button
                         class="s-btn-icon danger"
-                        [permAction]="permissionService.canDelete(effectivePageCode)"
+                        [permAction]="permissionService.canDelete(effectivePageCode())"
                         (click)="confirmDelete(user)"
-                        title="Delete"
+                        [title]="'COMMON.DELETE' | translate"
                       >
-                        🗑
+                        �—‘
                       </button>
                     </div>
                   </td>
@@ -130,8 +131,8 @@ import { PermActionDirective } from '../../directives/perm-action.directive';
                 <tr>
                   <td colspan="7">
                     <div class="s-empty">
-                      <div class="s-empty-icon">👤</div>
-                      <div class="s-empty-text">No users found</div>
+                      <div class="s-empty-icon">�¤</div>
+                      <div class="s-empty-text">{{ 'SECU.USERS.EMPTY' | translate }}</div>
                     </div>
                   </td>
                 </tr>
@@ -154,50 +155,50 @@ import { PermActionDirective } from '../../directives/perm-action.directive';
       <div class="s-modal-backdrop" (click)="onBackdropClick($event)">
         <div class="s-modal">
           <div class="s-modal-header">
-            <span class="s-modal-title">{{ editUser() ? 'Edit User' : 'Create User' }}</span>
+            <span class="s-modal-title">{{ (editUser() ? 'SECU.USERS.MODAL.EDIT_TITLE' : 'SECU.USERS.MODAL.CREATE_TITLE') | translate }}</span>
             <button class="s-btn-icon" (click)="closeModal()">✕</button>
           </div>
           <div class="s-modal-body">
             @if (saveError()) {
-              <div class="s-alert error">⚠ {{ saveError() }}</div>
+              <div class="s-alert error">�  {{ saveError() }}</div>
             }
             <div class="s-form-row">
               <div class="s-field">
-                <label class="s-label">Username *</label>
+                <label class="s-label">{{ 'SECU.USERS.MODAL.USERNAME' | translate }}</label>
                 <input
                   class="s-input mono"
                   [(ngModel)]="form.username"
-                  placeholder="john.doe"
+                  placeholder="{{ 'AUTO_INLINE_SECURITY_UI.JOHN_DOE' | translate }}"
                   maxlength="100"
                 />
               </div>
               <div class="s-field">
-                <label class="s-label">Full Name *</label>
+                <label class="s-label">{{ 'SECU.USERS.MODAL.FULL_NAME' | translate }}</label>
                 <input
                   class="s-input"
                   [(ngModel)]="form.fullName"
-                  placeholder="John Doe"
+                  placeholder="{{ 'AUTO_INLINE_SECURITY_UI.JOHN_DOE_2' | translate }}"
                   maxlength="200"
                 />
               </div>
             </div>
             <div class="s-form-row">
               <div class="s-field">
-                <label class="s-label">Email</label>
+                <label class="s-label">{{ 'SECU.USERS.MODAL.EMAIL' | translate }}</label>
                 <input
                   class="s-input"
                   type="email"
                   [(ngModel)]="form.email"
-                  placeholder="john@example.com"
+                  placeholder="{{ 'AUTO_INLINE_SECURITY_UI.JOHN_EXAMPLE_COM' | translate }}"
                   maxlength="200"
                 />
               </div>
               <div class="s-field">
-                <label class="s-label">External ID</label>
+                <label class="s-label">{{ 'SECU.USERS.MODAL.EXTERNAL_ID' | translate }}</label>
                 <input
                   class="s-input mono"
                   [(ngModel)]="form.externalId"
-                  placeholder="ext-123"
+                  placeholder="{{ 'AUTO_INLINE_SECURITY_UI.EXT_123' | translate }}"
                   maxlength="200"
                 />
               </div>
@@ -210,15 +211,15 @@ import { PermActionDirective } from '../../directives/perm-action.directive';
                     <div class="s-toggle-track"></div>
                     <div class="s-toggle-thumb"></div>
                   </label>
-                  <span class="s-label">Active</span>
+                  <span class="s-label">{{ 'COMMON.ACTIVE' | translate }}</span>
                 </div>
               </div>
             }
           </div>
           <div class="s-modal-footer">
-            <button class="s-btn s-btn-ghost" (click)="closeModal()">Cancel</button>
+            <button class="s-btn s-btn-ghost" (click)="closeModal()">{{ 'COMMON.CANCEL' | translate }}</button>
             <button class="s-btn s-btn-primary" (click)="save()" [disabled]="saving()">
-              {{ saving() ? 'Saving…' : editUser() ? 'Update' : 'Create' }}
+              {{ saving() ? ('COMMON.SAVING' | translate) : editUser() ? ('COMMON.UPDATE' | translate) : ('COMMON.CREATE' | translate) }}
             </button>
           </div>
         </div>
@@ -230,18 +231,18 @@ import { PermActionDirective } from '../../directives/perm-action.directive';
       <div class="s-modal-backdrop" (click)="onBackdropClick($event)">
         <div class="s-modal narrow">
           <div class="s-modal-header">
-            <span class="s-modal-title">Delete User</span>
+            <span class="s-modal-title">{{ 'SECU.USERS.DELETE.TITLE' | translate }}</span>
             <button class="s-btn-icon" (click)="deleteTarget.set(null)">✕</button>
           </div>
           <div class="s-modal-body">
             <p style="font-size:13px; color: var(--s-text-2);">
-              Deactivate <strong style="color:var(--s-text)">{{ deleteTarget()!.username }}</strong
-              >? This is a soft-delete.
-            </p>
+                            <p style="font-size:13px; color: var(--s-text-2);">
+              {{ 'SECU.USERS.DELETE.CONFIRM_PREFIX' | translate }} <strong style="color:var(--s-text)">{{ deleteTarget()!.username }}</strong>{{ 'SECU.USERS.DELETE.CONFIRM_SUFFIX' | translate }}
+              </p>
           </div>
           <div class="s-modal-footer">
-            <button class="s-btn s-btn-ghost" (click)="deleteTarget.set(null)">Cancel</button>
-            <button class="s-btn s-btn-danger" (click)="doDelete()">Delete</button>
+            <button class="s-btn s-btn-ghost" (click)="deleteTarget.set(null)">{{ 'COMMON.CANCEL' | translate }}</button>
+            <button class="s-btn s-btn-danger" (click)="doDelete()">{{ 'COMMON.DELETE' | translate }}</button>
           </div>
         </div>
       </div>
@@ -260,9 +261,7 @@ export class UsersListComponent implements OnInit {
   totalRecords = signal(0);
   totalPages = signal(1);
 
-  /** Fallback if menu mapping not yet available */
-  readonly defaultPageCode = 'USERS_MANAGEMENT';
-  currentPageCode = signal<string | null>(null);
+  readonly defaultPageCode = 'USERS_LIST';
 
   page = 1;
   pageSize = 20;
@@ -315,17 +314,7 @@ export class UsersListComponent implements OnInit {
           this.totalPages.set(r.totalPages);
         }
       });
-    this.setPageCodeFromUrl(this.router.url);
-    this.router.events.pipe(filter((e) => e instanceof NavigationEnd)).subscribe((event: any) => {
-      this.setPageCodeFromUrl(event.urlAfterRedirects || event.url || this.router.url);
-    });
-
     this.reload();
-  }
-
-  private setPageCodeFromUrl(url: string): void {
-    const pageCode = this.permissionService.getPageCodeForUrl(url);
-    this.currentPageCode.set(pageCode);
   }
 
   reload() {
@@ -340,12 +329,13 @@ export class UsersListComponent implements OnInit {
     this.search$.next();
   }
 
-  get effectivePageCode(): string {
-    return this.currentPageCode() ?? this.defaultPageCode;
-  }
+  readonly effectivePageCode = computed(() => {
+    this.permissionService.loaded();
+    return this.permissionService.getPageCodeForUrl(this.router.url) ?? this.defaultPageCode;
+  });
 
   get availableActions(): string[] {
-    return this.permissionService.getActionsForPage(this.effectivePageCode);
+    return this.permissionService.getActionsForPage(this.effectivePageCode());
   }
 
   openCreate() {
@@ -430,3 +420,4 @@ export class UsersListComponent implements OnInit {
       });
   }
 }
+

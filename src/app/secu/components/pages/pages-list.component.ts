@@ -1,8 +1,8 @@
-import { Component, OnInit, signal, inject, computed } from '@angular/core';
+﻿import { Component, OnInit, signal, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, NavigationEnd } from '@angular/router';
+import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { catchError, of, filter } from 'rxjs';
+import { catchError, of } from 'rxjs';
 import { SecuApiService } from '../../services/secu-api.service';
 import { SecuPaginationComponent } from '../shared/secu-pagination.component';
 import { PermActionDirective } from '../../directives/perm-action.directive';
@@ -13,6 +13,7 @@ import {
   UpdateSecuPageRequest,
   SecuPageType,
 } from '../../models/secu.models';
+import { TranslatePipe } from '@ngx-translate/core';
 
 interface TreeNode extends SecuPageDto {
   children: TreeNode[];
@@ -23,7 +24,7 @@ interface TreeNode extends SecuPageDto {
 @Component({
   selector: 'app-pages-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, SecuPaginationComponent, PermActionDirective],
+  imports: [CommonModule, FormsModule, SecuPaginationComponent, PermActionDirective, TranslatePipe],
   styles: [
     `
       .view-toggle {
@@ -164,9 +165,9 @@ interface TreeNode extends SecuPageDto {
   template: `
     <div class="s-page-header">
       <div>
-        <h1 class="s-page-title">Pages</h1>
+        <h1 class="s-page-title">{{ 'DOM_FALLBACK.TEXT_284' | translate }}</h1>
         <p class="s-page-subtitle">
-          {{ flatPages().length }} pages · hierarchy defines menu structure
+          {{ flatPages().length }} pages �· hierarchy defines menu structure
         </p>
       </div>
       <div style="display:flex;gap:8px;align-items:center;">
@@ -176,22 +177,22 @@ interface TreeNode extends SecuPageDto {
             [class.active]="viewMode() === 'tree'"
             (click)="viewMode.set('tree')"
           >
-            🌲 Tree
+            {{ 'AUTO_INLINE_SECURITY_UI.TREE' | translate }}
           </button>
           <button
             class="vt-btn"
             [class.active]="viewMode() === 'flat'"
             (click)="viewMode.set('flat')"
           >
-            📋 Flat
+            {{ 'AUTO_INLINE_SECURITY_UI.FLAT' | translate }}
           </button>
         </div>
         <button
           class="s-btn s-btn-primary"
-          [permAction]="permissionService.canCreate(effectivePageCode)"
+          [permAction]="permissionService.canCreate(effectivePageCode())"
           (click)="openCreate()"
         >
-          + New Page
+          {{ 'DOM_FALLBACK.TEXT_287' | translate }}
         </button>
       </div>
     </div>
@@ -200,9 +201,9 @@ interface TreeNode extends SecuPageDto {
       <!-- Toolbar -->
       <div class="s-toolbar">
         <div class="s-search">
-          <span class="s-search-icon">🔍</span>
+          <span class="s-search-icon">�</span>
           <input
-            placeholder="Search pages…"
+            placeholder="{{ 'AUTO_INLINE_SECURITY_UI.SEARCH_PAGES' | translate }}"
             [(ngModel)]="searchTerm"
             (ngModelChange)="onSearch()"
           />
@@ -212,17 +213,17 @@ interface TreeNode extends SecuPageDto {
           <div class="s-toggle-track"></div>
           <div class="s-toggle-thumb"></div>
         </label>
-        <span style="font-size:12px;color:var(--s-text-2)">Show inactive</span>
+        <span style="font-size:12px;color:var(--s-text-2)">{{ 'DOM_FALLBACK.TEXT_288' | translate }}</span>
         @if (viewMode() === 'tree') {
-          <button class="s-btn s-btn-ghost s-btn-sm" (click)="treeExpandAll()">Expand All</button>
+          <button class="s-btn s-btn-ghost s-btn-sm" (click)="treeExpandAll()">{{ 'DOM_FALLBACK.TEXT_289' | translate }}</button>
           <button class="s-btn s-btn-ghost s-btn-sm" (click)="treeCollapseAll()">
-            Collapse All
+            {{ 'DOM_FALLBACK.TEXT_290' | translate }}
           </button>
         }
       </div>
 
       @if (loading()) {
-        <div class="s-empty"><div class="s-empty-text">Loading…</div></div>
+        <div class="s-empty"><div class="s-empty-text">{{ 'COMMON.LOADING' | translate }}</div></div>
       } @else if (viewMode() === 'flat') {
         <!-- ── FLAT TABLE ──────────────────────────────────────────── -->
         <div class="s-table-wrap">
@@ -230,14 +231,14 @@ interface TreeNode extends SecuPageDto {
             <thead>
               <tr>
                 <th>#</th>
-                <th>Code</th>
-                <th>Name</th>
-                <th>Type</th>
+                <th>{{ 'DOM_FALLBACK.TEXT_035' | translate }}</th>
+                <th>{{ 'DOM_FALLBACK.TEXT_043' | translate }}</th>
+                <th>{{ 'DOM_FALLBACK.TEXT_232' | translate }}</th>
                 <th>URL</th>
-                <th>Icon</th>
-                <th>Parent</th>
-                <th>Sort</th>
-                <th>Status</th>
+                <th>{{ 'DOM_FALLBACK.TEXT_292' | translate }}</th>
+                <th>{{ 'DOM_FALLBACK.TEXT_231' | translate }}</th>
+                <th>{{ 'DOM_FALLBACK.TEXT_293' | translate }}</th>
+                <th>{{ 'DOM_FALLBACK.TEXT_026' | translate }}</th>
                 <th></th>
               </tr>
             </thead>
@@ -262,7 +263,7 @@ interface TreeNode extends SecuPageDto {
                         parentLabel(p.parentId)
                       }}</span>
                     } @else {
-                      <span style="font-size:11px;color:var(--s-text-3)">root</span>
+                      <span style="font-size:11px;color:var(--s-text-3)">{{ 'AUTO_INLINE_SECURITY_UI.ROOT' | translate }}</span>
                     }
                   </td>
                   <td style="color:var(--s-text-2);font-size:12px">{{ p.sortOrder ?? 0 }}</td>
@@ -278,17 +279,17 @@ interface TreeNode extends SecuPageDto {
                     <div style="display:flex;gap:4px;justify-content:flex-end;">
                       <button
                         class="s-btn-icon"
-                        [permAction]="permissionService.canUpdate(effectivePageCode)"
+                        [permAction]="permissionService.canUpdate(effectivePageCode())"
                         (click)="openEdit(p)"
                       >
-                        ✏
+                        �
                       </button>
                       <button
                         class="s-btn-icon danger"
-                        [permAction]="permissionService.canDelete(effectivePageCode)"
+                        [permAction]="permissionService.canDelete(effectivePageCode())"
                         (click)="askDelete(p)"
                       >
-                        🗑
+                        �—‘
                       </button>
                     </div>
                   </td>
@@ -296,7 +297,7 @@ interface TreeNode extends SecuPageDto {
               } @empty {
                 <tr>
                   <td colspan="10">
-                    <div class="s-empty"><div class="s-empty-text">No pages found</div></div>
+                    <div class="s-empty"><div class="s-empty-text">{{ 'DOM_FALLBACK.TEXT_294' | translate }}</div></div>
                   </td>
                 </tr>
               }
@@ -316,12 +317,12 @@ interface TreeNode extends SecuPageDto {
           <table class="tree-table">
             <thead>
               <tr>
-                <th>Page</th>
+                <th>{{ 'SECU.PAGE_ACTIONS.COLUMNS.PAGE' | translate }}</th>
                 <th style="width:200px">URL</th>
-                <th style="width:80px">Type</th>
-                <th style="width:60px">Icon</th>
-                <th style="width:80px">Sort</th>
-                <th style="width:80px">Status</th>
+                <th style="width:80px">{{ 'DOM_FALLBACK.TEXT_232' | translate }}</th>
+                <th style="width:60px">{{ 'DOM_FALLBACK.TEXT_292' | translate }}</th>
+                <th style="width:80px">{{ 'DOM_FALLBACK.TEXT_293' | translate }}</th>
+                <th style="width:80px">{{ 'DOM_FALLBACK.TEXT_026' | translate }}</th>
                 <th style="width:80px"></th>
               </tr>
             </thead>
@@ -335,7 +336,7 @@ interface TreeNode extends SecuPageDto {
                       }
                       @if (row.children.length) {
                         <button class="toggle-btn" (click)="toggleNode(row)">
-                          {{ row.expanded ? '▾' : '▸' }}
+                          {{ row.expanded ? '�–¾' : '�–¸' }}
                         </button>
                       } @else {
                         <span style="width:18px;display:inline-block;"></span>
@@ -366,17 +367,17 @@ interface TreeNode extends SecuPageDto {
                           class="sort-btn"
                           (click)="moveUp(row)"
                           [disabled]="!canMoveUp(row)"
-                          title="Move up"
+                          title="{{ 'DOM_FALLBACK.TEXT_387' | translate }}"
                         >
-                          ▲
+                          �–²
                         </button>
                         <button
                           class="sort-btn"
                           (click)="moveDown(row)"
                           [disabled]="!canMoveDown(row)"
-                          title="Move down"
+                          title="{{ 'DOM_FALLBACK.TEXT_388' | translate }}"
                         >
-                          ▼
+                          �–¼
                         </button>
                       </div>
                     </div>
@@ -393,19 +394,19 @@ interface TreeNode extends SecuPageDto {
                     <div style="display:flex;gap:4px;justify-content:flex-end;">
                       <button
                         class="s-btn-icon"
-                        [permAction]="permissionService.canUpdate(effectivePageCode)"
+                        [permAction]="permissionService.canUpdate(effectivePageCode())"
                         (click)="openEdit(row)"
-                        title="Edit"
+                        title="{{ 'DOM_FALLBACK.TEXT_324' | translate }}"
                       >
-                        ✏
+                        �
                       </button>
                       <button
                         class="s-btn-icon danger"
-                        [permAction]="permissionService.canDelete(effectivePageCode)"
+                        [permAction]="permissionService.canDelete(effectivePageCode())"
                         (click)="askDelete(row)"
-                        title="Delete"
+                        title="{{ 'COMMON.DELETE' | translate }}"
                       >
-                        🗑
+                        �—‘
                       </button>
                     </div>
                   </td>
@@ -417,7 +418,7 @@ interface TreeNode extends SecuPageDto {
         @if (!treeRows().length) {
           <div class="s-empty">
             <div class="s-empty-icon">📄</div>
-            <div class="s-empty-text">No pages found</div>
+            <div class="s-empty-text">{{ 'DOM_FALLBACK.TEXT_294' | translate }}</div>
           </div>
         }
       }
@@ -433,12 +434,12 @@ interface TreeNode extends SecuPageDto {
           </div>
           <div class="s-modal-body">
             @if (saveError()) {
-              <div class="s-alert error">⚠ {{ saveError() }}</div>
+              <div class="s-alert error">�  {{ saveError() }}</div>
             }
 
             <div class="s-form-row">
               <div class="s-field">
-                <label class="s-label">Page Code *</label>
+                <label class="s-label">{{ 'DOM_FALLBACK.TEXT_295' | translate }}</label>
                 <input
                   class="s-input mono"
                   [(ngModel)]="form.pageCode"
@@ -449,11 +450,11 @@ interface TreeNode extends SecuPageDto {
                 />
               </div>
               <div class="s-field">
-                <label class="s-label">Page Name *</label>
+                <label class="s-label">{{ 'DOM_FALLBACK.TEXT_296' | translate }}</label>
                 <input
                   class="s-input"
                   [(ngModel)]="form.pageName"
-                  placeholder="Fleet Dashboard"
+                  placeholder="{{ 'AUTO_INLINE_SECURITY_UI.FLEET_DASHBOARD' | translate }}"
                   maxlength="200"
                 />
               </div>
@@ -465,21 +466,21 @@ interface TreeNode extends SecuPageDto {
                 <input
                   class="s-input mono"
                   [(ngModel)]="form.pageUrl"
-                  placeholder="/fleet/dashboard"
+                  placeholder="{{ 'AUTO_INLINE_SECURITY_UI.FLEET_DASHBOARD_2' | translate }}"
                   maxlength="500"
                 />
               </div>
               <div class="s-field">
                 <label class="s-label"
-                  >Icon
+                  >{{ 'DOM_FALLBACK.TEXT_292' | translate }}
                   <span style="color:var(--s-text-3);font-size:11px"
-                    >(emoji or CSS class)</span
+                    >{{ 'DOM_FALLBACK.TEXT_297' | translate }}</span
                   ></label
                 >
                 <input
                   class="s-input"
                   [(ngModel)]="form.icon"
-                  placeholder="🚗 or pi pi-car"
+                  placeholder="{{ 'AUTO_INLINE_SECURITY_UI.OR_PI_PI_CAR' | translate }}"
                   maxlength="100"
                 />
               </div>
@@ -487,14 +488,14 @@ interface TreeNode extends SecuPageDto {
 
             <div class="s-form-row">
               <div class="s-field">
-                <label class="s-label">Page Type</label>
+                <label class="s-label">{{ 'DOM_FALLBACK.TEXT_298' | translate }}</label>
                 <select class="s-select" [(ngModel)]="form.pageType">
-                  <option value="PAGE">PAGE (leaf)</option>
-                  <option value="MODEL">MODEL (group)</option>
+                  <option value="PAGE">{{ 'DOM_FALLBACK.TEXT_299' | translate }}</option>
+                  <option value="MODEL">{{ 'DOM_FALLBACK.TEXT_300' | translate }}</option>
                 </select>
               </div>
               <div class="s-field">
-                <label class="s-label">Sort Order</label>
+                <label class="s-label">{{ 'DOM_FALLBACK.TEXT_301' | translate }}</label>
                 <input
                   class="s-input"
                   type="number"
@@ -509,9 +510,9 @@ interface TreeNode extends SecuPageDto {
             <div class="s-form-row single">
               <div class="s-field">
                 <label class="s-label"
-                  >Parent Page
+                  >{{ 'DOM_FALLBACK.TEXT_302' | translate }}
                   <span style="color:var(--s-text-3);font-size:11px"
-                    >(leave as Root for top-level)</span
+                    >{{ 'DOM_FALLBACK.TEXT_303' | translate }}</span
                   ></label
                 >
                 <div style="position:relative;">
@@ -525,9 +526,9 @@ interface TreeNode extends SecuPageDto {
                         parentLabel(form.parentId)
                       }}</span>
                     } @else {
-                      <span style="color:var(--s-text-3)">Root (no parent)</span>
+                      <span style="color:var(--s-text-3)">{{ 'DOM_FALLBACK.TEXT_304' | translate }}</span>
                     }
-                    <span style="margin-left:auto;color:var(--s-text-3);font-size:10px">▾</span>
+                    <span style="margin-left:auto;color:var(--s-text-3);font-size:10px">�–¾</span>
                   </button>
                   @if (parentPickerOpen()) {
                     <div
@@ -538,7 +539,7 @@ interface TreeNode extends SecuPageDto {
                         [class.selected]="!form.parentId"
                         (click)="selectParent(null)"
                       >
-                        <span>🌐</span> <span>Root (no parent)</span>
+                        <span>�</span> <span>{{ 'DOM_FALLBACK.TEXT_304' | translate }}</span>
                       </div>
                       @for (p of parentOptions(); track p.idPage) {
                         @if (p.idPage !== editPage()?.idPage) {
@@ -567,7 +568,7 @@ interface TreeNode extends SecuPageDto {
             @if (editPage()) {
               <div class="s-form-row single">
                 <div class="s-field" style="justify-content:flex-end;">
-                  <label class="s-label">Status</label>
+                  <label class="s-label">{{ 'DOM_FALLBACK.TEXT_026' | translate }}</label>
                   <div style="display:flex;align-items:center;gap:8px;margin-top:6px;">
                     <label class="s-toggle">
                       <input type="checkbox" [(ngModel)]="formActive" />
@@ -583,18 +584,18 @@ interface TreeNode extends SecuPageDto {
             }
           </div>
           <div class="s-modal-footer">
-            <button class="s-btn s-btn-ghost" (click)="closeModal()">Cancel</button>
+            <button class="s-btn s-btn-ghost" (click)="closeModal()">{{ 'SECURITY.CHANGE_PASSWORD.CANCEL' | translate }}</button>
             <button
               class="s-btn s-btn-primary"
               [permAction]="
                 editPage()
-                  ? permissionService.canUpdate(effectivePageCode)
-                  : permissionService.canCreate(effectivePageCode)
+                  ? permissionService.canUpdate(effectivePageCode())
+                  : permissionService.canCreate(effectivePageCode())
               "
               (click)="save()"
               [disabled]="saving()"
             >
-              {{ saving() ? 'Saving…' : editPage() ? 'Update' : 'Create' }}
+              {{ saving() ? 'Saving�¦' : editPage() ? 'Update' : 'Create' }}
             </button>
           </div>
         </div>
@@ -606,27 +607,27 @@ interface TreeNode extends SecuPageDto {
       <div class="s-modal-backdrop" (click)="onBackdrop($event)">
         <div class="s-modal narrow" (click)="$event.stopPropagation()">
           <div class="s-modal-header">
-            <span class="s-modal-title">Delete Page</span>
+            <span class="s-modal-title">{{ 'DOM_FALLBACK.TEXT_305' | translate }}</span>
             <button class="s-btn-icon" (click)="deleteTarget.set(null)">✕</button>
           </div>
           <div class="s-modal-body">
             <p style="font-size:13px;color:var(--s-text-2);">
-              Soft-delete page
+              {{ 'DOM_FALLBACK.TEXT_306' | translate }}
               <strong class="mono" style="color:var(--s-accent)">{{
                 deleteTarget()!.pageCode
               }}</strong
               >?
               @if (childCount(deleteTarget()!) > 0) {
                 <br /><br /><span style="color:var(--s-amber);font-size:12px;"
-                  >⚠ This page has {{ childCount(deleteTarget()!) }} child page(s). They will become
+                  >�  This page has {{ childCount(deleteTarget()!) }} child page(s). They will become
                   root-level pages.</span
                 >
               }
             </p>
           </div>
           <div class="s-modal-footer">
-            <button class="s-btn s-btn-ghost" (click)="deleteTarget.set(null)">Cancel</button>
-            <button class="s-btn s-btn-danger" (click)="doDelete()">Delete</button>
+            <button class="s-btn s-btn-ghost" (click)="deleteTarget.set(null)">{{ 'SECURITY.CHANGE_PASSWORD.CANCEL' | translate }}</button>
+            <button class="s-btn s-btn-danger" (click)="doDelete()">{{ 'COMMON.DELETE' | translate }}</button>
           </div>
         </div>
       </div>
@@ -638,9 +639,7 @@ export class PagesListComponent implements OnInit {
   private router = inject(Router);
   public permissionService = inject(PermissionService);
 
-  /** Fallback for required permission checks */
   readonly defaultPageCode = 'SECU_PAGES';
-  currentPageCode = signal<string | null>(null);
 
   flatPages = signal<SecuPageDto[]>([]);
   loading = signal(true);
@@ -715,22 +714,13 @@ export class PagesListComponent implements OnInit {
     return result;
   });
 
+  readonly effectivePageCode = computed(() => {
+    this.permissionService.loaded();
+    return this.permissionService.getPageCodeForUrl(this.router.url) ?? this.defaultPageCode;
+  });
+
   ngOnInit() {
-    this.setPageCodeFromUrl(this.router.url);
-    this.router.events.pipe(filter((e) => e instanceof NavigationEnd)).subscribe((event: any) => {
-      this.setPageCodeFromUrl(event.urlAfterRedirects || event.url || this.router.url);
-    });
-
     this.reload();
-  }
-
-  private setPageCodeFromUrl(url: string): void {
-    const pageCode = this.permissionService.getPageCodeForUrl(url);
-    this.currentPageCode.set(pageCode);
-  }
-
-  get effectivePageCode(): string {
-    return this.currentPageCode() ?? this.defaultPageCode;
   }
 
   reload() {
@@ -985,3 +975,4 @@ export class PagesListComponent implements OnInit {
       });
   }
 }
+

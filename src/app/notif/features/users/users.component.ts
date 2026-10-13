@@ -18,6 +18,7 @@ import { ReferenceItem } from '../../core/models/reference';
 import { UserPreference } from '../../core/models/user-preference';
 import { UserDevice } from '../../core/models/user-device';
 import { formatHttpError } from '../../shared/utils/api-utils';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'notif-users',
@@ -34,7 +35,8 @@ import { formatHttpError } from '../../shared/utils/api-utils';
     MessageModule,
     TabsModule, TabPanel, TabPanels, TabList, Tab, Tabs,
     TableModule,
-    DividerModule
+    DividerModule,
+    TranslatePipe
   ],
   templateUrl: './users.component.html'
 })

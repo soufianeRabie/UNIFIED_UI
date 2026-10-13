@@ -1,12 +1,12 @@
 <div class="np-page">
   <div class="np-page-header">
     <div>
-      <div class="np-eyebrow"><i class="pi pi-book"></i> System</div>
-      <div class="np-page-title">Reference Data</div>
-      <div class="np-page-subtitle">Fixed system enumerations for channels and priorities. Read-only.</div>
+      <div class="np-eyebrow"><i class="pi pi-book"></i> {{ 'DOM_FALLBACK.TEXT_028' | translate }}</div>
+      <div class="np-page-title">{{ 'DOM_FALLBACK.TEXT_029' | translate }}</div>
+      <div class="np-page-subtitle">{{ 'DOM_FALLBACK.TEXT_030' | translate }}</div>
     </div>
     <div class="np-btn-row">
-      <button class="np-btn np-btn--ghost" (click)="load()"><i class="pi pi-refresh"></i> Refresh</button>
+      <button class="np-btn np-btn--ghost" (click)="load()"><i class="pi pi-refresh"></i> {{ 'DOM_FALLBACK.TEXT_031' | translate }}</button>
     </div>
   </div>
 
@@ -16,13 +16,13 @@
     <!-- Channels -->
     <div class="np-card">
       <div class="np-card-header">
-        <div class="np-card-title"><i class="pi pi-send"></i> Channels</div>
+        <div class="np-card-title"><i class="pi pi-send"></i> {{ 'DOM_FALLBACK.TEXT_032' | translate }}</div>
         <span class="np-badge np-badge--blue">{{ channels.length }}</span>
       </div>
       <div class="np-card-body np-card-body--flush">
         <p-table [value]="channels" styleClass="p-datatable-sm">
           <ng-template pTemplate="header">
-            <tr><th style="width:60px">ID</th><th>Code</th><th>Label</th></tr>
+            <tr><th style="width:60px">{{ 'TECH_EXAMPLES.ID' | translate }}</th><th>{{ 'DOM_FALLBACK.TEXT_035' | translate }}</th><th>{{ 'DOM_FALLBACK.TEXT_036' | translate }}</th></tr>
           </ng-template>
           <ng-template pTemplate="body" let-item>
             <tr>
@@ -33,7 +33,7 @@
           </ng-template>
           <ng-template pTemplate="emptymessage">
             <tr><td colspan="3">
-              <div class="np-empty np-empty--compact"><i class="pi pi-send"></i> No channels</div>
+              <div class="np-empty np-empty--compact"><i class="pi pi-send"></i> {{ 'DOM_FALLBACK.TEXT_037' | translate }}</div>
             </td></tr>
           </ng-template>
         </p-table>
@@ -43,13 +43,13 @@
     <!-- Priorities -->
     <div class="np-card">
       <div class="np-card-header">
-        <div class="np-card-title"><i class="pi pi-flag"></i> Priorities</div>
+        <div class="np-card-title"><i class="pi pi-flag"></i> {{ 'DOM_FALLBACK.TEXT_033' | translate }}</div>
         <span class="np-badge np-badge--blue">{{ priorities.length }}</span>
       </div>
       <div class="np-card-body np-card-body--flush">
         <p-table [value]="priorities" styleClass="p-datatable-sm">
           <ng-template pTemplate="header">
-            <tr><th style="width:60px">ID</th><th>Code</th><th>Label</th></tr>
+            <tr><th style="width:60px">{{ 'TECH_EXAMPLES.ID' | translate }}</th><th>{{ 'DOM_FALLBACK.TEXT_035' | translate }}</th><th>{{ 'DOM_FALLBACK.TEXT_036' | translate }}</th></tr>
           </ng-template>
           <ng-template pTemplate="body" let-item>
             <tr>
@@ -60,7 +60,7 @@
           </ng-template>
           <ng-template pTemplate="emptymessage">
             <tr><td colspan="3">
-              <div class="np-empty np-empty--compact"><i class="pi pi-flag"></i> No priorities</div>
+              <div class="np-empty np-empty--compact"><i class="pi pi-flag"></i> {{ 'DOM_FALLBACK.TEXT_038' | translate }}</div>
             </td></tr>
           </ng-template>
         </p-table>

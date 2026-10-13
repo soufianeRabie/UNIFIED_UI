@@ -1,11 +1,12 @@
-import { Component, OnInit, signal, inject, computed } from '@angular/core';
+﻿import { Component, OnInit, signal, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, NavigationEnd } from '@angular/router';
+import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { catchError, of, forkJoin, filter } from 'rxjs';
+import { catchError, of, forkJoin } from 'rxjs';
 import { SecuApiService } from '../../services/secu-api.service';
 import { PermissionService } from '../../services/permission.service';
 import { SecuRoleDto, SecuPageActionDto, SecuPermissionDto } from '../../models/secu.models';
+import { TranslatePipe } from '@ngx-translate/core';
 
 type ViewMode = 'matrix' | 'role';
 
@@ -25,7 +26,7 @@ interface PageGroup {
 @Component({
   selector: 'app-permissions-matrix',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslatePipe],
   styles: [
     `
       .view-toggle {
@@ -285,9 +286,9 @@ interface PageGroup {
   template: `
     <div class="s-page-header">
       <div>
-        <h1 class="s-page-title">Permissions Matrix</h1>
+        <h1 class="s-page-title">{{ 'DOM_FALLBACK.TEXT_307' | translate }}</h1>
         <p class="s-page-subtitle">
-          {{ roles().length }} roles · {{ allPageActions().length }} page-actions ·
+          {{ roles().length }} roles �· {{ allPageActions().length }} page-actions �·
           {{ totalGranted() }} grants
         </p>
       </div>
@@ -298,50 +299,50 @@ interface PageGroup {
             [class.active]="viewMode() === 'matrix'"
             (click)="viewMode.set('matrix')"
           >
-            ⊞ Matrix
+            {{ 'AUTO_INLINE_SECURITY_UI.MATRIX' | translate }}
           </button>
           <button
             class="vt-btn"
             [class.active]="viewMode() === 'role'"
             (click)="viewMode.set('role')"
           >
-            🎭 By Role
+            {{ 'AUTO_INLINE_SECURITY_UI.BY_ROLE' | translate }}
           </button>
         </div>
       </div>
     </div>
 
     @if (loading()) {
-      <div class="s-empty"><div class="s-empty-text">Loading…</div></div>
+      <div class="s-empty"><div class="s-empty-text">{{ 'AUTO_INLINE_SECURITY_UI.LOADING' | translate }}</div></div>
     } @else {
       <!-- Stats -->
       <div class="s-stats-grid" style="margin-bottom:20px;">
         <div class="s-stat-card">
-          <div class="s-stat-icon blue">🎭</div>
+          <div class="s-stat-icon blue">�­</div>
           <div>
             <div class="s-stat-value">{{ roles().length }}</div>
-            <div class="s-stat-label">Roles</div>
+            <div class="s-stat-label">{{ 'DOM_FALLBACK.TEXT_309' | translate }}</div>
           </div>
         </div>
         <div class="s-stat-card">
-          <div class="s-stat-icon amber">🔗</div>
+          <div class="s-stat-icon amber">�—</div>
           <div>
             <div class="s-stat-value">{{ allPageActions().length }}</div>
-            <div class="s-stat-label">Page Actions</div>
+            <div class="s-stat-label">{{ 'DOM_FALLBACK.TEXT_264' | translate }}</div>
           </div>
         </div>
         <div class="s-stat-card">
           <div class="s-stat-icon green">✓</div>
           <div>
             <div class="s-stat-value">{{ totalGranted() }}</div>
-            <div class="s-stat-label">Grants</div>
+            <div class="s-stat-label">{{ 'DOM_FALLBACK.TEXT_310' | translate }}</div>
           </div>
         </div>
         <div class="s-stat-card">
           <div class="s-stat-icon purple">📄</div>
           <div>
             <div class="s-stat-value">{{ pageGroups().length }}</div>
-            <div class="s-stat-label">Pages</div>
+            <div class="s-stat-label">{{ 'DOM_FALLBACK.TEXT_284' | translate }}</div>
           </div>
         </div>
       </div>
@@ -354,16 +355,16 @@ interface PageGroup {
             style="padding:10px 16px;border-bottom:1px solid var(--s-border);display:flex;align-items:center;gap:10px;flex-wrap:wrap;"
           >
             <div class="s-search" style="max-width:180px;">
-              <span class="s-search-icon">🔍</span>
-              <input placeholder="Filter pages…" [(ngModel)]="mxSearch" />
+              <span class="s-search-icon">�</span>
+              <input placeholder="{{ 'AUTO_INLINE_SECURITY_UI.FILTER_PAGES' | translate }}" [(ngModel)]="mxSearch" />
             </div>
             <span style="font-size:11px;color:var(--s-text-3);"
-              >Click ✓ to revoke · Click · to grant</span
+              >{{ 'AUTO_INLINE_SECURITY_UI.CLICK_TO_REVOKE_CLICK_TO_GRANT' | translate }}</span
             >
             @if (pendingCount() > 0) {
               <span style="font-size:12px;color:var(--s-amber);margin-left:auto;"
                 >{{ pendingCount() }} operation{{ pendingCount() !== 1 ? 's' : '' }} in
-                progress…</span
+                progress�¦</span
               >
             }
           </div>
@@ -372,7 +373,7 @@ interface PageGroup {
             <table class="mx-table">
               <thead>
                 <tr>
-                  <th>Page / Action</th>
+                  <th>{{ 'DOM_FALLBACK.TEXT_312' | translate }}</th>
                   @for (r of roles(); track r.idRole) {
                     <th
                       class="role-header"
@@ -396,7 +397,7 @@ interface PageGroup {
                       style="cursor:pointer;user-select:none;"
                     >
                       <span style="margin-right:6px;font-size:9px;color:var(--s-text-3);">{{
-                        pg.expanded ? '▾' : '▸'
+                        pg.expanded ? '�–¾' : '�–¸'
                       }}</span>
                       <span style="font-family:var(--s-mono);color:var(--s-accent)">{{
                         pg.pageCode
@@ -445,11 +446,11 @@ interface PageGroup {
                               "
                             >
                               @if (cell.saving) {
-                                <span class="spin">⟳</span>
+                                <span class="spin">�³</span>
                               } @else if (cell.granted) {
                                 <span class="check">✓</span>
                               } @else {
-                                <span class="dot">·</span>
+                                <span class="dot">�·</span>
                               }
                             </div>
                           </td>
@@ -461,7 +462,7 @@ interface PageGroup {
               </tbody>
             </table>
             @if (!filteredPageGroups().length) {
-              <div class="s-empty"><div class="s-empty-text">No pages match filter</div></div>
+              <div class="s-empty"><div class="s-empty-text">{{ 'DOM_FALLBACK.TEXT_261' | translate }}</div></div>
             }
           </div>
         </div>
@@ -475,7 +476,7 @@ interface PageGroup {
             <div
               style="font-size:11px;font-weight:600;color:var(--s-text-3);text-transform:uppercase;letter-spacing:.07em;padding:10px 14px;border:1px solid var(--s-border);border-bottom:none;border-radius:var(--s-radius-lg) var(--s-radius-lg) 0 0;background:var(--s-bg-3);"
             >
-              Select Role
+              {{ 'DOM_FALLBACK.TEXT_313' | translate }}
             </div>
             <div class="role-list">
               @for (r of roles(); track r.idRole) {
@@ -501,8 +502,8 @@ interface PageGroup {
             @if (!selectedRoleId()) {
               <div class="s-card">
                 <div class="s-empty" style="padding:60px;">
-                  <div class="s-empty-icon">🎭</div>
-                  <div class="s-empty-text">Select a role to manage its permissions</div>
+                  <div class="s-empty-icon">�­</div>
+                  <div class="s-empty-text">{{ 'DOM_FALLBACK.TEXT_314' | translate }}</div>
                 </div>
               </div>
             } @else {
@@ -516,14 +517,14 @@ interface PageGroup {
                   </span>
                   <div style="margin-left:auto;display:flex;gap:8px;">
                     <div class="s-search" style="max-width:160px;">
-                      <span class="s-search-icon">🔍</span>
-                      <input placeholder="Filter…" [(ngModel)]="roleViewSearch" />
+                      <span class="s-search-icon">�</span>
+                      <input placeholder="{{ 'AUTO_INLINE_SECURITY_UI.FILTER' | translate }}" [(ngModel)]="roleViewSearch" />
                     </div>
                     <button class="s-btn s-btn-ghost s-btn-sm" (click)="expandAllRole()">
-                      Expand All
+                      {{ 'DOM_FALLBACK.TEXT_289' | translate }}
                     </button>
                     <button class="s-btn s-btn-ghost s-btn-sm" (click)="collapseAllRole()">
-                      Collapse All
+                      {{ 'DOM_FALLBACK.TEXT_290' | translate }}
                     </button>
                   </div>
                 </div>
@@ -531,7 +532,7 @@ interface PageGroup {
                   @for (pg of filteredRolePageGroups(); track pg.pageCode) {
                     <div class="rp-page">
                       <div class="rp-header" (click)="pg.expanded = !pg.expanded">
-                        <span class="rp-chevron" [class.open]="pg.expanded">▶</span>
+                        <span class="rp-chevron" [class.open]="pg.expanded">�–¶</span>
                         <span style="font-size:13px">📄</span>
                         <span
                           style="font-family:var(--s-mono);font-size:12px;color:var(--s-accent);min-width:100px;flex-shrink:0;"
@@ -569,7 +570,7 @@ interface PageGroup {
                               @if (cell.saving) {
                                 <span
                                   style="font-size:10px;color:var(--s-text-3);animation:spin .6s linear infinite;display:inline-block"
-                                  >⟳</span
+                                  >�³</span
                                 >
                               }
                             </div>
@@ -578,7 +579,7 @@ interface PageGroup {
                       }
                     </div>
                   } @empty {
-                    <div class="s-empty"><div class="s-empty-text">No pages match filter</div></div>
+                    <div class="s-empty"><div class="s-empty-text">{{ 'DOM_FALLBACK.TEXT_261' | translate }}</div></div>
                   }
                 </div>
               </div>
@@ -596,7 +597,6 @@ export class PermissionsMatrixComponent implements OnInit {
 
   /** Fallback for required permission checks */
   readonly defaultPageCode = 'SECU_PERMISSIONS';
-  currentPageCode = signal<string | null>(null);
 
   roles = signal<SecuRoleDto[]>([]);
   allPageActions = signal<SecuPageActionDto[]>([]);
@@ -669,11 +669,6 @@ export class PermissionsMatrixComponent implements OnInit {
   );
 
   ngOnInit() {
-    this.setPageCodeFromUrl(this.router.url);
-    this.router.events.pipe(filter((e) => e instanceof NavigationEnd)).subscribe((event: any) => {
-      this.setPageCodeFromUrl(event.urlAfterRedirects || event.url || this.router.url);
-    });
-
     forkJoin({
       roles: this.api.getRoles({ size: 200 }).pipe(catchError(() => of(null))),
       pas: this.api.getPageActions({ size: 1000 }).pipe(catchError(() => of(null))),
@@ -685,14 +680,10 @@ export class PermissionsMatrixComponent implements OnInit {
     });
   }
 
-  private setPageCodeFromUrl(url: string): void {
-    const pageCode = this.permissionService.getPageCodeForUrl(url);
-    this.currentPageCode.set(pageCode);
-  }
-
-  get effectivePageCode(): string {
-    return this.currentPageCode() ?? this.defaultPageCode;
-  }
+  readonly effectivePageCode = computed(() => {
+    this.permissionService.loaded();
+    return this.permissionService.getPageCodeForUrl(this.router.url) ?? this.defaultPageCode;
+  });
 
   buildPageGroups(pas: SecuPageActionDto[]) {
     const map = new Map<string, PageGroup>();
@@ -782,6 +773,7 @@ export class PermissionsMatrixComponent implements OnInit {
   }
 
   toggleMxCell(role: SecuRoleDto, pa: SecuPageActionDto) {
+    if (!this.permissionService.canUpdate(this.effectivePageCode())) return;
     const key = `${role.idRole}_${pa.idPageAction}`;
     const cell = this.cellMap().get(key);
     if (!cell || cell.saving) return;
@@ -831,3 +823,4 @@ export class PermissionsMatrixComponent implements OnInit {
     this.pageGroups.update((gs) => gs.map((g) => ({ ...g, expanded: false })));
   }
 }
+

@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+﻿import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { catchError, forkJoin, of } from 'rxjs';
@@ -17,7 +17,12 @@ import {
   SecuUserDto,
 } from '../../models/secu.models';
 import { SecuApiService } from '../../services/secu-api.service';
+import { PermissionService } from '../../services/permission.service';
+import { PermActionDirective } from '../../directives/perm-action.directive';
 import { SecuPaginationComponent } from '../shared/secu-pagination.component';
+import { TranslatePipe } from '@ngx-translate/core';
+
+const PAGE_CODE = 'DATA_FILTERS';
 
 const OPERATORS = ['Equals', 'NotEquals', 'Contains', 'StartsWith', 'EndsWith', 'GreaterThan', 'LessThan', 'Between', 'In', 'IsNull', 'Regex'];
 const CONJUNCTIONS = ['AND', 'OR'];
@@ -29,7 +34,7 @@ type DetailTab = 'rules' | 'targets' | 'effective';
 @Component({
   selector: 'app-data-filters',
   standalone: true,
-  imports: [CommonModule, FormsModule, SecuPaginationComponent],
+  imports: [CommonModule, FormsModule, SecuPaginationComponent, PermActionDirective, TranslatePipe],
   styles: [`
     .df-grid { display:grid; grid-template-columns:minmax(260px,.34fr) minmax(0,1fr); min-height:62vh; }
     @media (max-width: 900px) { .df-grid { grid-template-columns:1fr; } }
@@ -49,10 +54,10 @@ type DetailTab = 'rules' | 'targets' | 'effective';
   template: `
     <div class="s-page-header">
       <div>
-        <h1 class="s-page-title">Data Filters</h1>
-        <p class="s-page-subtitle">Row filters scoped by company, user, role, or group.</p>
+        <h1 class="s-page-title">{{ 'SECU.DATA_FILTERS.TITLE' | translate }}</h1>
+        <p class="s-page-subtitle">{{ 'SECU.DATA_FILTERS.SUBTITLE' | translate }}</p>
       </div>
-      <button class="s-btn s-btn-primary" (click)="openCreate()">+ New Filter</button>
+      <button class="s-btn s-btn-primary" [permAction]="permissionService.canCreate(PAGE_CODE)" (click)="openCreate()">{{ 'SECU.DATA_FILTERS.NEW' | translate }}</button>
     </div>
 
     <div class="s-card" style="padding:0;overflow:visible;">
@@ -60,11 +65,11 @@ type DetailTab = 'rules' | 'targets' | 'effective';
         <div class="df-list">
           <div class="s-toolbar" style="gap:8px;flex-wrap:wrap;">
             <div class="s-search" style="flex:1;min-width:150px;">
-              <span class="s-search-icon">Search</span>
-              <input [(ngModel)]="search" (ngModelChange)="onFilterSearch()" placeholder="Filter code, entity..." />
+              <span class="s-search-icon">🔍</span>
+              <input [(ngModel)]="search" (ngModelChange)="onFilterSearch()" [placeholder]="'SECU.DATA_FILTERS.SEARCH_PLACEHOLDER' | translate" />
             </div>
-            <input class="s-input mono" style="width:150px;" [(ngModel)]="entityFilter" (ngModelChange)="onFilterSearch()" list="dfEntityList" placeholder="Entity" />
-            <label class="s-toggle" title="Include inactive">
+            <input class="s-input mono" style="width:150px;" [(ngModel)]="entityFilter" (ngModelChange)="onFilterSearch()" list="dfEntityList" placeholder="{{ 'SECU.DATA_FILTERS.COLUMNS.ENTITY' | translate }}" />
+            <label class="s-toggle" title="{{ 'AUTO_INLINE_SECURITY_UI.INCLUDE_INACTIVE' | translate }}">
               <input type="checkbox" [(ngModel)]="includeInactive" (change)="onFilterSearch()" />
               <div class="s-toggle-track"></div><div class="s-toggle-thumb"></div>
             </label>
@@ -77,13 +82,13 @@ type DetailTab = 'rules' | 'targets' | 'effective';
           </datalist>
 
           @if (loading()) {
-            <div class="s-empty"><div class="s-empty-text">Loading...</div></div>
+            <div class="s-empty"><div class="s-empty-text">{{ 'COMMON.LOADING' | translate }}</div></div>
           } @else {
             @for (filter of filters(); track filter.idFilter) {
               <div class="df-item" [class.active]="selected()?.idFilter === filter.idFilter" (click)="select(filter)">
                 <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
                   <span class="mono" style="font-size:12px;color:var(--s-accent);font-weight:600;">{{ filter.filterCode }}</span>
-                  <span class="s-badge" [class.active]="filter.isActive" [class.inactive]="!filter.isActive">{{ filter.isActive ? 'Active' : 'Off' }}</span>
+                  <span class="s-badge" [class.active]="filter.isActive" [class.inactive]="!filter.isActive">{{ (filter.isActive ? 'COMMON.ACTIVE' : 'COMMON.OFF') | translate }}</span>
                 </div>
                 <div style="font-size:12px;color:var(--s-text-2);margin-top:4px;">{{ filter.entityName }}</div>
                 <div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:6px;">
@@ -93,7 +98,7 @@ type DetailTab = 'rules' | 'targets' | 'effective';
                 </div>
               </div>
             } @empty {
-              <div class="s-empty" style="padding:40px 20px;"><div class="s-empty-text">No data filters found</div></div>
+              <div class="s-empty" style="padding:40px 20px;"><div class="s-empty-text">{{ 'SECU.DATA_FILTERS.EMPTY' | translate }}</div></div>
             }
             <secu-pagination
               [page]="page"
@@ -107,7 +112,7 @@ type DetailTab = 'rules' | 'targets' | 'effective';
 
         <div class="df-detail">
           @if (!selected()) {
-            <div class="s-empty" style="padding:80px 20px;"><div class="s-empty-text">Select a filter to manage rules and targets</div></div>
+            <div class="s-empty" style="padding:80px 20px;"><div class="s-empty-text">{{ 'SECU.DATA_FILTERS.SELECT_HINT' | translate }}</div></div>
           } @else {
             <div class="df-header">
               <div>
@@ -115,28 +120,28 @@ type DetailTab = 'rules' | 'targets' | 'effective';
                 <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;">
                   <span class="df-chip">{{ selected()!.entityName }}</span>
                   <span class="df-chip">Company {{ companyLabel(selected()!.tenantId) }}</span>
-                  <span class="s-badge" [class.active]="selected()!.isActive" [class.inactive]="!selected()!.isActive">{{ selected()!.isActive ? 'Active' : 'Inactive' }}</span>
+                  <span class="s-badge" [class.active]="selected()!.isActive" [class.inactive]="!selected()!.isActive">{{ (selected()!.isActive ? 'COMMON.ACTIVE' : 'COMMON.INACTIVE') | translate }}</span>
                 </div>
                 @if (selected()!.description) {
                   <div style="font-size:12px;color:var(--s-text-2);margin-top:6px;">{{ selected()!.description }}</div>
                 }
               </div>
               <div style="display:flex;gap:6px;">
-                <button class="s-btn s-btn-ghost s-btn-sm" (click)="openEdit(selected()!)">Edit</button>
-                <button class="s-btn-icon danger" (click)="askDelete(selected()!)">Del</button>
+                <button class="s-btn s-btn-ghost s-btn-sm" [permAction]="permissionService.canUpdate(PAGE_CODE)" (click)="openEdit(selected()!)">{{ 'COMMON.EDIT' | translate }}</button>
+                <button class="s-btn-icon danger" [permAction]="permissionService.canDelete(PAGE_CODE)" (click)="askDelete(selected()!)">{{ 'COMMON.DELETE' | translate }}</button>
               </div>
             </div>
 
             <div class="s-tabs" style="border-bottom:1px solid var(--s-border);">
-              <div class="s-tab" [class.active]="detailTab()==='rules'" (click)="detailTab.set('rules')">Rules <span class="s-tab-count">{{ selected()!.rules.length }}</span></div>
-              <div class="s-tab" [class.active]="detailTab()==='targets'" (click)="detailTab.set('targets')">Targets <span class="s-tab-count">{{ selected()!.targets.length }}</span></div>
-              <div class="s-tab" [class.active]="detailTab()==='effective'" (click)="detailTab.set('effective'); loadEffective()">Effective</div>
+              <div class="s-tab" [class.active]="detailTab()==='rules'" (click)="detailTab.set('rules')">{{ 'SECU.DATA_FILTERS.TABS.RULES' | translate }} <span class="s-tab-count">{{ selected()!.rules.length }}</span></div>
+              <div class="s-tab" [class.active]="detailTab()==='targets'" (click)="detailTab.set('targets')">{{ 'SECU.DATA_FILTERS.TABS.TARGETS' | translate }} <span class="s-tab-count">{{ selected()!.targets.length }}</span></div>
+              <div class="s-tab" [class.active]="detailTab()==='effective'" (click)="detailTab.set('effective'); loadEffective()">{{ 'SECU.DATA_FILTERS.TABS.EFFECTIVE' | translate }}</div>
             </div>
 
             @if (detailTab() === 'rules') {
               <div style="padding:12px 16px;border-bottom:1px solid var(--s-border);display:flex;justify-content:space-between;align-items:center;gap:8px;">
-                <span class="df-help">Pick a field from the selected entity, then define the value condition.</span>
-                <button class="s-btn s-btn-primary s-btn-sm" (click)="openAddRule()">+ Add Rule</button>
+                <span class="df-help">{{ 'SECU.DATA_FILTERS.RULES_HELP' | translate }}</span>
+                <button class="s-btn s-btn-primary s-btn-sm" [permAction]="permissionService.canUpdate(PAGE_CODE)" (click)="openAddRule()">{{ 'SECU.DATA_FILTERS.ADD_RULE' | translate }}</button>
               </div>
               <div style="padding:14px 16px;display:flex;flex-direction:column;gap:8px;">
                 @for (rule of selected()!.rules; track rule.idRule; let i = $index) {
@@ -148,33 +153,33 @@ type DetailTab = 'rules' | 'targets' | 'effective';
                     <span class="df-chip op">{{ rule.operator }}</span>
                     <span class="mono" style="font-size:11px;color:var(--s-text);">{{ rule.value || '-' }}</span>
                     @if (rule.value2) { <span class="mono" style="font-size:11px;color:var(--s-text-2);">to {{ rule.value2 }}</span> }
-                    <span class="s-badge" [class.active]="rule.isActive" [class.inactive]="!rule.isActive" style="margin-left:auto;">{{ rule.isActive ? 'On' : 'Off' }}</span>
-                    <button class="s-btn-icon danger" (click)="deleteRule(rule)">Del</button>
+                    <span class="s-badge" [class.active]="rule.isActive" [class.inactive]="!rule.isActive" style="margin-left:auto;">{{ (rule.isActive ? 'COMMON.ON' : 'COMMON.OFF') | translate }}</span>
+                    <button class="s-btn-icon danger" [permAction]="permissionService.canUpdate(PAGE_CODE)" (click)="deleteRule(rule)">{{ 'COMMON.DELETE' | translate }}</button>
                   </div>
                 } @empty {
-                  <div class="s-empty" style="padding:28px;"><div class="s-empty-text">No rules. Add a field condition to filter rows.</div></div>
+                  <div class="s-empty" style="padding:28px;"><div class="s-empty-text">{{ 'SECU.DATA_FILTERS.NO_RULES' | translate }}</div></div>
                 }
               </div>
             }
 
             @if (detailTab() === 'targets') {
               <div style="padding:12px 16px;border-bottom:1px solid var(--s-border);display:flex;justify-content:space-between;align-items:center;gap:8px;">
-                <span class="df-help">Tenant target means company code. Empty targets means the filter is not assigned to a specific user/role/group.</span>
-                <button class="s-btn s-btn-primary s-btn-sm" (click)="openAddTarget()">+ Add Target</button>
+                <span class="df-help">{{ 'SECU.DATA_FILTERS.TARGETS_HELP' | translate }}</span>
+                <button class="s-btn s-btn-primary s-btn-sm" [permAction]="permissionService.canUpdate(PAGE_CODE)" (click)="openAddTarget()">{{ 'SECU.DATA_FILTERS.ADD_TARGET' | translate }}</button>
               </div>
               <div class="s-table-wrap">
                 <table class="s-table">
-                  <thead><tr><th>Type</th><th>Target</th><th>Status</th><th style="width:52px;"></th></tr></thead>
+                  <thead><tr><th>{{ 'SECU.DATA_FILTERS.COLUMNS.TYPE' | translate }}</th><th>{{ 'SECU.DATA_FILTERS.COLUMNS.TARGET' | translate }}</th><th>{{ 'COMMON.STATUS' | translate }}</th><th style="width:52px;"></th></tr></thead>
                   <tbody>
                     @for (target of selected()!.targets; track target.idTarget) {
                       <tr>
                         <td><span class="df-chip">{{ target.targetType }}</span></td>
                         <td><span class="mono" style="font-size:11px;color:var(--s-purple);">{{ targetLabel(target) }}</span></td>
-                        <td><span class="s-badge" [class.active]="target.isActive" [class.inactive]="!target.isActive">{{ target.isActive ? 'Active' : 'Off' }}</span></td>
-                        <td><button class="s-btn-icon danger" (click)="deleteTarget(target)">Del</button></td>
+                        <td><span class="s-badge" [class.active]="target.isActive" [class.inactive]="!target.isActive">{{ (target.isActive ? 'COMMON.ACTIVE' : 'COMMON.OFF') | translate }}</span></td>
+                        <td><button class="s-btn-icon danger" [permAction]="permissionService.canUpdate(PAGE_CODE)" (click)="deleteTarget(target)">{{ 'COMMON.DELETE' | translate }}</button></td>
                       </tr>
                     } @empty {
-                      <tr><td colspan="4"><div class="s-empty"><div class="s-empty-text">No targets</div></div></td></tr>
+                      <tr><td colspan="4"><div class="s-empty"><div class="s-empty-text">{{ 'SECU.DATA_FILTERS.NO_TARGETS' | translate }}</div></div></td></tr>
                     }
                   </tbody>
                 </table>
@@ -183,11 +188,11 @@ type DetailTab = 'rules' | 'targets' | 'effective';
 
             @if (detailTab() === 'effective') {
               <div style="padding:12px 16px;border-bottom:1px solid var(--s-border);display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
-                <input class="s-input mono" style="width:210px;" [(ngModel)]="effectiveTenantId" list="dfCompanyList" placeholder="Company / tenant" />
-                <button class="s-btn s-btn-ghost s-btn-sm" (click)="loadEffective()">Reload</button>
+                <input class="s-input mono" style="width:210px;" [(ngModel)]="effectiveTenantId" list="dfCompanyList" placeholder="{{ 'DOM_FALLBACK.TEXT_394' | translate }}" />
+                <button class="s-btn s-btn-ghost s-btn-sm" (click)="loadEffective()">{{ 'COMMON.REFRESH' | translate }}</button>
               </div>
               @if (effectiveLoading()) {
-                <div class="s-empty"><div class="s-empty-text">Loading effective filters...</div></div>
+                <div class="s-empty"><div class="s-empty-text">{{ 'COMMON.LOADING' | translate }}</div></div>
               } @else {
                 @for (filter of effectiveFilters(); track filter.idFilter) {
                   <div style="padding:11px 16px;border-bottom:1px solid var(--s-border);display:flex;gap:8px;align-items:center;">
@@ -196,7 +201,7 @@ type DetailTab = 'rules' | 'targets' | 'effective';
                     <span class="df-chip">Company {{ companyLabel(filter.tenantId) }}</span>
                   </div>
                 } @empty {
-                  <div class="s-empty" style="padding:28px;"><div class="s-empty-text">No effective filters for this entity/company.</div></div>
+                  <div class="s-empty" style="padding:28px;"><div class="s-empty-text">{{ 'SECU.DATA_FILTERS.NO_EFFECTIVE' | translate }}</div></div>
                 }
               }
             }
@@ -230,29 +235,29 @@ type DetailTab = 'rules' | 'targets' | 'effective';
       <div class="s-modal-backdrop" (click)="onBd($event)">
         <div class="s-modal" (click)="$event.stopPropagation()">
           <div class="s-modal-header">
-            <span class="s-modal-title">{{ editingFilter() ? 'Edit Filter' : 'New Data Filter' }}</span>
+            <span class="s-modal-title">{{ (editingFilter() ? 'SECU.DATA_FILTERS.MODAL.EDIT_TITLE' : 'SECU.DATA_FILTERS.MODAL.CREATE_TITLE') | translate }}</span>
             <button class="s-btn-icon" (click)="filterModal.set(false)">x</button>
           </div>
           <div class="s-modal-body">
             @if (saveError()) { <div class="s-alert error" style="margin-bottom:12px;">{{ saveError() }}</div> }
             <div class="s-form-row">
               <div class="s-field">
-                <label class="s-label">Filter Code *</label>
+                <label class="s-label">{{ 'SECU.DATA_FILTERS.MODAL.FILTER_CODE' | translate }}</label>
                 <input class="s-input mono" [(ngModel)]="ff.filterCode" [disabled]="!!editingFilter()" (blur)="ff.filterCode=ff.filterCode.toUpperCase()" placeholder="FLEET_ACTIVE_ONLY" />
               </div>
               <div class="s-field">
-                <label class="s-label">Entity *</label>
-                <input class="s-input mono" [(ngModel)]="ff.entityName" list="dfEntityList" placeholder="Vehicle" />
+                <label class="s-label">{{ 'SECU.DATA_FILTERS.MODAL.ENTITY' | translate }}</label>
+                <input class="s-input mono" [(ngModel)]="ff.entityName" list="dfEntityList" placeholder="{{ 'AUTO_INLINE_SECURITY_UI.VEHICLE' | translate }}" />
               </div>
             </div>
             <div class="s-form-row">
               <div class="s-field">
-                <label class="s-label">Description</label>
-                <input class="s-input" [(ngModel)]="ff.description" placeholder="Optional" />
+                <label class="s-label">{{ 'COMMON.DESCRIPTION' | translate }}</label>
+                <input class="s-input" [(ngModel)]="ff.description" [placeholder]="'COMMON.OPTIONAL' | translate" />
               </div>
               <div class="s-field">
-                <label class="s-label">Company / Tenant</label>
-                <input class="s-input mono" [(ngModel)]="ff.tenantId" list="dfCompanyList" placeholder="Optional company code" />
+                <label class="s-label">{{ 'SECU.DATA_FILTERS.MODAL.COMPANY_TENANT' | translate }}</label>
+                <input class="s-input mono" [(ngModel)]="ff.tenantId" list="dfCompanyList" [placeholder]="'SECU.DATA_FILTERS.MODAL.COMPANY_PLACEHOLDER' | translate" />
               </div>
             </div>
             <div class="s-form-row single">
@@ -261,13 +266,13 @@ type DetailTab = 'rules' | 'targets' | 'effective';
                   <input type="checkbox" [(ngModel)]="ff.isActive" />
                   <div class="s-toggle-track"></div><div class="s-toggle-thumb"></div>
                 </label>
-                <span style="font-size:13px;color:var(--s-text-2);">Active</span>
+                <span style="font-size:13px;color:var(--s-text-2);">{{ 'COMMON.ACTIVE' | translate }}</span>
               </div>
             </div>
           </div>
           <div class="s-modal-footer">
-            <button class="s-btn s-btn-ghost" (click)="filterModal.set(false)">Cancel</button>
-            <button class="s-btn s-btn-primary" (click)="saveFilter()" [disabled]="saving()">{{ saving() ? 'Saving...' : 'Save' }}</button>
+            <button class="s-btn s-btn-ghost" (click)="filterModal.set(false)">{{ 'COMMON.CANCEL' | translate }}</button>
+            <button class="s-btn s-btn-primary" (click)="saveFilter()" [disabled]="saving()">{{ saving() ? ('COMMON.SAVING' | translate) : ('COMMON.SAVE' | translate) }}</button>
           </div>
         </div>
       </div>
@@ -277,15 +282,15 @@ type DetailTab = 'rules' | 'targets' | 'effective';
       <div class="s-modal-backdrop" (click)="onBd($event)">
         <div class="s-modal" (click)="$event.stopPropagation()">
           <div class="s-modal-header">
-            <span class="s-modal-title">Add Rule for {{ selected()?.entityName }}</span>
+            <span class="s-modal-title">{{ 'SECU.DATA_FILTERS.RULE.ADD_TITLE' | translate }} {{ selected()?.entityName }}</span>
             <button class="s-btn-icon" (click)="ruleModal.set(false)">x</button>
           </div>
           <div class="s-modal-body">
             @if (saveError()) { <div class="s-alert error" style="margin-bottom:12px;">{{ saveError() }}</div> }
             <div class="s-form-row">
               <div class="s-field">
-                <label class="s-label">Field *</label>
-                <input class="s-input mono" [ngModel]="ruleFieldText" (ngModelChange)="onRuleFieldInput($event)" list="dfRuleFieldList" placeholder="Search field" />
+                <label class="s-label">{{ 'SECU.DATA_FILTERS.RULE.FIELD' | translate }}</label>
+                <input class="s-input mono" [ngModel]="ruleFieldText" (ngModelChange)="onRuleFieldInput($event)" list="dfRuleFieldList" [placeholder]="'COMMON.SEARCH' | translate" />
                 <datalist id="dfRuleFieldList">
                   @for (field of fieldsForSelectedFilter(); track field.idField) {
                     <option [value]="fieldOption(field)">{{ field.columnName || field.fieldName }}</option>
@@ -293,7 +298,7 @@ type DetailTab = 'rules' | 'targets' | 'effective';
                 </datalist>
               </div>
               <div class="s-field">
-                <label class="s-label">Operator *</label>
+                <label class="s-label">{{ 'SECU.DATA_FILTERS.RULE.OPERATOR' | translate }}</label>
                 <select class="s-select" [(ngModel)]="rf.operator">
                   @for (operator of OPERATORS; track operator) { <option [value]="operator">{{ operator }}</option> }
                 </select>
@@ -301,24 +306,24 @@ type DetailTab = 'rules' | 'targets' | 'effective';
             </div>
             <div class="s-form-row">
               <div class="s-field">
-                <label class="s-label">Value</label>
-                <input class="s-input mono" [(ngModel)]="rf.value" placeholder="TenantId, true, 10..." />
+                <label class="s-label">{{ 'SECU.DATA_FILTERS.RULE.VALUE' | translate }}</label>
+                <input class="s-input mono" [(ngModel)]="rf.value" placeholder="{{ 'AUTO_INLINE_SECURITY_UI.TENANTID_TRUE_10' | translate }}" />
               </div>
               <div class="s-field">
-                <label class="s-label">Value 2</label>
-                <input class="s-input mono" [(ngModel)]="rf.value2" placeholder="Upper bound for Between" />
+                <label class="s-label">{{ 'SECU.DATA_FILTERS.RULE.VALUE2' | translate }}</label>
+                <input class="s-input mono" [(ngModel)]="rf.value2" placeholder="{{ 'DOM_FALLBACK.TEXT_386' | translate }}" />
               </div>
             </div>
             <div class="s-form-row">
               <div class="s-field">
-                <label class="s-label">Value Type</label>
+                <label class="s-label">{{ 'SECU.DATA_FILTERS.RULE.VALUE_TYPE' | translate }}</label>
                 <select class="s-select" [(ngModel)]="rf.valueType">
-                  <option [ngValue]="null">Auto</option>
+                  <option [ngValue]="null">{{ 'COMMON.AUTO' | translate }}</option>
                   @for (type of VALUE_TYPES; track type) { <option [value]="type">{{ type }}</option> }
                 </select>
               </div>
               <div class="s-field">
-                <label class="s-label">Conjunction</label>
+                <label class="s-label">{{ 'SECU.DATA_FILTERS.RULE.CONJUNCTION' | translate }}</label>
                 <select class="s-select" [(ngModel)]="rf.conjunction">
                   @for (conjunction of CONJUNCTIONS; track conjunction) { <option [value]="conjunction">{{ conjunction }}</option> }
                 </select>
@@ -326,14 +331,14 @@ type DetailTab = 'rules' | 'targets' | 'effective';
             </div>
             <div class="s-form-row single">
               <div class="s-field">
-                <label class="s-label">Group Index</label>
+                <label class="s-label">{{ 'SECU.DATA_FILTERS.RULE.GROUP_INDEX' | translate }}</label>
                 <input class="s-input" type="number" min="0" [(ngModel)]="rf.groupIndex" />
               </div>
             </div>
           </div>
           <div class="s-modal-footer">
-            <button class="s-btn s-btn-ghost" (click)="ruleModal.set(false)">Cancel</button>
-            <button class="s-btn s-btn-primary" (click)="saveRule()" [disabled]="saving()">{{ saving() ? 'Saving...' : 'Add Rule' }}</button>
+            <button class="s-btn s-btn-ghost" (click)="ruleModal.set(false)">{{ 'COMMON.CANCEL' | translate }}</button>
+            <button class="s-btn s-btn-primary" (click)="saveRule()" [disabled]="saving()">{{ saving() ? ('COMMON.SAVING' | translate) : ('SECU.DATA_FILTERS.RULE.ADD_BTN' | translate) }}</button>
           </div>
         </div>
       </div>
@@ -343,14 +348,14 @@ type DetailTab = 'rules' | 'targets' | 'effective';
       <div class="s-modal-backdrop" (click)="onBd($event)">
         <div class="s-modal narrow" (click)="$event.stopPropagation()">
           <div class="s-modal-header">
-            <span class="s-modal-title">Add Target</span>
+            <span class="s-modal-title">{{ 'SECU.DATA_FILTERS.TARGET.ADD_TITLE' | translate }}</span>
             <button class="s-btn-icon" (click)="targetModal.set(false)">x</button>
           </div>
           <div class="s-modal-body">
             @if (saveError()) { <div class="s-alert error" style="margin-bottom:12px;">{{ saveError() }}</div> }
             <div class="s-form-row single">
               <div class="s-field">
-                <label class="s-label">Target Type *</label>
+                <label class="s-label">{{ 'SECU.DATA_FILTERS.TARGET.TYPE' | translate }}</label>
                 <select class="s-select" [(ngModel)]="tf.targetType" (ngModelChange)="onTargetTypeChange()">
                   @for (type of TARGET_TYPES; track type) { <option [value]="type">{{ type }}</option> }
                 </select>
@@ -364,8 +369,8 @@ type DetailTab = 'rules' | 'targets' | 'effective';
             </div>
           </div>
           <div class="s-modal-footer">
-            <button class="s-btn s-btn-ghost" (click)="targetModal.set(false)">Cancel</button>
-            <button class="s-btn s-btn-primary" (click)="saveTarget()" [disabled]="saving()">{{ saving() ? 'Saving...' : 'Add Target' }}</button>
+            <button class="s-btn s-btn-ghost" (click)="targetModal.set(false)">{{ 'COMMON.CANCEL' | translate }}</button>
+            <button class="s-btn s-btn-primary" (click)="saveTarget()" [disabled]="saving()">{{ saving() ? ('COMMON.SAVING' | translate) : ('SECU.DATA_FILTERS.TARGET.ADD_BTN' | translate) }}</button>
           </div>
         </div>
       </div>
@@ -375,15 +380,15 @@ type DetailTab = 'rules' | 'targets' | 'effective';
       <div class="s-modal-backdrop" (click)="onBd($event)">
         <div class="s-modal narrow" (click)="$event.stopPropagation()">
           <div class="s-modal-header">
-            <span class="s-modal-title">Delete Filter</span>
+            <span class="s-modal-title">{{ 'SECU.DATA_FILTERS.DELETE.TITLE' | translate }}</span>
             <button class="s-btn-icon" (click)="deleteModal.set(null)">x</button>
           </div>
           <div class="s-modal-body">
-            <p style="font-size:13px;color:var(--s-text-2);">Delete filter <strong class="mono" style="color:var(--s-accent);">{{ deleteModal()!.filterCode }}</strong>?</p>
+            <p style="font-size:13px;color:var(--s-text-2);">{{ 'SECU.DATA_FILTERS.DELETE.CONFIRM' | translate }} <strong class="mono" style="color:var(--s-accent);">{{ deleteModal()!.filterCode }}</strong>?</p>
           </div>
           <div class="s-modal-footer">
-            <button class="s-btn s-btn-ghost" (click)="deleteModal.set(null)">Cancel</button>
-            <button class="s-btn s-btn-danger" (click)="doDelete()">Delete</button>
+            <button class="s-btn s-btn-ghost" (click)="deleteModal.set(null)">{{ 'COMMON.CANCEL' | translate }}</button>
+            <button class="s-btn s-btn-danger" (click)="doDelete()">{{ 'COMMON.DELETE' | translate }}</button>
           </div>
         </div>
       </div>
@@ -392,6 +397,8 @@ type DetailTab = 'rules' | 'targets' | 'effective';
 })
 export class DataFiltersComponent implements OnInit {
   private readonly api = inject(SecuApiService);
+  readonly permissionService = inject(PermissionService);
+  readonly PAGE_CODE = PAGE_CODE;
 
   readonly OPERATORS = OPERATORS;
   readonly CONJUNCTIONS = CONJUNCTIONS;
@@ -834,3 +841,4 @@ export class DataFiltersComponent implements OnInit {
     this.deleteModal.set(null);
   }
 }
+

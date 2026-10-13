@@ -1,27 +1,28 @@
 ﻿import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-no-access',
   standalone: true,
-  imports: [RouterLink, ButtonModule],
+  imports: [RouterLink, ButtonModule, TranslatePipe],
   template: `
     <main class="state-shell">
       <section class="state-card">
         <div class="state-icon">
           <i class="pi pi-ban"></i>
         </div>
-        <p class="state-kicker">Access denied</p>
-        <h1>You do not have permission to view this page.</h1>
+        <p class="state-kicker">{{ 'COMMON.NO_ACCESS.TITLE' | translate }}</p>
+        <h1>{{ 'COMMON.NO_ACCESS.SUBTITLE' | translate }}</h1>
         <p>
-          Your account is authenticated, but the Security API did not grant the required page permission.
+          {{ 'DOM_FALLBACK.TEXT_173' | translate }}
         </p>
         <a
           pButton
           routerLink="/admin"
           class="state-action"
-          label="Go to allowed security pages"
+          label="{{ 'DOM_FALLBACK.TEXT_174' | translate }}"
         ></a>
       </section>
     </main>

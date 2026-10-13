@@ -4,40 +4,41 @@
       <i class="pi pi-shield"></i>
     </div>
 
-    <p class="eyebrow">Security Center</p>
-    <h1>Centralized identity for every protected workspace.</h1>
-    <p class="hero-copy">Authentication is delegated to the Security API OpenID Connect provider. This frontend never collects user passwords.</p>
+    <p class="eyebrow">{{ 'LOGIN.BRAND' | translate }}</p>
+    <h1>{{ 'LOGIN.TAGLINE' | translate }}</h1>
+    <p class="hero-copy">{{ 'LOGIN.HERO_COPY' | translate }}</p>
 
     <div class="signal-grid" aria-hidden="true">
       <div class="signal-card">
-        <span>PKCE</span>
-        <strong>Code flow</strong>
+        <span>{{ 'LOGIN.PKCE_LABEL' | translate }}</span>
+        <strong>{{ 'LOGIN.PKCE_VALUE' | translate }}</strong>
       </div>
       <div class="signal-card">
-        <span>Policy</span>
-        <strong>Menu permissions</strong>
+        <span>{{ 'LOGIN.POLICY_LABEL' | translate }}</span>
+        <strong>{{ 'LOGIN.POLICY_VALUE' | translate }}</strong>
       </div>
       <div class="signal-card">
-        <span>Session</span>
-        <strong>Browser scoped</strong>
+        <span>{{ 'LOGIN.SESSION_LABEL' | translate }}</span>
+        <strong>{{ 'LOGIN.SESSION_VALUE' | translate }}</strong>
       </div>
     </div>
   </section>
 
-  <section class="login-panel" attr.aria-label="Sign in securely">
+  <section class="login-panel" [attr.aria-label]="'LOGIN.SIGN_IN_TITLE' | translate">
     <div class="panel-card">
       <div class="panel-header">
         <div class="panel-icon">
           <i class="pi pi-lock"></i>
         </div>
         <div>
-          <h2>Sign in securely</h2>
-          <p>Continue through the trusted authorization server.</p>
+          <h2>{{ 'LOGIN.SIGN_IN_TITLE' | translate }}</h2>
+          <p>{{ 'LOGIN.SIGN_IN_SUBTITLE' | translate }}</p>
         </div>
       </div>
 
       <!-- Language switcher on login page -->
       <div style="display:flex; justify-content:flex-end; margin-bottom: 12px;">
+        <app-lang-switcher />
       </div>
 
       <p-message
@@ -48,14 +49,14 @@
       ></p-message>
 
       <p-button
-        label="Continue with Security API"
+        [label]="'LOGIN.CTA' | translate"
         icon="pi pi-shield"
         [loading]="loading()"
         (onClick)="signIn()"
         styleClass="w-full security-login-button"
       ></p-button>
 
-      <p class="panel-footnote">After login, the Security API returns an authorization code that this app exchanges with PKCE. Tokens are kept in the current browser session only.</p>
+      <p class="panel-footnote">{{ 'LOGIN.FOOTNOTE' | translate }}</p>
     </div>
   </section>
 </main>

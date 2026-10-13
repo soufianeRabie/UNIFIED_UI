@@ -1,16 +1,16 @@
 <div class="np-page">
   <div class="np-page-header">
     <div>
-      <div class="np-eyebrow"><i class="pi pi-tags"></i> Eyebrow</div>
-      <div class="np-page-title">Page Title</div>
-      <div class="np-page-subtitle">Page Subtitle</div>
+      <div class="np-eyebrow"><i class="pi pi-tags"></i> {{ 'NOTIF.EVENT_TYPES.EYEBROW' | translate }}</div>
+      <div class="np-page-title">{{ 'NOTIF.EVENT_TYPES.PAGE_TITLE' | translate }}</div>
+      <div class="np-page-subtitle">{{ 'NOTIF.EVENT_TYPES.PAGE_SUBTITLE' | translate }}</div>
     </div>
     <div class="np-btn-row">
-      <button class="np-btn np-btn--ghost" (click)="load()"><i class="pi pi-refresh"></i> Reload</button>
-      <button class="np-btn np-btn--ghost" [permAction]="perm.canCreate(PAGE_CODE)" (click)="resetForm()"><i class="pi pi-plus"></i> New</button>
+      <button class="np-btn np-btn--ghost" (click)="load()"><i class="pi pi-refresh"></i> {{ 'COMMON.REFRESH' | translate }}</button>
+      <button class="np-btn np-btn--ghost" [permAction]="perm.canCreate(PAGE_CODE)" (click)="resetForm()"><i class="pi pi-plus"></i> {{ 'COMMON.NEW' | translate }}</button>
       <button class="np-btn np-btn--primary" [permAction]="selected ? perm.canUpdate(PAGE_CODE) : perm.canCreate(PAGE_CODE)" (click)="save()">
         <i class="pi" [class.pi-save]="selected" [class.pi-plus-circle]="!selected"></i>
-        {{ selected ? 'Save Btn' : 'Create Btn' }}
+        {{ (selected ? 'NOTIF.EVENT_TYPES.SAVE_BTN' : 'NOTIF.EVENT_TYPES.CREATE_BTN') | translate }}
       </button>
     </div>
   </div>
@@ -21,18 +21,18 @@
   <div class="np-concept-strip">
     <div class="np-concept-card">
       <div class="np-concept-icon np-concept-icon--blue"><i class="pi pi-bolt"></i></div>
-      <div class="np-concept-title">Payload Title</div>
-      <div class="np-concept-desc">Payload Desc</div>
+      <div class="np-concept-title">{{ 'NOTIF.EVENT_TYPES.CONCEPT.PAYLOAD_TITLE' | translate }}</div>
+      <div class="np-concept-desc">{{ 'NOTIF.EVENT_TYPES.CONCEPT.PAYLOAD_DESC' | translate }}</div>
     </div>
     <div class="np-concept-card">
       <div class="np-concept-icon np-concept-icon--purple"><i class="pi pi-code"></i></div>
-      <div class="np-concept-title">Vars Title</div>
-      <div class="np-concept-desc">Vars Desc</div>
+      <div class="np-concept-title">{{ 'NOTIF.EVENT_TYPES.CONCEPT.VARS_TITLE' | translate }}</div>
+      <div class="np-concept-desc">{{ 'NOTIF.EVENT_TYPES.CONCEPT.VARS_DESC' | translate }}</div>
     </div>
     <div class="np-concept-card">
       <div class="np-concept-icon np-concept-icon--green"><i class="pi pi-users"></i></div>
-      <div class="np-concept-title">Resolver Title</div>
-      <div class="np-concept-desc">Resolver Desc</div>
+      <div class="np-concept-title">{{ 'NOTIF.EVENT_TYPES.CONCEPT.RESOLVER_TITLE' | translate }}</div>
+      <div class="np-concept-desc">{{ 'NOTIF.EVENT_TYPES.CONCEPT.RESOLVER_DESC' | translate }}</div>
     </div>
   </div>
 
@@ -41,33 +41,33 @@
     <div style="display:flex;flex-direction:column;gap:14px">
       <div class="np-card">
         <div class="np-card-header">
-          <div class="np-card-title"><i class="pi pi-pencil"></i> {{ selected ? 'Edit Prefix' + selected.code : 'New Form Title' }}</div>
+          <div class="np-card-title"><i class="pi pi-pencil"></i> {{ selected ? ('NOTIF.EVENT_TYPES.EDIT_PREFIX' | translate) + selected.code : ('NOTIF.EVENT_TYPES.NEW_FORM_TITLE' | translate) }}</div>
           <button *ngIf="selected" class="np-btn np-btn--ghost" style="padding:3px 10px;font-size:11px" (click)="resetForm()">
-            <i class="pi pi-times"></i> Cancel
+            <i class="pi pi-times"></i> {{ 'COMMON.CANCEL' | translate }}
           </button>
         </div>
         <div class="np-card-body">
           <form class="np-form" [formGroup]="form">
             <div class="np-form-row">
               <div class="np-field">
-                <label class="np-label">Code <span style="color:var(--s-red)">*</span></label>
-                <input pInputText formControlName="code" [attr.readonly]="!!selected || null" placeholder="ORDER_PLACED" />
-                <span class="np-hint">Code Hint</span>
+                <label class="np-label">{{ 'NOTIF.EVENT_TYPES.FORM.CODE' | translate }} <span style="color:var(--s-red)">*</span></label>
+                <input pInputText formControlName="code" [attr.readonly]="!!selected || null" [placeholder]="'TECH_EXAMPLES.ORDER_PLACED' | translate" />
+                <span class="np-hint">{{ 'NOTIF.EVENT_TYPES.FORM.CODE_HINT' | translate }}</span>
               </div>
               <div class="np-field">
-                <label class="np-label">Label <span style="color:var(--s-red)">*</span></label>
-                <input pInputText formControlName="label" placeholder="Order Placed" />
+                <label class="np-label">{{ 'NOTIF.EVENT_TYPES.FORM.LABEL' | translate }} <span style="color:var(--s-red)">*</span></label>
+                <input pInputText formControlName="label" [placeholder]="'AUTO_SECURITY_UI.ORDER_PLACED' | translate" />
               </div>
             </div>
             <div class="np-field">
-              <label class="np-label">Source System</label>
-              <input pInputText formControlName="sourceSystem" placeholder="Source System Placeholder" />
+              <label class="np-label">{{ 'NOTIF.EVENT_TYPES.FORM.SOURCE_SYSTEM' | translate }}</label>
+              <input pInputText formControlName="sourceSystem" [placeholder]="'NOTIF.EVENT_TYPES.FORM.SOURCE_SYSTEM_PLACEHOLDER' | translate" />
             </div>
             <div class="np-toggle-item" *ngIf="selected" style="padding:6px 0">
               <p-checkbox formControlName="isActive" binary="true" inputId="isActive"></p-checkbox>
               <label class="np-toggle-label" for="isActive">
-                <span class="np-toggle-name">Active</span>
-                <span class="np-toggle-hint">Inactive Hint</span>
+                <span class="np-toggle-name">{{ 'COMMON.ACTIVE' | translate }}</span>
+                <span class="np-toggle-hint">{{ 'NOTIF.EVENT_TYPES.FORM.INACTIVE_HINT' | translate }}</span>
               </label>
             </div>
           </form>
@@ -76,27 +76,27 @@
 
       <div class="np-card">
         <div class="np-card-header">
-          <div class="np-card-title"><i class="pi pi-list"></i> Payload Fields</div>
+          <div class="np-card-title"><i class="pi pi-list"></i> {{ 'NOTIF.EVENT_TYPES.PAYLOAD_FIELDS' | translate }}</div>
           <button class="np-btn np-btn--ghost" style="padding:3px 10px;font-size:11px" (click)="addPayloadField()">
-            <i class="pi pi-plus"></i> Add Field
+            <i class="pi pi-plus"></i> {{ 'NOTIF.EVENT_TYPES.ADD_FIELD' | translate }}
           </button>
         </div>
         <div class="np-card-body">
           <div class="np-empty np-empty--compact" *ngIf="payloadFields.length === 0">
             <i class="pi pi-tags"></i>
-            <div>Fields Empty</div>
+            <div>{{ 'NOTIF.EVENT_TYPES.FIELDS_EMPTY' | translate }}</div>
           </div>
           <div *ngIf="payloadFields.length > 0">
             <div class="np-mapping-header">
-              <span class="np-mapping-col">Col Field Name</span>
-              <span class="np-mapping-col">Col Data Type</span>
+              <span class="np-mapping-col">{{ 'NOTIF.EVENT_TYPES.COL_FIELD_NAME' | translate }}</span>
+              <span class="np-mapping-col">{{ 'NOTIF.EVENT_TYPES.COL_DATA_TYPE' | translate }}</span>
               <span></span>
             </div>
             <div class="np-mapping-list">
               <div class="np-mapping-row" *ngFor="let field of payloadFields; let i = index">
-                <input pInputText [(ngModel)]="field.name" [ngModelOptions]="{standalone:true}" placeholder="orderId" />
+                <input pInputText [(ngModel)]="field.name" [ngModelOptions]="{standalone:true}" [placeholder]="'TECH_EXAMPLES.ORDER_ID' | translate" />
                 <p-select [options]="payloadTypeOptions" optionLabel="label" optionValue="value"
-                  [(ngModel)]="field.type" [ngModelOptions]="{standalone:true}" placeholder="Type"></p-select>
+                  [(ngModel)]="field.type" [ngModelOptions]="{standalone:true}" [placeholder]="'NOTIF.RECIPIENT_GROUPS.FORM.TYPE' | translate"></p-select>
                 <button class="np-btn np-btn--danger" [permAction]="perm.canUpdate(PAGE_CODE)" style="padding:6px 8px;min-width:34px;justify-content:center" (click)="removePayloadField(i)">
                   <i class="pi pi-trash"></i>
                 </button>
@@ -110,11 +110,11 @@
     <!-- Library -->
     <div class="np-library">
       <div class="np-library-header">
-        <div class="np-library-title"><i class="pi pi-bolt"></i> Sidebar Title</div>
+        <div class="np-library-title"><i class="pi pi-bolt"></i> {{ 'NOTIF.EVENT_TYPES.SIDEBAR_TITLE' | translate }}</div>
         <span class="np-badge np-badge--gray">{{ items.length }}</span>
       </div>
       <div class="np-empty np-empty--compact" *ngIf="!items.length">
-        <i class="pi pi-inbox"></i><div>No Items</div>
+        <i class="pi pi-inbox"></i><div>{{ 'NOTIF.EVENT_TYPES.NO_ITEMS' | translate }}</div>
       </div>
       <div class="np-library-list">
         <button type="button" class="np-library-item" *ngFor="let item of items"
@@ -124,7 +124,7 @@
             <div class="np-library-item-meta">{{ item.label }}</div>
             <div style="display:flex;gap:5px;margin-top:4px;flex-wrap:wrap">
               <p-tag *ngIf="item.sourceSystem" [value]="item.sourceSystem" severity="info"></p-tag>
-              <p-tag [value]="item.isActive ? 'Active' : 'Inactive'" [severity]="item.isActive ? 'success' : 'danger'"></p-tag>
+              <p-tag [value]="(item.isActive ? 'COMMON.ACTIVE' : 'COMMON.INACTIVE') | translate" [severity]="item.isActive ? 'success' : 'danger'"></p-tag>
             </div>
             <div class="np-token-grid" style="margin-top:5px" *ngIf="getPayloadFieldNames(item.expectedPayload).length > 0">
               <span class="np-token" *ngFor="let f of getPayloadFieldNames(item.expectedPayload)" style="cursor:default">{{ f }}</span>

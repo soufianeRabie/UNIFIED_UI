@@ -1,10 +1,11 @@
-import { Component, OnInit, signal, inject, computed } from '@angular/core';
+﻿import { Component, OnInit, signal, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { catchError, of, forkJoin } from 'rxjs';
 import { SecuApiService } from '../../services/secu-api.service';
 import { SecuPaginationComponent } from '../shared/secu-pagination.component';
 import { SecuPageActionDto, SecuPageDto, SecuActionDto } from '../../models/secu.models';
+import { TranslatePipe } from '@ngx-translate/core';
 
 type ViewMode = 'matrix' | 'list';
 
@@ -17,7 +18,7 @@ interface MatrixCell {
 @Component({
   selector: 'app-page-actions-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, SecuPaginationComponent],
+  imports: [CommonModule, FormsModule, SecuPaginationComponent, TranslatePipe],
   styles: [
     `
       .view-toggle {
@@ -169,9 +170,9 @@ interface MatrixCell {
   template: `
     <div class="s-page-header">
       <div>
-        <h1 class="s-page-title">Page Actions</h1>
+        <h1 class="s-page-title">{{ 'DOM_FALLBACK.TEXT_264' | translate }}</h1>
         <p class="s-page-subtitle">
-          Link actions to pages · {{ totalLinks() }} links across {{ allPages().length }} pages
+          Link actions to pages �· {{ totalLinks() }} links across {{ allPages().length }} pages
         </p>
       </div>
       <div style="display:flex;gap:8px;align-items:center;">
@@ -181,29 +182,29 @@ interface MatrixCell {
             [class.active]="viewMode() === 'matrix'"
             (click)="viewMode.set('matrix')"
           >
-            ⊞ Matrix
+            {{ 'AUTO_INLINE_SECURITY_UI.MATRIX' | translate }}
           </button>
           <button
             class="vt-btn"
             [class.active]="viewMode() === 'list'"
             (click)="viewMode.set('list')"
           >
-            ☰ List
+            {{ 'AUTO_INLINE_SECURITY_UI.LIST' | translate }}
           </button>
         </div>
-        <button class="s-btn s-btn-primary" (click)="openCreate()">+ Link Action</button>
+        <button class="s-btn s-btn-primary" (click)="openCreate()">{{ 'DOM_FALLBACK.TEXT_267' | translate }}</button>
       </div>
     </div>
 
     @if (loading()) {
-      <div class="s-empty"><div class="s-empty-text">Loading…</div></div>
+      <div class="s-empty"><div class="s-empty-text">{{ 'COMMON.LOADING' | translate }}</div></div>
     } @else {
       @if (viewMode() === 'matrix') {
         <!-- ── MATRIX VIEW ─────────────────────────────────────────── -->
         <div class="s-card" style="margin-bottom:16px;">
           <div style="padding:12px 20px;border-bottom:1px solid var(--s-border);">
             <div style="font-size:11px;color:var(--s-text-3);margin-bottom:8px;">
-              Filter pages shown in matrix:
+              {{ 'DOM_FALLBACK.TEXT_268' | translate }}
             </div>
             <div class="page-chips" style="padding:0;border:none;">
                 <div
@@ -211,7 +212,7 @@ interface MatrixCell {
                   [class.active]="!matrixPageFilter().size"
                   (click)="clearMatrixPageFilter()"
                 >
-                  All pages
+                  {{ 'DOM_FALLBACK.TEXT_269' | translate }}
                 </div>
               @for (p of allPages(); track p.idPage) {
                 <div
@@ -232,12 +233,10 @@ interface MatrixCell {
               style="display:flex;align-items:center;gap:12px;font-size:12px;color:var(--s-text-2);"
             >
               <span style="display:flex;align-items:center;gap:5px;"
-                ><span style="font-size:14px;color:var(--s-green)">✓</span> Link exists — click to
-                remove</span
+                ><span style="font-size:14px;color:var(--s-green)">✓</span> {{ 'AUTO_INLINE_SECURITY_UI.LINK_EXISTS_CLICK_TO_REMOVE' | translate }}</span
               >
               <span style="display:flex;align-items:center;gap:5px;"
-                ><span style="font-size:12px;color:var(--s-border-2)">·</span> No link — click to
-                create</span
+                ><span style="font-size:12px;color:var(--s-border-2)">�·</span> {{ 'AUTO_INLINE_SECURITY_UI.NO_LINK_CLICK_TO_CREATE' | translate }}</span
               >
             </div>
           </div>
@@ -246,7 +245,7 @@ interface MatrixCell {
             <table class="matrix-table">
               <thead>
                 <tr>
-                  <th>Page Action</th>
+                  <th>{{ 'DOM_FALLBACK.TEXT_272' | translate }}</th>
                   @for (a of allActions(); track a.idAction) {
                     <th [title]="a.actionName">{{ a.actionCode }}</th>
                   }
@@ -275,11 +274,11 @@ interface MatrixCell {
                           [title]="cell.exists ? 'Click to remove link' : 'Click to create link'"
                         >
                           @if (cell.saving) {
-                            <span class="cell-spin">⟳</span>
+                            <span class="cell-spin">�³</span>
                           } @else if (cell.exists) {
                             <span class="cell-check">✓</span>
                           } @else {
-                            <span class="cell-empty">·</span>
+                            <span class="cell-empty">�·</span>
                           }
                         </div>
                       </td>
@@ -289,7 +288,7 @@ interface MatrixCell {
               </tbody>
             </table>
             @if (!filteredMatrixPages().length) {
-              <div class="s-empty"><div class="s-empty-text">No pages to show</div></div>
+              <div class="s-empty"><div class="s-empty-text">{{ 'DOM_FALLBACK.TEXT_273' | translate }}</div></div>
             }
           </div>
         </div>
@@ -298,11 +297,11 @@ interface MatrixCell {
         <div class="s-card">
           <div class="s-toolbar">
             <div class="s-search">
-              <span class="s-search-icon">🔍</span>
-              <input placeholder="Search…" [(ngModel)]="listSearch" />
+              <span class="s-search-icon">�</span>
+              <input placeholder="{{ 'AUTO_INLINE_SECURITY_UI.SEARCH' | translate }}" [(ngModel)]="listSearch" />
             </div>
             <select class="s-select" style="width:200px;" [(ngModel)]="listPageFilter">
-              <option [ngValue]="null">All pages</option>
+              <option [ngValue]="null">{{ 'DOM_FALLBACK.TEXT_269' | translate }}</option>
               @for (p of allPages(); track p.idPage) {
                 <option [ngValue]="p.idPage">{{ p.pageCode }}</option>
               }
@@ -312,7 +311,7 @@ interface MatrixCell {
               <div class="s-toggle-track"></div>
               <div class="s-toggle-thumb"></div>
             </label>
-            <span style="font-size:12px;color:var(--s-text-2)">Inactive</span>
+            <span style="font-size:12px;color:var(--s-text-2)">{{ 'COMMON.INACTIVE' | translate }}</span>
           </div>
 
           <div class="s-table-wrap">
@@ -320,9 +319,9 @@ interface MatrixCell {
               <thead>
                 <tr>
                   <th>#</th>
-                  <th>Page</th>
-                  <th>Action</th>
-                  <th>Status</th>
+                  <th>{{ 'SECU.PAGE_ACTIONS.COLUMNS.PAGE' | translate }}</th>
+                  <th>{{ 'SECU.PAGE_ACTIONS.COLUMNS.ACTION' | translate }}</th>
+                  <th>{{ 'DOM_FALLBACK.TEXT_026' | translate }}</th>
                   <th style="width:48px"></th>
                 </tr>
               </thead>
@@ -347,13 +346,13 @@ interface MatrixCell {
                         >{{ pa.isActive ? 'Active' : 'Inactive' }}</span
                       >
                     </td>
-                    <td><button class="s-btn-icon danger" (click)="askDelete(pa)">🗑</button></td>
+                    <td><button class="s-btn-icon danger" (click)="askDelete(pa)">�—‘</button></td>
                   </tr>
                 } @empty {
                   <tr>
                     <td colspan="5">
                       <div class="s-empty">
-                        <div class="s-empty-text">No page-action links found</div>
+                        <div class="s-empty-text">{{ 'DOM_FALLBACK.TEXT_274' | translate }}</div>
                       </div>
                     </td>
                   </tr>
@@ -377,18 +376,18 @@ interface MatrixCell {
       <div class="s-modal-backdrop" (click)="onBackdrop($event)">
         <div class="s-modal narrow" (click)="$event.stopPropagation()">
           <div class="s-modal-header">
-            <span class="s-modal-title">Link Action to Page</span>
+            <span class="s-modal-title">{{ 'DOM_FALLBACK.TEXT_275' | translate }}</span>
             <button class="s-btn-icon" (click)="createOpen.set(false)">✕</button>
           </div>
           <div class="s-modal-body">
             @if (createError()) {
-              <div class="s-alert error">⚠ {{ createError() }}</div>
+              <div class="s-alert error">�  {{ createError() }}</div>
             }
             <div class="s-form-row single">
               <div class="s-field">
-                <label class="s-label">Page *</label>
+                <label class="s-label">{{ 'DOM_FALLBACK.TEXT_276' | translate }}</label>
                 <select class="s-select" [(ngModel)]="createForm.pageId">
-                  <option [ngValue]="null">Select page…</option>
+                  <option [ngValue]="null">{{ 'AUTO_INLINE_SECURITY_UI.SELECT_PAGE' | translate }}</option>
                   @for (p of allPages(); track p.idPage) {
                     <option [ngValue]="p.idPage">{{ p.pageCode }} — {{ p.pageName }}</option>
                   }
@@ -397,33 +396,33 @@ interface MatrixCell {
             </div>
             <div class="s-form-row single">
               <div class="s-field">
-                <label class="s-label">Action *</label>
+                <label class="s-label">{{ 'DOM_FALLBACK.TEXT_278' | translate }}</label>
                 <select
                   class="s-select"
                   [(ngModel)]="createForm.actionId"
                   [disabled]="!createForm.pageId"
                 >
-                  <option [ngValue]="null">Select action…</option>
+                  <option [ngValue]="null">{{ 'AUTO_INLINE_SECURITY_UI.SELECT_ACTION' | translate }}</option>
                   @for (a of availableActionsForCreate(); track a.idAction) {
                     <option [ngValue]="a.idAction">{{ a.actionCode }} — {{ a.actionName }}</option>
                   }
                 </select>
                 @if (createForm.pageId && !availableActionsForCreate().length) {
                   <div style="font-size:11px;color:var(--s-green);margin-top:4px;">
-                    ✓ All actions already linked to this page
+                    {{ 'AUTO_INLINE_SECURITY_UI.ALL_ACTIONS_ALREADY_LINKED_TO_THIS_PAGE' | translate }}
                   </div>
                 }
               </div>
             </div>
           </div>
           <div class="s-modal-footer">
-            <button class="s-btn s-btn-ghost" (click)="createOpen.set(false)">Cancel</button>
+            <button class="s-btn s-btn-ghost" (click)="createOpen.set(false)">{{ 'SECURITY.CHANGE_PASSWORD.CANCEL' | translate }}</button>
             <button
               class="s-btn s-btn-primary"
               (click)="doCreate()"
               [disabled]="!createForm.pageId || !createForm.actionId || creating()"
             >
-              {{ creating() ? 'Saving…' : 'Create Link' }}
+              {{ creating() ? 'Saving�¦' : 'Create Link' }}
             </button>
           </div>
         </div>
@@ -435,21 +434,21 @@ interface MatrixCell {
       <div class="s-modal-backdrop" (click)="onBackdrop($event)">
         <div class="s-modal narrow" (click)="$event.stopPropagation()">
           <div class="s-modal-header">
-            <span class="s-modal-title">Remove Link</span>
+            <span class="s-modal-title">{{ 'DOM_FALLBACK.TEXT_281' | translate }}</span>
             <button class="s-btn-icon" (click)="deleteTarget.set(null)">✕</button>
           </div>
           <div class="s-modal-body">
             <p style="font-size:13px;color:var(--s-text-2);">
-              Remove link <strong class="mono">{{ deleteTarget()!.pageCode }}</strong> ↔
+              {{ 'DOM_FALLBACK.TEXT_282' | translate }} <strong class="mono">{{ deleteTarget()!.pageCode }}</strong> ↔
               <span class="s-badge action">{{ deleteTarget()!.actionCode }}</span
               >? <br /><br /><span style="font-size:12px;color:var(--s-amber);"
-                >⚠ Role permissions using this link will also be removed.</span
+                >{{ 'AUTO_INLINE_SECURITY_UI.ROLE_PERMISSIONS_USING_THIS_LINK_WILL_ALSO_BE_REMOVED' | translate }}</span
               >
             </p>
           </div>
           <div class="s-modal-footer">
-            <button class="s-btn s-btn-ghost" (click)="deleteTarget.set(null)">Cancel</button>
-            <button class="s-btn s-btn-danger" (click)="doDelete()">Remove</button>
+            <button class="s-btn s-btn-ghost" (click)="deleteTarget.set(null)">{{ 'SECURITY.CHANGE_PASSWORD.CANCEL' | translate }}</button>
+            <button class="s-btn s-btn-danger" (click)="doDelete()">{{ 'AUTO_SECURITY_UI.REMOVE' | translate }}</button>
           </div>
         </div>
       </div>
@@ -496,7 +495,7 @@ export class PageActionsListComponent implements OnInit {
   filteredList = computed(() => {
     const q = this.listSearch.trim().toLowerCase();
     return this.allPageActions().filter((pa) => {
-      if (this.listPageFilter && pa.idPage !== this.listPageFilter) return false;
+      if (this.listPageFilter && pa.pageId !== this.listPageFilter) return false;
       if (!q) return true;
       return (
         pa.pageCode.toLowerCase().includes(q) ||
@@ -519,8 +518,8 @@ export class PageActionsListComponent implements OnInit {
     if (!this.createForm.pageId) return this.allActions();
     const linked = new Set(
       this.allPageActions()
-        .filter((pa) => pa.idPage === this.createForm.pageId && pa.isActive)
-        .map((pa) => pa.idAction),
+        .filter((pa) => pa.pageId === this.createForm.pageId && pa.isActive)
+        .map((pa) => pa.actionId),
     );
     return this.allActions().filter((a) => !linked.has(a.idAction) && a.isActive);
   });
@@ -561,7 +560,7 @@ export class PageActionsListComponent implements OnInit {
     // Mark existing links
     for (const pa of pas) {
       if (pa.isActive) {
-        const key = `${pa.idPage}_${pa.idAction}`;
+        const key = `${pa.pageId}_${pa.actionId}`;
         map.set(key, { exists: true, idPageAction: pa.idPageAction, saving: false });
       }
     }
@@ -652,7 +651,7 @@ export class PageActionsListComponent implements OnInit {
         if (pa) {
           this.createOpen.set(false);
           this.allPageActions.update((list) => [...list, pa]);
-          const key = `${pa.idPage}_${pa.idAction}`;
+          const key = `${pa.pageId}_${pa.actionId}`;
           const m = new Map(this.cellMap());
           m.set(key, { exists: true, idPageAction: pa.idPageAction, saving: false });
           this.cellMap.set(m);
@@ -674,7 +673,7 @@ export class PageActionsListComponent implements OnInit {
         this.allPageActions.update((list) =>
           list.filter((x) => x.idPageAction !== pa.idPageAction),
         );
-        const key = `${pa.idPage}_${pa.idAction}`;
+        const key = `${pa.pageId}_${pa.actionId}`;
         const m = new Map(this.cellMap());
         m.set(key, { exists: false, idPageAction: null, saving: false });
         this.cellMap.set(m);
@@ -692,3 +691,4 @@ export class PageActionsListComponent implements OnInit {
   protected readonly newSet = (v: Set<number>) => new Set(v);
   new = Set;
 }
+

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Component, computed, effect, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
 import { ButtonModule } from 'primeng/button';
 import { DrawerModule } from 'primeng/drawer';
 import { map } from 'rxjs';
@@ -32,7 +33,7 @@ interface LayoutMenuNode {
 @Component({
   selector: 'app-main-layout',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive, DrawerModule, ButtonModule],
+  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive, DrawerModule, ButtonModule, TranslatePipe],
   templateUrl: './main-layout.component.html',
   styleUrl: './main-layout.component.scss'
 })

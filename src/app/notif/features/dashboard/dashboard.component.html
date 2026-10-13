@@ -2,13 +2,13 @@
   <!-- Header -->
   <div class="np-page-header">
     <div>
-      <div class="np-eyebrow"><i class="pi pi-home"></i> Workspace</div>
-      <div class="np-page-title">Command Center</div>
-      <div class="np-page-subtitle">Live overview of your notification pipeline — delivery health, recent activity, and quick actions.</div>
+      <div class="np-eyebrow"><i class="pi pi-home"></i> {{ 'NOTIF.DASHBOARD.EYEBROW' | translate }}</div>
+      <div class="np-page-title">{{ 'NOTIF.DASHBOARD.TITLE' | translate }}</div>
+      <div class="np-page-subtitle">{{ 'NOTIF.DASHBOARD.SUBTITLE' | translate }}</div>
     </div>
     <div class="np-btn-row">
-      <button class="np-btn np-btn--ghost" (click)="load()"><i class="pi pi-refresh"></i> Refresh</button>
-      <a class="np-btn np-btn--primary" routerLink="/notif/events"><i class="pi pi-bolt"></i> Publish Event</a>
+      <button class="np-btn np-btn--ghost" (click)="load()"><i class="pi pi-refresh"></i> {{ 'NOTIF.DASHBOARD.REFRESH' | translate }}</button>
+      <a class="np-btn np-btn--primary" routerLink="/notif/events"><i class="pi pi-bolt"></i> {{ 'NOTIF.DASHBOARD.PUBLISH_EVENT' | translate }}</a>
     </div>
   </div>
 
@@ -18,22 +18,22 @@
   <div class="np-kpi-grid">
     <div class="np-kpi-card">
       <div class="np-kpi-icon np-kpi-icon--blue"><i class="pi pi-bell"></i></div>
-      <div class="np-kpi-label">Total</div>
+      <div class="np-kpi-label">{{ 'NOTIF.DASHBOARD.KPI.TOTAL' | translate }}</div>
       <div class="np-kpi-value np-kpi-value--blue" *ngIf="!loading(); else skel">{{ stats()?.total ?? 0 }}</div>
     </div>
     <div class="np-kpi-card">
       <div class="np-kpi-icon np-kpi-icon--amber"><i class="pi pi-envelope"></i></div>
-      <div class="np-kpi-label">Unread</div>
+      <div class="np-kpi-label">{{ 'NOTIF.DASHBOARD.KPI.UNREAD' | translate }}</div>
       <div class="np-kpi-value np-kpi-value--amber" *ngIf="!loading(); else skel">{{ stats()?.unread ?? 0 }}</div>
     </div>
     <div class="np-kpi-card">
       <div class="np-kpi-icon np-kpi-icon--green"><i class="pi pi-clock"></i></div>
-      <div class="np-kpi-label">Scheduled</div>
+      <div class="np-kpi-label">{{ 'NOTIF.DASHBOARD.KPI.SCHEDULED' | translate }}</div>
       <div class="np-kpi-value np-kpi-value--green" *ngIf="!loading(); else skel">{{ stats()?.scheduled ?? 0 }}</div>
     </div>
     <div class="np-kpi-card">
       <div class="np-kpi-icon np-kpi-icon--red"><i class="pi pi-exclamation-triangle"></i></div>
-      <div class="np-kpi-label">Dead Letters</div>
+      <div class="np-kpi-label">{{ 'NOTIF.DASHBOARD.KPI.DEAD_LETTERS' | translate }}</div>
       <div class="np-kpi-value np-kpi-value--red" *ngIf="!loading(); else skel">{{ stats()?.deadLetters ?? 0 }}</div>
     </div>
   </div>
@@ -45,7 +45,7 @@
     <!-- Status breakdown -->
     <div class="np-card">
       <div class="np-card-header">
-        <div class="np-card-title"><i class="pi pi-chart-bar"></i> By Status</div>
+        <div class="np-card-title"><i class="pi pi-chart-bar"></i> {{ 'NOTIF.DASHBOARD.BY_STATUS' | translate }}</div>
       </div>
       <div class="np-card-body np-card-body--compact">
         <div class="np-breakdown-list">
@@ -54,7 +54,7 @@
             <span class="np-breakdown-value">{{ row.count }}</span>
           </div>
           <div class="np-empty np-empty--compact" *ngIf="!loading() && statusBreakdown().length === 0">
-            <i class="pi pi-inbox"></i> No data yet
+            <i class="pi pi-inbox"></i> {{ 'NOTIF.DASHBOARD.NO_DATA' | translate }}
           </div>
         </div>
       </div>
@@ -63,7 +63,7 @@
     <!-- Channel breakdown -->
     <div class="np-card">
       <div class="np-card-header">
-        <div class="np-card-title"><i class="pi pi-send"></i> By Channel</div>
+        <div class="np-card-title"><i class="pi pi-send"></i> {{ 'NOTIF.DASHBOARD.BY_CHANNEL' | translate }}</div>
       </div>
       <div class="np-card-body np-card-body--compact">
         <div class="np-breakdown-list">
@@ -72,7 +72,7 @@
             <span class="np-breakdown-value">{{ row.count }}</span>
           </div>
           <div class="np-empty np-empty--compact" *ngIf="!loading() && channelBreakdown().length === 0">
-            <i class="pi pi-send"></i> No data yet
+            <i class="pi pi-send"></i> {{ 'NOTIF.DASHBOARD.NO_DATA' | translate }}
           </div>
         </div>
       </div>
@@ -82,10 +82,10 @@
   <!-- Recent notifications -->
   <div class="np-card">
     <div class="np-card-header">
-      <div class="np-card-title"><i class="pi pi-list"></i> Recent Notifications</div>
+      <div class="np-card-title"><i class="pi pi-list"></i> {{ 'NOTIF.DASHBOARD.RECENT' | translate }}</div>
       <div class="np-btn-row">
         <a class="np-btn np-btn--ghost" style="font-size:12px;padding:4px 10px;" routerLink="/notif/notifications">
-          View all <i class="pi pi-arrow-right"></i>
+          {{ 'NOTIF.VIEW_ALL' | translate }} <i class="pi pi-arrow-right"></i>
         </a>
       </div>
     </div>
@@ -93,11 +93,11 @@
       <p-table [value]="recent()" [loading]="loading()" styleClass="p-datatable-sm">
         <ng-template pTemplate="header">
           <tr>
-            <th>Title</th>
-            <th>Recipient</th>
-            <th>Channel</th>
-            <th>Status</th>
-            <th>Date</th>
+            <th>{{ 'NOTIF.DASHBOARD.COLUMNS.TITLE' | translate }}</th>
+            <th>{{ 'NOTIF.DASHBOARD.COLUMNS.RECIPIENT' | translate }}</th>
+            <th>{{ 'NOTIF.DASHBOARD.COLUMNS.CHANNEL' | translate }}</th>
+            <th>{{ 'NOTIF.DASHBOARD.COLUMNS.STATUS' | translate }}</th>
+            <th>{{ 'NOTIF.DASHBOARD.COLUMNS.DATE' | translate }}</th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-item>
@@ -110,15 +110,15 @@
           </tr>
         </ng-template>
         <ng-template pTemplate="emptymessage">
-          <tr><td colspan="5" style="text-align:center;padding:32px;color:var(--s-text-3)">No recent notifications.</td></tr>
+          <tr><td colspan="5" style="text-align:center;padding:32px;color:var(--s-text-3)">{{ 'NOTIF.DASHBOARD.NO_RECENT' | translate }}</td></tr>
         </ng-template>
       </p-table>
     </div>
     <div class="np-card-body" style="padding-top:0;border-top:1px solid var(--s-border)">
       <div class="np-btn-row np-btn-row--start">
-        <a class="np-btn np-btn--ghost" routerLink="/notif/notifications"><i class="pi pi-inbox"></i> Inbox</a>
-        <a class="np-btn np-btn--ghost" routerLink="/notif/templates"><i class="pi pi-file-edit"></i> Templates</a>
-        <a class="np-btn np-btn--ghost" routerLink="/notif/reports"><i class="pi pi-file-excel"></i> Reports</a>
+        <a class="np-btn np-btn--ghost" routerLink="/notif/notifications"><i class="pi pi-inbox"></i> {{ 'NOTIF.DASHBOARD.INBOX' | translate }}</a>
+        <a class="np-btn np-btn--ghost" routerLink="/notif/templates"><i class="pi pi-file-edit"></i> {{ 'NOTIF.DASHBOARD.TEMPLATES' | translate }}</a>
+        <a class="np-btn np-btn--ghost" routerLink="/notif/reports"><i class="pi pi-file-excel"></i> {{ 'NOTIF.DASHBOARD.REPORTS' | translate }}</a>
       </div>
     </div>
   </div>

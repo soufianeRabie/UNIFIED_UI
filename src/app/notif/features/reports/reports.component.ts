@@ -15,6 +15,7 @@ import { DataSourcesService } from '../../core/services/data-sources.service';
 import { ScheduledReport, ReportScheduleType } from '../../core/models/scheduled-report';
 import { DataSource } from '../../core/models/data-source';
 import { formatHttpError, unwrapList } from '../../shared/utils/api-utils';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'notif-reports',
@@ -31,7 +32,8 @@ import { formatHttpError, unwrapList } from '../../shared/utils/api-utils';
     SelectModule,
     InputTextModule,
     TextareaModule,
-    MessageModule
+    MessageModule,
+    TranslatePipe
   ],
   templateUrl: './reports.component.html'
 })

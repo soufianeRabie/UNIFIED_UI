@@ -10,6 +10,7 @@ import { PermissionService } from '../../core/services/permission.service';
 import { NotifConfigService } from '../../core/services/notif-config.service';
 import { PermActionDirective } from '../../../secu/directives/perm-action.directive';
 import { AuthStore } from '../../../core/stores/auth.store';
+import { TranslatePipe } from '@ngx-translate/core';
 
 const PAGE_CODE = 'NOTIF_SETTINGS';
 
@@ -24,7 +25,8 @@ const PAGE_CODE = 'NOTIF_SETTINGS';
     InputTextModule,
     TextareaModule,
     MessageModule,
-    PermActionDirective
+    PermActionDirective,
+    TranslatePipe
   ],
   templateUrl: './settings.component.html'
 })

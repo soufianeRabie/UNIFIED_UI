@@ -7,6 +7,7 @@ import { TagModule } from 'primeng/tag';
 import { TableModule } from 'primeng/table';
 import { SkeletonModule } from 'primeng/skeleton';
 import { MessageModule } from 'primeng/message';
+import { TranslatePipe } from '@ngx-translate/core';
 import { NotifConfigService } from '../../core/services/notif-config.service';
 import { NotificationsService } from '../../core/services/notifications.service';
 import { NotificationStats } from '../../core/models/notification-stats';
@@ -22,7 +23,7 @@ interface Breakdown {
 @Component({
   selector: 'notif-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterLink, ButtonModule, CardModule, TagModule, TableModule, SkeletonModule, MessageModule],
+  imports: [CommonModule, RouterLink, ButtonModule, CardModule, TagModule, TableModule, SkeletonModule, MessageModule, TranslatePipe],
   templateUrl: './dashboard.component.html'
 })
 export class DashboardComponent implements OnInit {

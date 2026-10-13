@@ -1,16 +1,16 @@
 <div class="np-page">
   <div class="np-page-header">
     <div>
-      <div class="np-eyebrow"><i class="pi pi-users"></i> Eyebrow</div>
-      <div class="np-page-title">Page Title</div>
-      <div class="np-page-subtitle">Page Subtitle</div>
+      <div class="np-eyebrow"><i class="pi pi-users"></i> {{ 'NOTIF.GROUPS.EYEBROW' | translate }}</div>
+      <div class="np-page-title">{{ 'NOTIF.GROUPS.PAGE_TITLE' | translate }}</div>
+      <div class="np-page-subtitle">{{ 'NOTIF.GROUPS.PAGE_SUBTITLE' | translate }}</div>
     </div>
     <div class="np-btn-row">
-      <button class="np-btn np-btn--ghost" (click)="load()"><i class="pi pi-refresh"></i> Reload</button>
-      <button class="np-btn np-btn--ghost" [permAction]="perm.canCreate(PAGE_CODE)" (click)="resetForm()"><i class="pi pi-plus"></i> New</button>
+      <button class="np-btn np-btn--ghost" (click)="load()"><i class="pi pi-refresh"></i> {{ 'COMMON.REFRESH' | translate }}</button>
+      <button class="np-btn np-btn--ghost" [permAction]="perm.canCreate(PAGE_CODE)" (click)="resetForm()"><i class="pi pi-plus"></i> {{ 'COMMON.NEW' | translate }}</button>
       <button class="np-btn np-btn--primary" [permAction]="selected ? perm.canUpdate(PAGE_CODE) : perm.canCreate(PAGE_CODE)" (click)="save()">
         <i class="pi" [class.pi-save]="selected" [class.pi-plus-circle]="!selected"></i>
-        {{ selected ? 'Update Btn' : 'Create Btn' }}
+        {{ (selected ? 'NOTIF.GROUPS.UPDATE_BTN' : 'NOTIF.GROUPS.CREATE_BTN') | translate }}
       </button>
     </div>
   </div>
@@ -21,18 +21,18 @@
   <div class="np-concept-strip">
     <div class="np-concept-card">
       <div class="np-concept-icon np-concept-icon--blue"><i class="pi pi-id-card"></i></div>
-      <div class="np-concept-title">Code Title</div>
-      <div class="np-concept-desc">Code Desc</div>
+      <div class="np-concept-title">{{ 'NOTIF.GROUPS.CONCEPT.CODE_TITLE' | translate }}</div>
+      <div class="np-concept-desc">{{ 'NOTIF.GROUPS.CONCEPT.CODE_DESC' | translate }}</div>
     </div>
     <div class="np-concept-card">
       <div class="np-concept-icon np-concept-icon--green"><i class="pi pi-users"></i></div>
-      <div class="np-concept-title">Members Title</div>
-      <div class="np-concept-desc">Members Desc</div>
+      <div class="np-concept-title">{{ 'NOTIF.GROUPS.CONCEPT.MEMBERS_TITLE' | translate }}</div>
+      <div class="np-concept-desc">{{ 'NOTIF.GROUPS.CONCEPT.MEMBERS_DESC' | translate }}</div>
     </div>
     <div class="np-concept-card">
       <div class="np-concept-icon np-concept-icon--purple"><i class="pi pi-share-alt"></i></div>
-      <div class="np-concept-title">Resolver Title</div>
-      <div class="np-concept-desc">Resolver Desc</div>
+      <div class="np-concept-title">{{ 'NOTIF.GROUPS.CONCEPT.RESOLVER_TITLE' | translate }}</div>
+      <div class="np-concept-desc">{{ 'NOTIF.GROUPS.CONCEPT.RESOLVER_DESC' | translate }}</div>
     </div>
   </div>
 
@@ -43,38 +43,38 @@
       <!-- Group form -->
       <div class="np-card">
         <div class="np-card-header">
-          <div class="np-card-title"><i class="pi pi-pencil"></i> {{ selected ? 'Edit Prefix' + selected.code : 'New Form Title' }}</div>
+          <div class="np-card-title"><i class="pi pi-pencil"></i> {{ selected ? ('NOTIF.GROUPS.EDIT_PREFIX' | translate) + selected.code : ('NOTIF.GROUPS.NEW_FORM_TITLE' | translate) }}</div>
           <button *ngIf="selected" class="np-btn np-btn--ghost" style="padding:3px 10px;font-size:11px" (click)="resetForm()">
-            <i class="pi pi-times"></i> Cancel
+            <i class="pi pi-times"></i> {{ 'COMMON.CANCEL' | translate }}
           </button>
         </div>
         <div class="np-card-body">
           <form class="np-form" [formGroup]="form">
             <div class="np-form-row">
               <div class="np-field">
-                <label class="np-label">Code <span style="color:var(--s-red)">*</span></label>
-                <input pInputText formControlName="code" [attr.readonly]="!!selected || null" placeholder="HR_TEAM" />
-                <span class="np-hint" *ngIf="!selected">Code Hint</span>
+                <label class="np-label">{{ 'NOTIF.GROUPS.FORM.CODE' | translate }} <span style="color:var(--s-red)">*</span></label>
+                <input pInputText formControlName="code" [attr.readonly]="!!selected || null" [placeholder]="'TECH_EXAMPLES.HR_TEAM' | translate" />
+                <span class="np-hint" *ngIf="!selected">{{ 'NOTIF.GROUPS.FORM.CODE_HINT' | translate }}</span>
               </div>
               <div class="np-field">
-                <label class="np-label">Label <span style="color:var(--s-red)">*</span></label>
-                <input pInputText formControlName="label" placeholder="Label Placeholder" />
+                <label class="np-label">{{ 'NOTIF.GROUPS.FORM.LABEL' | translate }} <span style="color:var(--s-red)">*</span></label>
+                <input pInputText formControlName="label" [placeholder]="'NOTIF.GROUPS.FORM.LABEL_PLACEHOLDER' | translate" />
               </div>
             </div>
             <div class="np-field">
-              <label class="np-label">Description</label>
-              <input pInputText formControlName="description" placeholder="Description Placeholder" />
+              <label class="np-label">{{ 'NOTIF.GROUPS.FORM.DESCRIPTION' | translate }}</label>
+              <input pInputText formControlName="description" [placeholder]="'NOTIF.GROUPS.FORM.DESCRIPTION_PLACEHOLDER' | translate" />
             </div>
             <div class="np-form-row">
               <div class="np-field">
-                <label class="np-label">Created By</label>
+                <label class="np-label">{{ 'NOTIF.GROUPS.FORM.CREATED_BY' | translate }}</label>
                 <input pInputText formControlName="createdBy" />
               </div>
               <div class="np-toggle-item" *ngIf="selected" style="padding:24px 0 0">
                 <p-checkbox formControlName="isActive" binary="true" inputId="grpActive"></p-checkbox>
                 <label class="np-toggle-label" for="grpActive">
-                  <span class="np-toggle-name">Active</span>
-                  <span class="np-toggle-hint">Inactive Hint</span>
+                  <span class="np-toggle-name">{{ 'COMMON.ACTIVE' | translate }}</span>
+                  <span class="np-toggle-hint">{{ 'NOTIF.GROUPS.FORM.INACTIVE_HINT' | translate }}</span>
                 </label>
               </div>
             </div>
@@ -86,12 +86,12 @@
       <div class="np-grid-2">
         <div class="np-card">
           <div class="np-card-header">
-            <div class="np-card-title"><i class="pi pi-code"></i> Resolver Setting</div>
+            <div class="np-card-title"><i class="pi pi-code"></i> {{ 'NOTIF.GROUPS.RESOLVER_SETTING' | translate }}</div>
           </div>
           <div class="np-card-body">
-            <p class="np-muted" style="font-size:11px;margin-bottom:10px">Resolver Hint</p>
+            <p class="np-muted" style="font-size:11px;margin-bottom:10px">{{ 'NOTIF.GROUPS.RESOLVER_HINT' | translate }}</p>
             <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--s-bg-3);border-radius:6px;border:1px solid var(--s-border)">
-              <span class="np-code" style="color:var(--s-accent)">groupCode</span>
+              <span class="np-code" style="color:var(--s-accent)">{{ 'TECH_EXAMPLES.GROUP_CODE' | translate }}</span>
               <i class="pi pi-arrow-right" style="color:var(--s-text-2);font-size:11px"></i>
               <span class="np-code">{{ selected?.code || form.controls.code.value || 'GROUP_CODE' }}</span>
             </div>
@@ -100,20 +100,20 @@
 
         <div class="np-card">
           <div class="np-card-header">
-            <div class="np-card-title"><i class="pi pi-chart-bar"></i> Audience Status</div>
+            <div class="np-card-title"><i class="pi pi-chart-bar"></i> {{ 'NOTIF.GROUPS.AUDIENCE_STATUS' | translate }}</div>
           </div>
           <div class="np-card-body">
             <div class="np-kpi-grid" style="grid-template-columns:1fr 1fr">
               <div class="np-kpi-card">
                 <div class="np-kpi-value np-kpi-value--blue">{{ members.length }}</div>
-                <div class="np-kpi-label">Kpi Members</div>
+                <div class="np-kpi-label">{{ 'NOTIF.GROUPS.KPI_MEMBERS' | translate }}</div>
               </div>
               <div class="np-kpi-card">
                 <div class="np-kpi-value" [class.np-kpi-value--green]="selected?.isActive !== false"
                   [class.np-kpi-value--red]="selected?.isActive === false">
-                  {{ selected?.isActive === false ? 'Off' : 'On' }}
+                  {{ (selected?.isActive === false ? 'COMMON.OFF' : 'COMMON.ON') | translate }}
                 </div>
-                <div class="np-kpi-label">Active</div>
+                <div class="np-kpi-label">{{ 'COMMON.ACTIVE' | translate }}</div>
               </div>
             </div>
           </div>
@@ -123,27 +123,27 @@
       <!-- Members section -->
       <div class="np-card">
         <div class="np-card-header">
-          <div class="np-card-title"><i class="pi pi-users"></i> Group Members</div>
+          <div class="np-card-title"><i class="pi pi-users"></i> {{ 'NOTIF.GROUPS.GROUP_MEMBERS' | translate }}</div>
         </div>
         <div class="np-card-body">
           <div class="np-locked" *ngIf="!selected">
             <i class="pi pi-lock"></i>
-            <span>Members Locked</span>
+            <span>{{ 'NOTIF.GROUPS.MEMBERS_LOCKED' | translate }}</span>
           </div>
 
           <ng-container *ngIf="selected">
             <form class="np-form" [formGroup]="memberForm" style="margin-bottom:16px">
               <div class="np-form-row" style="align-items:flex-end">
                 <div class="np-field">
-                  <label class="np-label">User Id</label>
+                  <label class="np-label">{{ 'NOTIF.GROUPS.MEMBER_FORM.USER_ID' | translate }}</label>
                   <input pInputText formControlName="userId" placeholder="12345" />
                 </div>
                 <div class="np-field">
-                  <label class="np-label">Added By</label>
+                  <label class="np-label">{{ 'NOTIF.GROUPS.MEMBER_FORM.ADDED_BY' | translate }}</label>
                   <input pInputText formControlName="addedBy" />
                 </div>
                 <button class="np-btn np-btn--primary" [permAction]="perm.canUpdate(PAGE_CODE)" style="white-space:nowrap" (click)="addMember()">
-                  <i class="pi pi-user-plus"></i> Add Member
+                  <i class="pi pi-user-plus"></i> {{ 'NOTIF.GROUPS.ADD_MEMBER' | translate }}
                 </button>
               </div>
             </form>
@@ -157,7 +157,7 @@
                 <div style="flex:1;min-width:0">
                   <div style="font-size:13px;font-weight:500;color:var(--s-text)">{{ member.userId }}</div>
                   <div style="font-size:11px;color:var(--s-text-2)">
-                    Added By Prefix {{ member.addedBy || 'ui' }}<ng-container *ngIf="member.addedAt"> · {{ member.addedAt | date:'medium' }}</ng-container>
+                    {{ 'NOTIF.GROUPS.ADDED_BY_PREFIX' | translate }} {{ member.addedBy || 'ui' }}<ng-container *ngIf="member.addedAt"> · {{ member.addedAt | date:'medium' }}</ng-container>
                   </div>
                 </div>
                 <button class="np-btn np-btn--danger" [permAction]="perm.canUpdate(PAGE_CODE)" style="padding:4px 8px;font-size:11px" (click)="removeMember(member)">
@@ -168,7 +168,7 @@
 
             <div class="np-empty np-empty--compact" *ngIf="members.length === 0">
               <i class="pi pi-users"></i>
-              <div>No Members</div>
+              <div>{{ 'NOTIF.GROUPS.NO_MEMBERS' | translate }}</div>
             </div>
           </ng-container>
         </div>
@@ -178,11 +178,11 @@
     <!-- Library sidebar -->
     <div class="np-library">
       <div class="np-library-header">
-        <div class="np-library-title"><i class="pi pi-users"></i> Sidebar Title</div>
+        <div class="np-library-title"><i class="pi pi-users"></i> {{ 'NOTIF.GROUPS.SIDEBAR_TITLE' | translate }}</div>
         <span class="np-badge np-badge--gray">{{ groups.length }}</span>
       </div>
       <div class="np-empty np-empty--compact" *ngIf="!groups.length">
-        <i class="pi pi-inbox"></i><div>No Groups</div>
+        <i class="pi pi-inbox"></i><div>{{ 'NOTIF.GROUPS.NO_GROUPS' | translate }}</div>
       </div>
       <div class="np-library-list">
         <button type="button" class="np-library-item" *ngFor="let group of groups"
@@ -191,8 +191,8 @@
             <div class="np-library-item-name">{{ group.code }}</div>
             <div class="np-library-item-meta">{{ group.label }}</div>
             <div style="display:flex;gap:5px;margin-top:4px;flex-wrap:wrap">
-              <p-tag [value]="group.isActive ? 'Active' : 'Inactive'" [severity]="group.isActive ? 'success' : 'danger'"></p-tag>
-              <p-tag value="groupCode" severity="info"></p-tag>
+              <p-tag [value]="(group.isActive ? 'COMMON.ACTIVE' : 'COMMON.INACTIVE') | translate" [severity]="group.isActive ? 'success' : 'danger'"></p-tag>
+              <p-tag [value]="'TECH_EXAMPLES.GROUP_CODE' | translate" severity="info"></p-tag>
             </div>
           </div>
           <button class="np-btn np-btn--danger" [permAction]="perm.canDelete(PAGE_CODE)" style="padding:4px 8px;font-size:11px;align-self:flex-start;margin-top:4px"
