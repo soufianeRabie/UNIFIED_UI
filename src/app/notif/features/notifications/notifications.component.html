@@ -1,0 +1,219 @@
+<div class="np-page">
+
+  <!-- Header -->
+  <div class="np-page-header">
+    <div>
+      <div class="np-eyebrow"><i class="pi pi-inbox"></i> Inbox</div>
+      <div class="np-page-title">
+        Inbox
+        @if (unread() > 0) {
+          <span class="np-count-badge">{{ unread() > 99 ? '99+' : unread() }}</span>
+        }
+      </div>
+      <div class="np-page-subtitle">All received notifications</div>
+    </div>
+    <div class="np-btn-row">
+      @if (unread() > 0) {
+        <button class="np-btn np-btn--primary" (click)="markAllRead()">
+          <i class="pi pi-check-circle"></i> Mark all as read
+        </button>
+      }
+      <button class="np-btn np-btn--ghost" (click)="loadInbox()">
+        <i class="pi pi-refresh"></i> Loading�
+      </button>
+    </div>
+  </div>
+
+  @if (status) {
+    <p-message [severity]="status.type" [text]="status.message"></p-message>
+  }
+
+  <!-- Inbox split: list + detail -->
+  <div class="np-inbox-split">
+
+    <!-- ── NOTIFICATION LIST ── -->
+    <div class="np-inbox-list np-card">
+      @if (loading()) {
+        <div class="np-empty"><i class="pi pi-spin pi-spinner"></i><div>Loading�</div></div>
+      } @else if (items().length === 0) {
+        <div class="np-empty">
+          <i class="pi pi-inbox" style="font-size:2rem;opacity:.3"></i>
+          <div class="np-empty-title">Your inbox is empty.</div>
+        </div>
+      } @else {
+        <ul class="np-notif-list">
+          @for (item of items(); track item.id) {
+            <li
+              class="np-notif-item"
+              [class.np-notif-item--unread]="!item.readAt"
+              [class.np-notif-item--selected]="selected()?.id === item.id"
+              (click)="open(item)"
+            >
+              <div class="np-notif-dot-col">
+                @if (!item.readAt) {
+                  <span class="np-unread-dot"></span>
+                }
+              </div>
+              <div class="np-notif-body">
+                <div class="np-notif-title">{{ item.title }}</div>
+                <div class="np-notif-preview">{{ item.body | slice:0:90 }}{{ (item.body?.length ?? 0) > 90 ? '�' : '' }}</div>
+                <div class="np-notif-meta">
+                  <span class="np-priority-badge np-priority-badge--{{ item.priority }}">{{ priorityLabel(item.priority) }}</span>
+                  <span class="np-muted">{{ item.createdAt | date:'dd/MM/yy HH:mm' }}</span>
+                  @if (item.attachmentFileName) {
+                    <span class="np-attachment-chip"><i class="pi pi-paperclip"></i> {{ item.attachmentFileName }}</span>
+                  }
+                </div>
+              </div>
+            </li>
+          }
+        </ul>
+        <p-paginator
+          [rows]="pageSize"
+          [totalRecords]="total()"
+          [first]="(page - 1) * pageSize"
+          [rowsPerPageOptions]="[10, 20, 50]"
+          (onPageChange)="onPage($event)"
+          styleClass="np-paginator"
+        ></p-paginator>
+      }
+    </div>
+
+    <!-- ── NOTIFICATION DETAIL ── -->
+    <div class="np-inbox-detail np-card">
+      @if (selected(); as detail) {
+        <div class="np-card-header">
+          <div class="np-detail-title">{{ detail.title }}</div>
+          <div class="np-detail-meta">
+            <span class="np-priority-badge np-priority-badge--{{ detail.priority }}">{{ priorityLabel(detail.priority) }}</span>
+            <span class="np-badge np-badge--blue">{{ channelLabel(detail.channel) }}</span>
+            @if (!detail.readAt) {
+              <p-tag value="Mark as read" severity="warn"></p-tag>
+            } @else {
+              <p-tag value="Lu" severity="success"></p-tag>
+            }
+          </div>
+        </div>
+        <div class="np-card-body">
+          <div class="np-detail-body">
+            @if (detail.isHtml) {
+              <div [innerHTML]="detail.body"></div>
+            } @else {
+              {{ detail.body }}
+            }
+          </div>
+
+          <div class="np-detail-fields">
+            @if (detail.sentAt) {
+              <div class="np-detail-field">
+                <span class="np-detail-field-key">Date</span>
+                <span class="np-detail-field-value">{{ detail.sentAt | date:'dd/MM/yyyy HH:mm' }}</span>
+              </div>
+            }
+            @if (detail.readAt) {
+              <div class="np-detail-field">
+                <span class="np-detail-field-key">Mark as read</span>
+                <span class="np-detail-field-value">{{ detail.readAt | date:'dd/MM/yyyy HH:mm' }}</span>
+              </div>
+            }
+            <div class="np-detail-field">
+              <span class="np-detail-field-key">Event Types</span>
+              <span class="np-detail-field-value np-mono">{{ detail.eventTypeCode }}</span>
+            </div>
+          </div>
+
+          @if (detail.attachmentFileName) {
+            <div class="np-attachment-box">
+              <i class="pi pi-file-excel np-attachment-icon"></i>
+              <div class="np-attachment-info">
+                <div class="np-attachment-name">{{ detail.attachmentFileName }}</div>
+              </div>
+              <button
+                class="np-btn np-btn--ghost np-attachment-dl"
+                (click)="downloadAttachment(detail.id, detail.attachmentFileName)"
+                [disabled]="downloadingAttachment()"
+              >
+                @if (downloadingAttachment()) {
+                  <i class="pi pi-spin pi-spinner"></i>
+                } @else {
+                  <i class="pi pi-download"></i>
+                }
+                Download XLSX
+              </button>
+            </div>
+          }
+
+          <div class="np-btn-row" style="margin-top: 20px">
+            @if (!detail.readAt) {
+              <button class="np-btn np-btn--primary" (click)="markRead()">
+                <i class="pi pi-check"></i> Mark as read
+              </button>
+            }
+          </div>
+        </div>
+      } @else {
+        <div class="np-empty" style="padding: 60px 20px">
+          <i class="pi pi-inbox" style="font-size:2rem;opacity:.2"></i>
+          <div class="np-empty-title">Nothing to show here.</div>
+        </div>
+      }
+    </div>
+
+  </div>
+
+  <!-- Admin dead-letter section — only for users with NOTIF_SETTINGS permission -->
+  @if (perm.canRead(PAGE_SETTINGS)) {
+    <div style="margin-top: 32px">
+      <div class="np-section-label">
+        <i class="pi pi-exclamation-circle"></i> Dead Letters (admin)
+      </div>
+      <div class="np-toolbar" style="background:transparent; padding: 0 0 14px">
+        <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--s-text-2);cursor:pointer">
+          <p-checkbox [(ngModel)]="resolved" [binary]="true" (onChange)="loadDeadLetters()"></p-checkbox>
+        </label>
+        <input pInputText type="text" [(ngModel)]="reviewedBy" style="width:180px" />
+        <button class="np-btn np-btn--ghost" (click)="loadDeadLetters()"><i class="pi pi-refresh"></i></button>
+      </div>
+      <div class="np-card">
+        <div class="np-card-body np-card-body--flush">
+          <p-table [value]="deadLetters()" styleClass="p-datatable-sm">
+            <ng-template pTemplate="header">
+              <tr>
+                <th>Code</th>
+                <th>An error occurred.</th>
+                <th style="width:130px">Date</th>
+                <th style="width:160px">Edit</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-dl>
+              <tr>
+                <td><span class="np-code">{{ dl.eventType || dl.eventTypeCode }}</span></td>
+                <td><span class="np-muted" style="font-size:12px">{{ (dl.error || dl.lastError) | slice:0:100 }}</span></td>
+                <td><span class="np-muted">{{ dl.createdAt | date:'dd/MM/yy HH:mm' }}</span></td>
+                <td>
+                  <div class="np-btn-row">
+                    <button class="np-btn np-btn--ghost" style="padding:3px 10px;font-size:12px" (click)="replayDeadLetter(dl)">
+                      <i class="pi pi-replay"></i>
+                    </button>
+                    <button class="np-btn np-btn--ghost" style="padding:3px 10px;font-size:12px" (click)="resolveDeadLetter(dl)">
+                      <i class="pi pi-check"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+              <tr><td colspan="4">
+                <div class="np-empty">
+                  <i class="pi pi-check-circle"></i>
+                  <div class="np-empty-title">Nothing to show here.</div>
+                </div>
+              </td></tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </div>
+    </div>
+  }
+
+</div>

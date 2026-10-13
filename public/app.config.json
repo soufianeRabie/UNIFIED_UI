@@ -1,0 +1,6 @@
+{
+  "apiUrl":      "http://localhost:5000/api",
+  "notifApiUrl": "http://localhost:5003",
+  "notifHubUrl": "http://localhost:5003/hubs/notifications",
+  "rhApiUrl":    "http://localhost:8000/api"
+}

@@ -1,0 +1,14 @@
+@import 'primeicons/primeicons.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Permission-based UI disabling */
+.perm-disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+@import './app/secu/secu.styles.css';
+@import './app/notif/notif.styles.css';

@@ -1,0 +1,214 @@
+<div class="np-page">
+  <div class="np-page-header">
+    <div>
+      <div class="np-eyebrow"><i class="pi pi-database"></i> {{ 'NOTIF.DATA_SOURCES.EYEBROW' }}</div>
+      <div class="np-page-title">{{ 'NOTIF.DATA_SOURCES.PAGE_TITLE' }}</div>
+      <div class="np-page-subtitle">{{ 'NOTIF.DATA_SOURCES.PAGE_SUBTITLE' }}</div>
+    </div>
+    <div class="np-btn-row">
+      <button class="np-btn np-btn--ghost" (click)="load()"><i class="pi pi-refresh"></i> {{ 'COMMON.REFRESH' }}</button>
+      <button class="np-btn np-btn--ghost" [permAction]="perm.canCreate(PAGE_CODE)" (click)="resetForm()"><i class="pi pi-plus"></i> {{ 'COMMON.NEW' }}</button>
+      <button class="np-btn np-btn--primary" [permAction]="selected ? perm.canUpdate(PAGE_CODE) : perm.canCreate(PAGE_CODE)" (click)="save()">
+        <i class="pi" [class.pi-save]="selected" [class.pi-plus-circle]="!selected"></i>
+        {{ selected ? 'NOTIF.DATA_SOURCES.UPDATE_BTN' : 'NOTIF.DATA_SOURCES.CREATE_BTN' }}
+      </button>
+    </div>
+  </div>
+
+  <p-message *ngIf="status" [severity]="status.type" [text]="status.message"></p-message>
+
+  <!-- Concept strip -->
+  <div class="np-concept-strip">
+    <div class="np-concept-card">
+      <div class="np-concept-icon np-concept-icon--blue"><i class="pi pi-sign-in"></i></div>
+      <div class="np-concept-title">{{ 'NOTIF.DATA_SOURCES.CONCEPT.INPUTS_TITLE' }}</div>
+      <div class="np-concept-desc">{{ 'NOTIF.DATA_SOURCES.CONCEPT.INPUTS_DESC' }}</div>
+    </div>
+    <div class="np-concept-card">
+      <div class="np-concept-icon np-concept-icon--green"><i class="pi pi-database"></i></div>
+      <div class="np-concept-title">{{ 'NOTIF.DATA_SOURCES.CONCEPT.OUTPUTS_TITLE' }}</div>
+      <div class="np-concept-desc">{{ 'NOTIF.DATA_SOURCES.CONCEPT.OUTPUTS_DESC' }}</div>
+    </div>
+    <div class="np-concept-card">
+      <div class="np-concept-icon np-concept-icon--amber"><i class="pi pi-play-circle"></i></div>
+      <div class="np-concept-title">{{ 'NOTIF.DATA_SOURCES.CONCEPT.TEST_TITLE' }}</div>
+      <div class="np-concept-desc">{{ 'NOTIF.DATA_SOURCES.CONCEPT.TEST_DESC' }}</div>
+    </div>
+  </div>
+
+  <div class="np-split">
+    <!-- Editor column -->
+    <div style="display:flex;flex-direction:column;gap:14px">
+
+      <!-- Main form -->
+      <div class="np-card">
+        <div class="np-card-header">
+          <div class="np-card-title"><i class="pi pi-pencil"></i> {{ selected ? 'NOTIF.DATA_SOURCES.EDIT_PREFIX' + selected.name : 'NOTIF.DATA_SOURCES.NEW_FORM_TITLE' }}</div>
+          <button *ngIf="selected" class="np-btn np-btn--ghost" style="padding:3px 10px;font-size:11px" (click)="resetForm()">
+            <i class="pi pi-times"></i> {{ 'COMMON.CANCEL' }}
+          </button>
+        </div>
+        <div class="np-card-body">
+          <form class="np-form" [formGroup]="form">
+            <div class="np-form-row">
+              <div class="np-field">
+                <label class="np-label">{{ 'NOTIF.DATA_SOURCES.FORM.NAME' }} <span style="color:var(--s-red)">*</span></label>
+                <input pInputText formControlName="name" [placeholder]="'NOTIF.DATA_SOURCES.FORM.NAME_PLACEHOLDER'" />
+              </div>
+              <div class="np-field">
+                <label class="np-label">{{ 'NOTIF.DATA_SOURCES.FORM.CREATED_BY' }}</label>
+                <input pInputText formControlName="createdBy" />
+              </div>
+            </div>
+            <div class="np-field">
+              <label class="np-label">{{ 'NOTIF.DATA_SOURCES.FORM.DESCRIPTION' }}</label>
+              <input pInputText formControlName="description" [placeholder]="'NOTIF.DATA_SOURCES.FORM.DESCRIPTION_PLACEHOLDER'" />
+            </div>
+            <div class="np-field">
+              <label class="np-label">{{ 'NOTIF.DATA_SOURCES.FORM.SQL_QUERY' }} <span style="color:var(--s-red)">*</span></label>
+              <textarea pTextarea formControlName="sqlQuery" rows="9"
+                [placeholder]="'NOTIF.DATA_SOURCES.FORM.SQL_QUERY_PLACEHOLDER'"></textarea>
+            </div>
+            <div class="np-toggle-item" *ngIf="selected" style="padding:6px 0">
+              <p-checkbox formControlName="isActive" binary="true" inputId="dsActive"></p-checkbox>
+              <label class="np-toggle-label" for="dsActive">
+                <span class="np-toggle-name">{{ 'COMMON.ACTIVE' }}</span>
+                <span class="np-toggle-hint">{{ 'NOTIF.DATA_SOURCES.FORM.INACTIVE_HINT' }}</span>
+              </label>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Detected params/columns -->
+      <div class="np-grid-2" *ngIf="hasSqlQuery">
+        <div class="np-card">
+          <div class="np-card-header">
+            <div class="np-card-title"><i class="pi pi-sign-in"></i> {{ 'NOTIF.DATA_SOURCES.QUERY_INPUTS' }}</div>
+          </div>
+          <div class="np-card-body">
+            <p class="np-muted" style="font-size:11px;margin-bottom:8px">{{ 'NOTIF.DATA_SOURCES.INPUTS_HINT' }}</p>
+            <div class="np-token-grid" *ngIf="detectedParams.length > 0">
+              <span class="np-token" *ngFor="let param of detectedParams">{{ param }}</span>
+            </div>
+            <div class="np-empty np-empty--compact" *ngIf="detectedParams.length === 0">
+              <i class="pi pi-info-circle"></i>
+              <div>{{ 'NOTIF.DATA_SOURCES.NO_PARAMS' }}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="np-card">
+          <div class="np-card-header">
+            <div class="np-card-title"><i class="pi pi-sign-out"></i> {{ 'NOTIF.DATA_SOURCES.OUTPUT_VARS' }}</div>
+          </div>
+          <div class="np-card-body">
+            <p class="np-muted" style="font-size:11px;margin-bottom:8px">{{ 'NOTIF.DATA_SOURCES.OUTPUTS_HINT' }}</p>
+            <div class="np-token-grid" *ngIf="detectedColumns.length > 0">
+              <span class="np-token" *ngFor="let col of detectedColumns">{{ col }}</span>
+            </div>
+            <div class="np-empty np-empty--compact" *ngIf="detectedColumns.length === 0">
+              <i class="pi pi-info-circle"></i>
+              <div>{{ 'NOTIF.DATA_SOURCES.NO_ALIASES' }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Test section -->
+      <div class="np-card">
+        <div class="np-card-header">
+          <div class="np-card-title"><i class="pi pi-play"></i> {{ 'NOTIF.DATA_SOURCES.TEST_QUERY' }}</div>
+          <div class="np-btn-row">
+            <button class="np-btn np-btn--ghost" style="padding:3px 10px;font-size:11px" (click)="autoFillTestParams()">
+              <i class="pi pi-sparkles"></i> {{ 'NOTIF.DATA_SOURCES.AUTO_FILL' }}
+            </button>
+            <button class="np-btn np-btn--ghost" style="padding:3px 10px;font-size:11px" (click)="addTestParam()">
+              <i class="pi pi-plus"></i> {{ 'NOTIF.DATA_SOURCES.ADD_INPUT' }}
+            </button>
+            <button class="np-btn np-btn--primary" style="padding:3px 10px;font-size:11px"
+              [disabled]="!selected" (click)="test()">
+              <i class="pi pi-play"></i> {{ 'NOTIF.DATA_SOURCES.RUN_TEST' }}
+            </button>
+          </div>
+        </div>
+        <div class="np-card-body">
+          <div class="np-locked" *ngIf="!selected">
+            <i class="pi pi-lock"></i>
+            <span>{{ 'NOTIF.DATA_SOURCES.TEST_LOCKED' }}</span>
+          </div>
+
+          <ng-container *ngIf="selected">
+            <div class="np-empty np-empty--compact" *ngIf="testParamRows.length === 0">
+              <i class="pi pi-list"></i>
+              <div>{{ 'NOTIF.DATA_SOURCES.NO_SAMPLE_INPUTS' }}</div>
+            </div>
+
+            <ng-container *ngIf="testParamRows.length > 0">
+              <div class="np-mapping-header">
+                <span class="np-mapping-col">{{ 'NOTIF.DATA_SOURCES.COL_INPUT_NAME' }}</span>
+                <span class="np-mapping-col">{{ 'NOTIF.DATA_SOURCES.COL_SAMPLE_VALUE' }}</span>
+                <span></span>
+              </div>
+              <div class="np-mapping-list">
+                <div class="np-mapping-row" *ngFor="let row of testParamRows; let i = index">
+                  <input pInputText [(ngModel)]="row.key" [ngModelOptions]="{standalone:true}" placeholder="userId" />
+                  <input pInputText [(ngModel)]="row.value" [ngModelOptions]="{standalone:true}" placeholder="12345" />
+                  <button class="np-btn np-btn--danger" style="padding:6px 8px;min-width:34px;justify-content:center" (click)="removeTestParam(i)">
+                    <i class="pi pi-trash"></i>
+                  </button>
+                </div>
+              </div>
+            </ng-container>
+
+            <div *ngIf="testResult" style="margin-top:12px">
+              <div class="np-sql-result" *ngIf="testResultRows.length > 0">
+                <table style="width:100%;border-collapse:collapse">
+                  <thead>
+                    <tr>
+                      <th *ngFor="let col of testResultColumns" style="padding:6px 10px;text-align:left;border-bottom:1px solid var(--s-border);font-size:11px;color:var(--s-text-2)">{{ col }}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let row of testResultRows" style="border-bottom:1px solid rgba(255,255,255,0.04)">
+                      <td *ngFor="let col of testResultColumns" style="padding:7px 10px;font-size:12px">{{ formatCell(row[col]) }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="np-sql-scalar" *ngIf="testResultRows.length === 0">{{ formatCell(testResult) }}</div>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+
+    <!-- Library sidebar -->
+    <div class="np-library">
+      <div class="np-library-header">
+        <div class="np-library-title"><i class="pi pi-database"></i> {{ 'NOTIF.DATA_SOURCES.SIDEBAR_TITLE' }}</div>
+        <span class="np-badge np-badge--gray">{{ items.length }}</span>
+      </div>
+      <div class="np-empty np-empty--compact" *ngIf="!items.length">
+        <i class="pi pi-inbox"></i><div>{{ 'NOTIF.DATA_SOURCES.NO_ITEMS' }}</div>
+      </div>
+      <div class="np-library-list">
+        <button type="button" class="np-library-item" *ngFor="let item of items"
+          [class.np-library-item--active]="selected?.id === item.id" (click)="edit(item)">
+          <div class="np-library-item-body">
+            <div class="np-library-item-name">{{ item.name }}</div>
+            <div class="np-library-item-meta">{{ item.description || ('NOTIF.DATA_SOURCES.NO_DESCRIPTION') }}</div>
+            <div style="display:flex;gap:5px;margin-top:4px;flex-wrap:wrap">
+              <p-tag [value]="item.isActive ? 'COMMON.ACTIVE' : 'COMMON.INACTIVE'" [severity]="item.isActive ? 'success' : 'danger'"></p-tag>
+              <p-tag [value]="(item.sqlQuery || '').length ? 'NOTIF.DATA_SOURCES.SQL_READY' : 'NOTIF.DATA_SOURCES.NO_QUERY'" severity="info"></p-tag>
+            </div>
+          </div>
+          <button class="np-btn np-btn--danger" [permAction]="perm.canDelete(PAGE_CODE)" style="padding:4px 8px;font-size:11px;align-self:flex-start;margin-top:4px"
+            (click)="$event.stopPropagation(); remove(item)">
+            <i class="pi pi-trash"></i>
+          </button>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

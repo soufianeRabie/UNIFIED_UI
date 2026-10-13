@@ -1,0 +1,138 @@
+<div class="app-shell" [class.is-collapsed]="sidebarCollapsed() && !isMobile()">
+  <aside class="app-sidebar app-sidebar-desktop">
+    <ng-container *ngTemplateOutlet="sidebarTpl"></ng-container>
+  </aside>
+
+  <section class="app-main">
+    <header class="app-topbar">
+      <div class="app-topbar-left">
+        <p-button
+          icon="pi pi-bars"
+          [rounded]="true"
+          [text]="true"
+          severity="secondary"
+          (onClick)="toggleSidebar()"
+        ></p-button>
+        <div class="app-context">
+          <span>Security workspace</span>
+          <strong>{{ tenantName() }}</strong>
+        </div>
+      </div>
+
+      <div class="app-topbar-actions">
+        <div class="app-user-pill">
+          <i class="pi pi-user"></i>
+          <span>{{ userName() }}</span>
+        </div>
+        <p-button
+          label="Logout"
+          icon="pi pi-sign-out"
+          size="small"
+          severity="contrast"
+          (onClick)="logout()"
+        ></p-button>
+      </div>
+    </header>
+
+    <main class="app-content">
+      <router-outlet></router-outlet>
+    </main>
+  </section>
+
+  <p-drawer
+    [visible]="mobileSidebarVisible()"
+    (visibleChange)="mobileSidebarVisible.set($event)"
+    [modal]="true"
+    [blockScroll]="true"
+    [dismissible]="true"
+    [showCloseIcon]="false"
+    position="left"
+    styleClass="app-mobile-drawer"
+  >
+    <aside class="app-sidebar app-sidebar-mobile">
+      <ng-container *ngTemplateOutlet="sidebarTpl"></ng-container>
+    </aside>
+  </p-drawer>
+
+  <ng-template #sidebarTpl>
+    <div class="app-sidebar-brand">
+      <ng-container *ngIf="tenantLogo(); else fallbackLogo">
+        <img [src]="tenantLogo()" alt="Logo" class="app-logo" />
+      </ng-container>
+      <ng-template #fallbackLogo>
+        <div class="app-logo-fallback">{{ tenantName() | slice: 0 : 2 | uppercase }}</div>
+      </ng-template>
+
+      <div class="app-brand-text" [class.is-hidden]="sidebarCollapsed() && !isMobile()">
+        <strong>{{ tenantName() }}</strong>
+        <span>{{ userName() }}</span>
+      </div>
+    </div>
+
+    <nav class="app-nav">
+      <ng-container *ngTemplateOutlet="menuTreeTpl; context: { $implicit: menuTree(), depth: 0 }"></ng-container>
+
+      @if (adminMenuTree().length) {
+        <div class="app-nav-section" [class.is-icon-only]="sidebarCollapsed() && !isMobile()">
+          <span>Administration</span>
+          <i class="pi pi-lock"></i>
+        </div>
+        <ng-container
+          *ngTemplateOutlet="menuTreeTpl; context: { $implicit: adminMenuTree(), depth: 0 }"
+        ></ng-container>
+      }
+    </nav>
+
+    <div class="app-sidebar-footer">
+      <p-button
+        [icon]="sidebarCollapsed() ? 'pi pi-angle-right' : 'pi pi-angle-left'"
+        [text]="true"
+        [rounded]="true"
+        severity="secondary"
+        (onClick)="toggleSidebar()"
+        styleClass="w-full"
+      ></p-button>
+    </div>
+  </ng-template>
+
+  <ng-template #menuTreeTpl let-nodes let-depth="depth">
+    @for (node of nodes; track node.idPage) {
+      <div class="app-nav-node" [style.paddingLeft.px]="depth * 10">
+        <div class="app-nav-row">
+          @if (node.children.length) {
+            <button type="button" class="app-expand" (click)="toggleMenuNode(node, $event)">
+              <i [class]="node.expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i>
+            </button>
+          } @else {
+            <span class="app-expand-placeholder"></span>
+          }
+
+          @if (node.routerLink) {
+            <a
+              [routerLink]="node.routerLink"
+              (click)="closeMobileSidebar()"
+              routerLinkActive="active"
+              class="app-nav-link"
+            >
+              <i [class]="node.icon"></i>
+              <span [class.is-hidden]="sidebarCollapsed() && !isMobile()">{{ node.label }}</span>
+            </a>
+          } @else {
+            <button type="button" class="app-nav-link" (click)="toggleMenuNode(node, $event)">
+              <i [class]="node.icon"></i>
+              <span [class.is-hidden]="sidebarCollapsed() && !isMobile()">{{ node.label }}</span>
+            </button>
+          }
+        </div>
+
+        @if (node.children.length && node.expanded) {
+          <div class="app-nav-children">
+            <ng-container
+              *ngTemplateOutlet="menuTreeTpl; context: { $implicit: node.children, depth: depth + 1 }"
+            ></ng-container>
+          </div>
+        }
+      </div>
+    }
+  </ng-template>
+</div>

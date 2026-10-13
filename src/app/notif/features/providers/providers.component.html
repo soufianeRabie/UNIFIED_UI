@@ -1,0 +1,251 @@
+<div class="np-page">
+  <div class="np-page-header">
+    <div>
+      <div class="np-eyebrow"><i class="pi pi-send"></i> Eyebrow</div>
+      <div class="np-page-title">Page Title</div>
+      <div class="np-page-subtitle">Page Subtitle</div>
+    </div>
+    <button class="np-btn np-btn--ghost" (click)="load()"><i class="pi pi-refresh"></i> Reload</button>
+  </div>
+
+  <p-message *ngIf="status" [severity]="status.type" [text]="status.message"></p-message>
+
+  <p-tabs [value]="0">
+    <p-tablist>
+      <p-tab [value]="0"><i class="pi pi-envelope" style="margin-right:6px"></i> Tab Email</p-tab>
+      <p-tab [value]="1"><i class="pi pi-mobile" style="margin-right:6px"></i> Tab Sms</p-tab>
+    </p-tablist>
+    <p-tabpanels>
+
+      <!-- ── EMAIL ── -->
+      <p-tabpanel [value]="0">
+        <div class="np-split" style="margin-top:4px">
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <div class="np-card">
+              <div class="np-card-header">
+                <div class="np-card-title"><i class="pi pi-envelope"></i> {{ selectedEmail ? 'Edit Provider' : 'New Email Provider' }}</div>
+                <div class="np-btn-row">
+                  <button *ngIf="selectedEmail" class="np-btn np-btn--ghost" style="padding:3px 10px;font-size:11px" (click)="resetEmailForm()">
+                    <i class="pi pi-times"></i> Cancel
+                  </button>
+                  <button class="np-btn np-btn--primary" [permAction]="selectedEmail ? perm.canUpdate(PAGE_CODE) : perm.canCreate(PAGE_CODE)" (click)="saveEmail()">
+                    <i class="pi pi-save"></i> {{ selectedEmail ? 'Update' : 'Create' }}
+                  </button>
+                </div>
+              </div>
+              <div class="np-card-body">
+                <form class="np-form" [formGroup]="emailForm">
+                  <div class="np-form-row">
+                    <div class="np-field">
+                      <label class="np-label">Provider Name</label>
+                      <input pInputText formControlName="name" placeholder="Main SMTP" />
+                    </div>
+                    <div class="np-field">
+                      <label class="np-label">Smtp Host</label>
+                      <input pInputText formControlName="host" placeholder="smtp.example.com" />
+                    </div>
+                  </div>
+                  <div class="np-form-row">
+                    <div class="np-field">
+                      <label class="np-label">Port</label>
+                      <p-inputNumber formControlName="port" [min]="1" [max]="65535"></p-inputNumber>
+                    </div>
+                    <div class="np-field">
+                      <label class="np-label">Username</label>
+                      <input pInputText formControlName="username" />
+                    </div>
+                  </div>
+                  <div class="np-field">
+                    <label class="np-label">Password</label>
+                    <input pInputText type="password" formControlName="password" placeholder="��������" />
+                  </div>
+                  <div class="np-form-row">
+                    <div class="np-field">
+                      <label class="np-label">From Address</label>
+                      <input pInputText formControlName="fromAddress" placeholder="noreply@company.com" />
+                    </div>
+                    <div class="np-field">
+                      <label class="np-label">From Name</label>
+                      <input pInputText formControlName="fromName" placeholder="My Application" />
+                    </div>
+                  </div>
+                  <div class="np-form-row">
+                    <div class="np-field">
+                      <label class="np-label">Priority Order</label>
+                      <p-inputNumber formControlName="priorityOrder" [min]="1"></p-inputNumber>
+                    </div>
+                    <div class="np-field" style="justify-content:flex-end;gap:14px;flex-direction:row;align-items:center;padding-top:20px">
+                      <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--s-text-2);cursor:pointer">
+                        <p-checkbox formControlName="useSsl" binary="true"></p-checkbox> Ssl
+                      </label>
+                      <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--s-text-2);cursor:pointer">
+                        <p-checkbox formControlName="isDefault" binary="true"></p-checkbox> Default
+                      </label>
+                      <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--s-text-2);cursor:pointer">
+                        <p-checkbox formControlName="isActive" binary="true"></p-checkbox> Active
+                      </label>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          <!-- Email list -->
+          <div class="np-card">
+            <div class="np-card-header">
+              <div class="np-card-title"><i class="pi pi-list"></i> Configured</div>
+              <button class="np-btn np-btn--ghost" [permAction]="perm.canCreate(PAGE_CODE)" style="padding:3px 10px;font-size:11px" (click)="resetEmailForm()">
+                <i class="pi pi-plus"></i> New
+              </button>
+            </div>
+            <div class="np-card-body np-card-body--flush">
+              <p-table [value]="emailProviders" styleClass="p-datatable-sm">
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th>Col Name</th>
+                    <th>Col Host</th>
+                    <th style="width:80px">Col Default</th>
+                    <th style="width:100px"></th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-p>
+                  <tr>
+                    <td>{{ p.name }}</td>
+                    <td><span class="np-muted">{{ p.host }}</span></td>
+                    <td>
+                      <span *ngIf="p.isDefault" class="np-badge np-badge--green">Default</span>
+                    </td>
+                    <td>
+                      <div class="np-btn-row">
+                        <button class="np-btn np-btn--ghost" [permAction]="perm.canUpdate(PAGE_CODE)" style="padding:3px 8px;font-size:11px" (click)="editEmail(p)"><i class="pi pi-pencil"></i></button>
+                        <button class="np-btn np-btn--danger" [permAction]="perm.canDelete(PAGE_CODE)" style="padding:3px 8px;font-size:11px" (click)="deleteEmail(p)"><i class="pi pi-trash"></i></button>
+                      </div>
+                    </td>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                  <tr><td colspan="4">
+                    <div class="np-empty np-empty--compact"><i class="pi pi-envelope"></i><div>No Email Providers</div></div>
+                  </td></tr>
+                </ng-template>
+              </p-table>
+            </div>
+          </div>
+        </div>
+      </p-tabpanel>
+
+      <!-- ── SMS ── -->
+      <p-tabpanel [value]="1">
+        <div class="np-split" style="margin-top:4px">
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <div class="np-card">
+              <div class="np-card-header">
+                <div class="np-card-title"><i class="pi pi-mobile"></i> {{ selectedSms ? 'Edit Provider' : 'New Sms Provider' }}</div>
+                <div class="np-btn-row">
+                  <button *ngIf="selectedSms" class="np-btn np-btn--ghost" style="padding:3px 10px;font-size:11px" (click)="resetSmsForm()">
+                    <i class="pi pi-times"></i> Cancel
+                  </button>
+                  <button class="np-btn np-btn--primary" [permAction]="selectedSms ? perm.canUpdate(PAGE_CODE) : perm.canCreate(PAGE_CODE)" (click)="saveSms()">
+                    <i class="pi pi-save"></i> {{ selectedSms ? 'Update' : 'Create' }}
+                  </button>
+                </div>
+              </div>
+              <div class="np-card-body">
+                <form class="np-form" [formGroup]="smsForm">
+                  <div class="np-form-row">
+                    <div class="np-field">
+                      <label class="np-label">Provider Name</label>
+                      <input pInputText formControlName="name" placeholder="Twilio" />
+                    </div>
+                    <div class="np-field">
+                      <label class="np-label">Provider Type</label>
+                      <input pInputText formControlName="providerType" placeholder="twilio, nexmo�" />
+                    </div>
+                  </div>
+                  <div class="np-field">
+                    <label class="np-label">Api Url</label>
+                    <input pInputText formControlName="apiUrl" placeholder="https://api.twilio.com/�" />
+                  </div>
+                  <div class="np-form-row">
+                    <div class="np-field">
+                      <label class="np-label">API key</label>
+                      <input pInputText formControlName="apiKey" />
+                    </div>
+                    <div class="np-field">
+                      <label class="np-label">Api Secret</label>
+                      <input pInputText type="password" formControlName="apiSecret" placeholder="��������" />
+                    </div>
+                  </div>
+                  <div class="np-form-row">
+                    <div class="np-field">
+                      <label class="np-label">Sender Id</label>
+                      <input pInputText formControlName="senderId" placeholder="+1234567890" />
+                    </div>
+                    <div class="np-field">
+                      <label class="np-label">Priority Order</label>
+                      <p-inputNumber formControlName="priorityOrder" [min]="1"></p-inputNumber>
+                    </div>
+                  </div>
+                  <div class="np-form-row">
+                    <div class="np-field" style="flex-direction:row;align-items:center;gap:14px;padding-top:4px">
+                      <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--s-text-2);cursor:pointer">
+                        <p-checkbox formControlName="isDefault" binary="true"></p-checkbox> Default
+                      </label>
+                      <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--s-text-2);cursor:pointer">
+                        <p-checkbox formControlName="isActive" binary="true"></p-checkbox> Active
+                      </label>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          <!-- SMS list -->
+          <div class="np-card">
+            <div class="np-card-header">
+              <div class="np-card-title"><i class="pi pi-list"></i> Configured</div>
+              <button class="np-btn np-btn--ghost" [permAction]="perm.canCreate(PAGE_CODE)" style="padding:3px 10px;font-size:11px" (click)="resetSmsForm()">
+                <i class="pi pi-plus"></i> New
+              </button>
+            </div>
+            <div class="np-card-body np-card-body--flush">
+              <p-table [value]="smsProviders" styleClass="p-datatable-sm">
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th>Col Name</th>
+                    <th>Col Type</th>
+                    <th style="width:80px">Col Default</th>
+                    <th style="width:100px"></th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-p>
+                  <tr>
+                    <td>{{ p.name }}</td>
+                    <td><span class="np-muted">{{ p.providerType }}</span></td>
+                    <td>
+                      <span *ngIf="p.isDefault" class="np-badge np-badge--green">Default</span>
+                    </td>
+                    <td>
+                      <div class="np-btn-row">
+                        <button class="np-btn np-btn--ghost" [permAction]="perm.canUpdate(PAGE_CODE)" style="padding:3px 8px;font-size:11px" (click)="editSms(p)"><i class="pi pi-pencil"></i></button>
+                        <button class="np-btn np-btn--danger" [permAction]="perm.canDelete(PAGE_CODE)" style="padding:3px 8px;font-size:11px" (click)="deleteSms(p)"><i class="pi pi-trash"></i></button>
+                      </div>
+                    </td>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                  <tr><td colspan="4">
+                    <div class="np-empty np-empty--compact"><i class="pi pi-mobile"></i><div>No Sms Providers</div></div>
+                  </td></tr>
+                </ng-template>
+              </p-table>
+            </div>
+          </div>
+        </div>
+      </p-tabpanel>
+
+    </p-tabpanels>
+  </p-tabs>
+</div>

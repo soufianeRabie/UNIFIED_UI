@@ -1,0 +1,858 @@
+<div class="nt-shell">
+
+  <!-- ══════════════════════════════════════════════════════════
+       LEFT PANEL — Template List
+  ═══════════════════════════════════════════════════════════ -->
+  <aside class="nt-list-panel">
+    <div class="nt-list-header">
+      <div class="nt-list-title">
+        <i class="pi pi-file-edit"></i>
+        <span>Templates</span>
+        <span class="nt-count-badge">{{ templates.length }}</span>
+      </div>
+      <button class="nt-new-btn" [permAction]="perm.canCreate(PAGE_CODE)" (click)="resetForm()" title="New template">
+        <i class="pi pi-plus"></i>
+      </button>
+    </div>
+
+    <div class="nt-list-search">
+      <i class="pi pi-search nt-list-search-icon"></i>
+      <input class="nt-list-search-input" [(ngModel)]="listSearch" [ngModelOptions]="{standalone:true}"
+        placeholder="Search templates�" />
+    </div>
+
+    <div class="nt-list-body">
+      <div class="nt-list-empty" *ngIf="!filteredTemplates.length">
+        <i class="pi pi-inbox"></i>
+        <span>No templates yet</span>
+      </div>
+
+      <button type="button" class="nt-list-item" *ngFor="let tpl of filteredTemplates"
+        [class.nt-list-item--active]="selected?.id === tpl.id"
+        (click)="selectTemplate(tpl)">
+        <div class="nt-list-item-icon"
+          [class.nt-list-item-icon--active]="tpl.isActive"
+          [class.nt-list-item-icon--draft]="!tpl.isActive">
+          <i class="pi" [class.pi-check-circle]="tpl.isActive" [class.pi-clock]="!tpl.isActive"></i>
+        </div>
+        <div class="nt-list-item-body">
+          <div class="nt-list-item-name">{{ getEventTypeLabel(tpl.eventTypeId) }}</div>
+          <div class="nt-list-item-meta">
+            <span class="nt-priority-dot" [attr.data-p]="'' + tpl.priority"></span>
+            {{ getPriorityLabel(tpl.priority) }}
+            &bull;
+            {{ tpl.isActive ? 'Active' : 'Draft' }}
+          </div>
+        </div>
+        <button class="nt-list-item-del" [permAction]="perm.canDelete(PAGE_CODE)" (click)="removeTemplate(tpl); $event.stopPropagation()" title="Delete">
+          <i class="pi pi-trash"></i>
+        </button>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ══════════════════════════════════════════════════════════
+       MAIN EDITOR AREA
+  ═══════════════════════════════════════════════════════════ -->
+  <main class="nt-editor">
+
+    <!-- Top bar -->
+    <div class="nt-editor-topbar">
+      <div class="nt-editor-breadcrumb">
+        <span *ngIf="!selected" class="nt-editor-breadcrumb-text">New Template</span>
+        <span *ngIf="selected" class="nt-editor-breadcrumb-text">
+          <span class="nt-code">{{ selectedEventType?.code || selected.id }}</span>
+        </span>
+        <span class="nt-status-pill nt-status-pill--active" *ngIf="selected?.isActive">Active</span>
+        <span class="nt-status-pill nt-status-pill--draft" *ngIf="selected && !selected.isActive">Draft</span>
+      </div>
+      <div class="nt-editor-actions">
+        <button class="nt-btn nt-btn--ghost" *ngIf="selected" [permAction]="perm.canUpdate(PAGE_CODE)" (click)="toggle()">
+          <i class="pi" [class.pi-pause-circle]="selected.isActive" [class.pi-play-circle]="!selected.isActive"></i>
+          {{ selected.isActive ? 'Deactivate' : 'Activate' }}
+        </button>
+        <button class="nt-btn nt-btn--ghost" (click)="resetForm()">
+          <i class="pi pi-plus"></i> New
+        </button>
+        <button class="nt-btn nt-btn--primary" [permAction]="isEditing ? perm.canUpdate(PAGE_CODE) : perm.canCreate(PAGE_CODE)" (click)="saveTemplate()">
+          <i class="pi" [class.pi-check]="isEditing" [class.pi-plus-circle]="!isEditing"></i>
+          {{ isEditing ? 'Save Changes' : 'Create Template' }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Status message -->
+    <div *ngIf="status" style="padding:0 24px">
+      <p-message [severity]="statusSeverity" [text]="status.message"></p-message>
+    </div>
+
+    <!-- Readiness checklist (inline, below topbar) -->
+    <div class="nt-readiness-bar">
+      <div class="nt-readiness-step" [class.done]="!!form.controls.eventTypeId.value">
+        <i class="pi" [class.pi-check-circle]="!!form.controls.eventTypeId.value" [class.pi-circle]="!form.controls.eventTypeId.value"></i>
+        Event type
+      </div>
+      <i class="pi pi-chevron-right nt-readiness-sep"></i>
+      <div class="nt-readiness-step" [class.done]="!!form.controls.defaultTitle.value">
+        <i class="pi" [class.pi-check-circle]="!!form.controls.defaultTitle.value" [class.pi-circle]="!form.controls.defaultTitle.value"></i>
+        Subject
+      </div>
+      <i class="pi pi-chevron-right nt-readiness-sep"></i>
+      <div class="nt-readiness-step" [class.done]="!!form.controls.defaultBody.value">
+        <i class="pi" [class.pi-check-circle]="!!form.controls.defaultBody.value" [class.pi-circle]="!form.controls.defaultBody.value"></i>
+        Body
+      </div>
+      <i class="pi pi-chevron-right nt-readiness-sep"></i>
+      <div class="nt-readiness-step" [class.done]="(form.controls.channels.value || []).length > 0">
+        <i class="pi" [class.pi-check-circle]="(form.controls.channels.value || []).length > 0" [class.pi-circle]="!(form.controls.channels.value || []).length"></i>
+        Channel
+      </div>
+      <i class="pi pi-chevron-right nt-readiness-sep"></i>
+      <div class="nt-readiness-step" [class.done]="!!selected?.targetResolvers?.length">
+        <i class="pi" [class.pi-check-circle]="selected?.targetResolvers?.length" [class.pi-circle]="!selected?.targetResolvers?.length"></i>
+        Recipients
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="nt-tabs-wrapper">
+      <p-tabs [value]="activeTab()" (valueChange)="activeTab.set(+$event!)">
+        <p-tablist>
+          <p-tab [value]="0"><i class="pi pi-pencil"></i> Compose</p-tab>
+          <p-tab [value]="1"><i class="pi pi-users"></i> Audience & Data</p-tab>
+          <p-tab [value]="2"><i class="pi pi-globe"></i> Localisations</p-tab>
+          <p-tab [value]="3"><i class="pi pi-eye"></i> Preview</p-tab>
+        </p-tablist>
+
+        <p-tabpanels>
+
+          <!-- ══ TAB 0 — COMPOSE ══════════════════════════════════════════ -->
+          <p-tabpanel [value]="0">
+            <div class="nt-compose-layout" [formGroup]="form">
+
+              <!-- ── Section: Identity ── -->
+              <section class="nt-section">
+                <div class="nt-section-header">
+                  <i class="pi pi-link"></i>
+                  <span class="nt-section-title">Template Identity</span>
+                </div>
+                <div class="nt-section-body">
+                  <div class="nt-row-2">
+                    <div class="nt-field">
+                      <label class="nt-label">Event Type <span class="nt-req">*</span></label>
+                      <p-select [options]="eventTypeOptions" formControlName="eventTypeId"
+                        placeholder="Select an event type" [filter]="true"
+                        filterPlaceholder="Search event types�"></p-select>
+                      <span class="nt-hint">The event that triggers this notification</span>
+                    </div>
+                    <div class="nt-field">
+                      <label class="nt-label">Priority</label>
+                      <p-select [options]="priorityOptions" formControlName="priority"></p-select>
+                    </div>
+                  </div>
+                  <div class="nt-field">
+                    <label class="nt-label">Delivery Channels</label>
+                    <p-multiSelect [options]="channelOptions" formControlName="channels"
+                      placeholder="Pick one or more channels" display="chip"></p-multiSelect>
+                    <span class="nt-hint"><i class="pi pi-lock" style="font-size:10px"></i> Channels are locked after creation</span>
+                  </div>
+                </div>
+              </section>
+
+              <!-- ── Section: Message Content ── -->
+              <section class="nt-section">
+                <div class="nt-section-header">
+                  <i class="pi pi-file-edit"></i>
+                  <span class="nt-section-title">Message Content</span>
+                  <div class="nt-section-actions" *ngIf="availableTemplateVariables.length > 0">
+                    <span class="nt-hint" style="margin:0">Insert variable:</span>
+                    <div class="nt-token-row">
+                      <button class="nt-token" type="button" *ngFor="let key of availableTemplateVariables"
+                        draggable="true" (dragstart)="onColumnDragStart($event, key)"
+                        (click)="insertToken('{{' + key + '}}')">
+                        <i class="pi pi-plus" style="font-size:9px"></i>{{ key }}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div class="nt-section-body">
+                  <div class="nt-field">
+                    <label class="nt-label">Subject / Title <span class="nt-req">*</span></label>
+                    <input pInputText formControlName="defaultTitle" placeholder="e.g. Your booking is confirmed" />
+                  </div>
+                  <div class="nt-field">
+                    <label class="nt-label">Body <span class="nt-req">*</span></label>
+                    <textarea pTextarea formControlName="defaultBody" [rows]="16"
+                      placeholder="Write the notification body here. Drag variables from above to insert them."
+                      (drop)="onBodyDrop($event)" (dragover)="onBodyDragOver($event)"
+                      style="font-family:var(--s-font-mono, monospace);font-size:13px;line-height:1.6;resize:vertical"></textarea>
+                  </div>
+                  <div class="nt-toggles">
+                    <label class="nt-toggle-item">
+                      <p-checkbox formControlName="isHtml" binary="true" inputId="isHtml"></p-checkbox>
+                      <span class="nt-toggle-text">
+                        <span class="nt-toggle-name">Render as HTML</span>
+                        <span class="nt-toggle-hint">Body is interpreted as HTML markup</span>
+                      </span>
+                    </label>
+                    <label class="nt-toggle-item" *ngIf="isEditing">
+                      <p-checkbox formControlName="isActive" binary="true" inputId="isActive"></p-checkbox>
+                      <span class="nt-toggle-text">
+                        <span class="nt-toggle-name">Active</span>
+                        <span class="nt-toggle-hint">Template can be triggered by events</span>
+                      </span>
+                    </label>
+                  </div>
+                </div>
+              </section>
+
+              <!-- ── Section: Schedule & Retry ── -->
+              <section class="nt-section">
+                <div class="nt-section-header">
+                  <i class="pi pi-clock"></i>
+                  <span class="nt-section-title">Schedule & Retry</span>
+                </div>
+                <div class="nt-section-body">
+                  <div class="nt-field">
+                    <label class="nt-label">Schedule Mode</label>
+                    <p-selectButton [options]="scheduleOptions" formControlName="scheduleType"></p-selectButton>
+                  </div>
+
+                  <div class="nt-row-2" *ngIf="scheduleTypeValue === 1">
+                    <div class="nt-field">
+                      <label class="nt-label">Delay (minutes)</label>
+                      <p-inputNumber formControlName="delayMinutes" [min]="0" [showButtons]="true"></p-inputNumber>
+                    </div>
+                    <div class="nt-field">
+                      <label class="nt-label">Quick Presets</label>
+                      <div style="display:flex;gap:8px;flex-wrap:wrap;padding-top:6px">
+                        <button *ngFor="let p of delayPresets" type="button" class="nt-preset-btn"
+                          (click)="applyDelayPreset(p.value)">{{ p.label }}</button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="nt-row-2" *ngIf="scheduleTypeValue === 2">
+                    <div class="nt-field">
+                      <label class="nt-label">Cron Expression</label>
+                      <input pInputText formControlName="cronExpression" placeholder="*/5 * * * *" />
+                    </div>
+                    <div class="nt-field">
+                      <label class="nt-label">Preset</label>
+                      <p-select [options]="cronPresets" optionLabel="label" optionValue="value"
+                        placeholder="Choose a preset" (onChange)="applyCronPreset($event.value)"></p-select>
+                    </div>
+                  </div>
+
+                  <div class="nt-row-2">
+                    <div class="nt-field">
+                      <label class="nt-label">Max Retries</label>
+                      <p-inputNumber formControlName="maxRetries" [min]="0" [showButtons]="true"></p-inputNumber>
+                    </div>
+                    <div class="nt-field">
+                      <label class="nt-label">Retry Delay (seconds)</label>
+                      <p-inputNumber formControlName="retryDelaySeconds" [min]="0" [showButtons]="true"></p-inputNumber>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              <!-- ── Section: Attachment ── -->
+              <section class="nt-section" [formGroup]="attachmentForm">
+                <div class="nt-section-header">
+                  <i class="pi pi-paperclip"></i>
+                  <span class="nt-section-title">File Attachment</span>
+                  <div class="nt-section-actions">
+                    <label class="nt-toggle-item" style="padding:0;background:transparent">
+                      <p-checkbox formControlName="enabled" binary="true" inputId="attachEnabled"></p-checkbox>
+                      <span class="nt-toggle-text">
+                        <span class="nt-toggle-name" style="font-size:12px">Enable attachment</span>
+                      </span>
+                    </label>
+                  </div>
+                </div>
+                <div class="nt-section-body" *ngIf="!attachmentEnabled">
+                  <div class="nt-hint-block">
+                    <i class="pi pi-info-circle"></i>
+                    Enable to attach a generated Excel, CSV or PDF file to this notification email. The file is built from a SQL data source at send time.
+                  </div>
+                </div>
+                <div class="nt-section-body" *ngIf="attachmentEnabled">
+                  <div class="nt-row-2">
+                    <div class="nt-field">
+                      <label class="nt-label">File Type <span class="nt-req">*</span></label>
+                      <p-selectButton [options]="attachmentTypeOptions" formControlName="type"></p-selectButton>
+                    </div>
+                    <div class="nt-field">
+                      <label class="nt-label">Filename <span class="nt-req">*</span></label>
+                      <input pInputText formControlName="filename" placeholder="report" />
+                      <span class="nt-hint">Without extension — added automatically</span>
+                    </div>
+                  </div>
+                  <div class="nt-row-2">
+                    <div class="nt-field">
+                      <label class="nt-label">Sheet / Tab Name</label>
+                      <input pInputText formControlName="sheetName" placeholder="Sheet1" />
+                    </div>
+                    <div class="nt-field">
+                      <label class="nt-label">Report Title</label>
+                      <input pInputText formControlName="reportTitle" placeholder="e.g. Monthly Summary" />
+                      <span class="nt-hint">Printed at top of the Excel sheet</span>
+                    </div>
+                  </div>
+                  <div class="nt-field">
+                    <label class="nt-label">Data Source</label>
+                    <p-select [options]="dataSourceOptions" formControlName="dataSourceId"
+                      placeholder="Select SQL data source for the file contents"></p-select>
+                    <span class="nt-hint">The query result becomes the file rows. No data source = empty attachment.</span>
+                  </div>
+                  <div *ngIf="selectedAttachmentColumns.length > 0" class="nt-columns-preview">
+                    <div class="nt-hint" style="margin-bottom:6px"><i class="pi pi-table" style="font-size:10px"></i> File columns:</div>
+                    <div class="nt-token-row">
+                      <span class="nt-token" *ngFor="let col of selectedAttachmentColumns">{{ col }}</span>
+                    </div>
+                  </div>
+                  <div class="nt-field">
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+                      <label class="nt-label" style="margin:0">Parameter Mappings</label>
+                      <div style="display:flex;gap:8px">
+                        <button type="button" class="nt-btn nt-btn--ghost nt-btn--sm" (click)="autoFillAttachmentMappings()">
+                          <i class="pi pi-bolt"></i> Auto Map
+                        </button>
+                        <button type="button" class="nt-btn nt-btn--ghost nt-btn--sm" (click)="addAttachmentMappingRow()">
+                          <i class="pi pi-plus"></i> Add Row
+                        </button>
+                      </div>
+                    </div>
+                    <ng-container *ngIf="attachmentMappings.length > 0">
+                      <div class="nt-kv-header"><span>SQL Parameter</span><span>Template Variable</span><span></span></div>
+                      <div class="nt-kv-list">
+                        <div class="nt-kv-row" *ngFor="let row of attachmentMappings; let i = index">
+                          <input pInputText [(ngModel)]="row.param" [ngModelOptions]="{standalone:true}" placeholder="userId" />
+                          <input pInputText [(ngModel)]="row.variable" [ngModelOptions]="{standalone:true}" placeholder="userId" />
+                          <button class="nt-icon-btn nt-icon-btn--danger" (click)="removeAttachmentMappingRow(i)"><i class="pi pi-trash"></i></button>
+                        </div>
+                      </div>
+                    </ng-container>
+                    <div class="nt-hint" *ngIf="!attachmentMappings.length">Map event payload variables to SQL parameters, or click Auto Map.</div>
+                  </div>
+                </div>
+              </section>
+
+            </div>
+          </p-tabpanel>
+
+          <!-- ══ TAB 1 — AUDIENCE & DATA ══════════════════════════════════ -->
+          <p-tabpanel [value]="1">
+            <div class="nt-locked-banner" *ngIf="!canEditDetails">
+              <i class="pi pi-lock"></i>
+              <div>
+                <strong>Create the template first</strong>
+                <span>Go to Compose, fill in the required fields, and click Create Template.</span>
+              </div>
+            </div>
+
+            <div class="nt-audience-layout" *ngIf="canEditDetails">
+
+              <!-- Recipients -->
+              <section class="nt-section">
+                <div class="nt-section-header">
+                  <i class="pi pi-users"></i>
+                  <span class="nt-section-title">Recipients</span>
+                  <div class="nt-section-actions">
+                    <button class="nt-btn nt-btn--ghost nt-btn--sm" (click)="openAudienceDialog()">
+                      <i class="pi pi-users"></i> Audience List
+                    </button>
+                    <button class="nt-btn nt-btn--ghost nt-btn--sm" (click)="openResolverDialog()">
+                      <i class="pi pi-sliders-h"></i> Add Resolver
+                    </button>
+                  </div>
+                </div>
+                <div class="nt-section-body">
+                  <div class="nt-empty-state" *ngIf="!selected?.targetResolvers?.length">
+                    <i class="pi pi-users"></i>
+                    <span>No recipients configured — add a resolver to define who receives this notification</span>
+                  </div>
+                  <div class="nt-resolver-list" *ngIf="selected?.targetResolvers?.length">
+                    <div class="nt-resolver-item" *ngFor="let r of selected?.targetResolvers">
+                      <div class="nt-resolver-icon">
+                        <i class="pi pi-user-plus"></i>
+                      </div>
+                      <div class="nt-resolver-body">
+                        <div class="nt-resolver-type">{{ getResolverLabel(r.resolverType) }}</div>
+                        <div class="nt-resolver-meta">{{ getResolverConfigSummary(r) }}</div>
+                      </div>
+                      <button class="nt-icon-btn nt-icon-btn--danger" (click)="removeResolver(r)" title="Remove">
+                        <i class="pi pi-trash"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              <!-- Data Bindings -->
+              <section class="nt-section">
+                <div class="nt-section-header">
+                  <i class="pi pi-database"></i>
+                  <span class="nt-section-title">Data Bindings</span>
+                  <div class="nt-section-actions">
+                    <button class="nt-btn nt-btn--ghost nt-btn--sm" (click)="openBindingDialog()">
+                      <i class="pi pi-link"></i> Add Binding
+                    </button>
+                  </div>
+                </div>
+                <div class="nt-section-body">
+                  <div class="nt-hint-block">
+                    <i class="pi pi-info-circle"></i>
+                    Data bindings let you query a SQL data source and inject columns as template variables — e.g. <code>customerName</code> becomes available in your body.
+                  </div>
+                  <div class="nt-empty-state" *ngIf="!selected?.dataBindings?.length">
+                    <i class="pi pi-database"></i>
+                    <span>No data bindings — attach a data source to enrich your notification with dynamic data</span>
+                  </div>
+                  <div class="nt-binding-list" *ngIf="selected?.dataBindings?.length">
+                    <div class="nt-binding-item" *ngFor="let b of selected?.dataBindings">
+                      <div class="nt-binding-icon">
+                        <i class="pi pi-database"></i>
+                      </div>
+                      <div class="nt-binding-body">
+                        <div class="nt-binding-name">{{ getDataSourceName(b.dataSourceId) }}</div>
+                        <div class="nt-binding-meta">Order {{ b.executionOrder }} &bull; {{ getBindingSummary(b) }}</div>
+                      </div>
+                      <button class="nt-icon-btn nt-icon-btn--danger" (click)="removeBinding(b)" title="Remove">
+                        <i class="pi pi-trash"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+            </div>
+          </p-tabpanel>
+
+          <!-- ══ TAB 2 — LOCALISATIONS ════════════════════════════════════ -->
+          <p-tabpanel [value]="2">
+            <div class="nt-locked-banner" *ngIf="!canEditDetails">
+              <i class="pi pi-lock"></i>
+              <div>
+                <strong>Create the template first</strong>
+                <span>Go to Compose, fill in the required fields, and click Create Template.</span>
+              </div>
+            </div>
+
+            <div *ngIf="canEditDetails">
+              <section class="nt-section">
+                <div class="nt-section-header">
+                  <i class="pi pi-globe"></i>
+                  <span class="nt-section-title">Translated Content</span>
+                  <div class="nt-section-actions">
+                    <button class="nt-btn nt-btn--ghost nt-btn--sm" (click)="openLocaleDialog()">
+                      <i class="pi pi-language"></i> Add Locale
+                    </button>
+                  </div>
+                </div>
+                <div class="nt-section-body">
+                  <div class="nt-empty-state" *ngIf="!selected?.locales?.length">
+                    <i class="pi pi-globe"></i>
+                    <span>No localisations yet — add translations for other languages</span>
+                  </div>
+                  <div class="nt-locale-list" *ngIf="selected?.locales?.length">
+                    <div class="nt-locale-item" *ngFor="let l of selected?.locales">
+                      <div class="nt-locale-lang">{{ l.languageCode }}</div>
+                      <div class="nt-locale-body">
+                        <div class="nt-locale-title">{{ l.title }}</div>
+                        <div class="nt-locale-preview" [innerHTML]="l.body"></div>
+                      </div>
+                      <button class="nt-icon-btn" (click)="editLocale(l)" title="Edit">
+                        <i class="pi pi-pencil"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </p-tabpanel>
+
+          <!-- ══ TAB 3 — PREVIEW ══════════════════════════════════════════ -->
+          <p-tabpanel [value]="3">
+            <div class="nt-locked-banner" *ngIf="!canEditDetails">
+              <i class="pi pi-lock"></i>
+              <div>
+                <strong>Create the template first</strong>
+                <span>Go to Compose, fill in the required fields, and click Create Template.</span>
+              </div>
+            </div>
+
+            <div class="nt-preview-layout" *ngIf="canEditDetails">
+
+              <!-- Sample data panel -->
+              <section class="nt-section">
+                <div class="nt-section-header">
+                  <i class="pi pi-sliders-h"></i>
+                  <span class="nt-section-title">Sample Data</span>
+                  <div class="nt-section-actions">
+                    <button class="nt-btn nt-btn--ghost nt-btn--sm" (click)="autoFillPreviewRows()">
+                      <i class="pi pi-bolt"></i> Auto Fill
+                    </button>
+                    <button class="nt-btn nt-btn--ghost nt-btn--sm" (click)="addPreviewRow()">
+                      <i class="pi pi-plus"></i> Add Row
+                    </button>
+                  </div>
+                </div>
+                <div class="nt-section-body">
+                  <form [formGroup]="previewForm">
+                    <div class="nt-field" style="max-width:280px">
+                      <label class="nt-label">Language Override</label>
+                      <p-select [options]="selected?.locales || []" optionLabel="languageCode" optionValue="languageCode"
+                        formControlName="languageCode" placeholder="Default template language" [showClear]="true"></p-select>
+                    </div>
+                  </form>
+
+                  <div *ngIf="availableTemplateVariables.length > 0" style="margin:14px 0 6px">
+                    <div class="nt-hint" style="margin-bottom:8px"><i class="pi pi-tags" style="font-size:10px"></i> Click to add known variables</div>
+                    <div class="nt-token-row">
+                      <button class="nt-token" type="button" *ngFor="let key of availableTemplateVariables"
+                        (click)="addVariableToPreview(key)">
+                        <i class="pi pi-plus" style="font-size:9px"></i>{{ key }}
+                      </button>
+                    </div>
+                  </div>
+
+                  <div *ngIf="previewRows.length > 0" style="margin-top:14px">
+                    <div class="nt-kv-header">
+                      <span>Variable</span><span>Sample Value</span><span></span>
+                    </div>
+                    <div class="nt-kv-list">
+                      <div class="nt-kv-row" *ngFor="let row of previewRows; let i = index">
+                        <input pInputText [(ngModel)]="row.key" [ngModelOptions]="{standalone:true}" placeholder="variableName" />
+                        <input pInputText [(ngModel)]="row.value" [ngModelOptions]="{standalone:true}" placeholder="sample value" />
+                        <button class="nt-icon-btn nt-icon-btn--danger" (click)="removePreviewRow(i)">
+                          <i class="pi pi-trash"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div style="margin-top:16px;display:flex;justify-content:flex-end">
+                    <button class="nt-btn nt-btn--primary" (click)="preview()">
+                      <i class="pi pi-play"></i> Run Preview
+                    </button>
+                  </div>
+                </div>
+              </section>
+
+              <!-- Rendered output -->
+              <section class="nt-section">
+                <div class="nt-section-header">
+                  <i class="pi pi-eye"></i>
+                  <span class="nt-section-title">Rendered Output</span>
+                </div>
+                <div class="nt-section-body">
+                  <div class="nt-empty-state" *ngIf="!renderedPreview">
+                    <i class="pi pi-play-circle"></i>
+                    <span>Fill in sample data and click Run Preview</span>
+                  </div>
+                  <ng-container *ngIf="renderedPreview">
+                    <div class="nt-preview-card">
+                      <div class="nt-preview-card-subject">{{ renderedPreview.title }}</div>
+                      <div class="nt-preview-card-body" *ngIf="renderedPreview.isHtml" [innerHTML]="renderedPreview.body"></div>
+                      <div class="nt-preview-card-body" *ngIf="!renderedPreview.isHtml" style="white-space:pre-wrap">{{ renderedPreview.body }}</div>
+                    </div>
+                    <div *ngIf="renderedPreview.unresolvedPlaceholders.length > 0" style="margin-top:14px">
+                      <div class="nt-hint" style="margin-bottom:6px;color:var(--s-amber)">
+                        <i class="pi pi-exclamation-triangle" style="font-size:11px"></i> Missing values:
+                      </div>
+                      <div class="nt-token-row">
+                        <span class="nt-token nt-token--warn" *ngFor="let key of renderedPreview.unresolvedPlaceholders">{{ key }}</span>
+                      </div>
+                    </div>
+                  </ng-container>
+                </div>
+              </section>
+
+            </div>
+          </p-tabpanel>
+
+        </p-tabpanels>
+      </p-tabs>
+    </div>
+
+  </main>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     DIALOGS
+═══════════════════════════════════════════════════════════════════════ -->
+
+<!-- Audience dialog -->
+<p-dialog header="Select Recipients" [(visible)]="showAudienceDialog" [modal]="true"
+  [draggable]="false" [style]="{ width: '760px', maxWidth: '95vw' }">
+  <div class="nt-dialog-body">
+    <div class="nt-field">
+      <label class="nt-label">Source Type</label>
+      <p-selectButton [options]="audienceTypes" optionLabel="label" optionValue="value"
+        [ngModel]="audienceType" (onChange)="setAudienceType($event.value)"
+        [ngModelOptions]="{standalone:true}"></p-selectButton>
+    </div>
+    <div class="nt-row-2">
+      <div class="nt-field" *ngIf="audienceType === 'role'">
+        <label class="nt-label">Role</label>
+        <p-select [options]="audienceRoles" optionLabel="roleName" optionValue="roleCode"
+          [(ngModel)]="selectedAudienceRole" [ngModelOptions]="{standalone:true}"
+          placeholder="Select role" (onChange)="onAudienceRoleChange()"></p-select>
+      </div>
+      <div class="nt-field" *ngIf="audienceType === 'group'">
+        <label class="nt-label">Group</label>
+        <p-select [options]="audienceGroups" optionLabel="groupName" optionValue="groupCode"
+          [(ngModel)]="selectedAudienceGroup" [ngModelOptions]="{standalone:true}"
+          placeholder="Select group" (onChange)="onAudienceGroupChange()"></p-select>
+      </div>
+      <div class="nt-field">
+        <label class="nt-label">Search</label>
+        <input pInputText [(ngModel)]="audienceSearch" [ngModelOptions]="{standalone:true}" placeholder="Name, email or ID" />
+      </div>
+    </div>
+    <div class="nt-audience-meta">
+      <strong>{{ selectedAudienceCount }}</strong> of {{ audienceUsers.length }} selected
+      <span *ngIf="audienceLoading"><i class="pi pi-spin pi-spinner"></i> Loading�</span>
+    </div>
+    <div class="nt-audience-list" *ngIf="filteredAudienceUsers.length > 0">
+      <div class="nt-audience-user" *ngFor="let user of filteredAudienceUsers">
+        <p-checkbox [binary]="true" [ngModel]="isAudienceSelected(user.userId)"
+          (onChange)="toggleAudienceUser(user.userId, $event.checked)"
+          [ngModelOptions]="{standalone:true}"></p-checkbox>
+        <div class="nt-audience-avatar">{{ (user.fullName || user.userId || '?').charAt(0).toUpperCase() }}</div>
+        <div class="nt-audience-info">
+          <div class="nt-audience-name">{{ user.fullName || user.userId }}</div>
+          <div class="nt-audience-email">{{ user.email || 'No email' }}</div>
+        </div>
+        <span class="nt-status-pill nt-status-pill--draft" *ngIf="user.isActive === false">Inactive</span>
+      </div>
+    </div>
+    <div class="nt-empty-state" *ngIf="!audienceLoading && filteredAudienceUsers.length === 0">
+      <i class="pi pi-users"></i><span>No users match your filter</span>
+    </div>
+  </div>
+  <ng-template pTemplate="footer">
+    <div class="nt-dialog-footer">
+      <button class="nt-btn nt-btn--ghost" (click)="selectAllAudienceUsers()"><i class="pi pi-check-square"></i> Select All</button>
+      <button class="nt-btn nt-btn--ghost" (click)="clearAudienceUsers()"><i class="pi pi-times-circle"></i> Clear</button>
+      <div style="flex:1"></div>
+      <button class="nt-btn nt-btn--ghost" (click)="showAudienceDialog = false">Cancel</button>
+      <button class="nt-btn nt-btn--primary" (click)="addAudienceResolver()"><i class="pi pi-user-plus"></i> Add Recipients</button>
+    </div>
+  </ng-template>
+</p-dialog>
+
+<!-- Binding dialog -->
+<p-dialog header="Add Data Binding" [(visible)]="showBindingDialog" [modal]="true"
+  [draggable]="false" [style]="{ width: '720px', maxWidth: '95vw' }">
+  <div class="nt-dialog-body">
+    <form [formGroup]="bindingForm">
+      <div class="nt-row-2">
+        <div class="nt-field">
+          <label class="nt-label">Data Source <span class="nt-req">*</span></label>
+          <p-select [options]="dataSourceOptions" formControlName="dataSourceId"
+            placeholder="Select data source" (onChange)="onBindingDataSourceChange()"></p-select>
+        </div>
+        <div class="nt-field">
+          <label class="nt-label">Execution Order</label>
+          <p-inputNumber formControlName="executionOrder" [min]="1" [showButtons]="true"></p-inputNumber>
+          <span class="nt-hint">Lower order runs first</span>
+        </div>
+      </div>
+      <div *ngIf="selectedBindingColumns.length > 0" class="nt-columns-preview">
+        <div class="nt-hint" style="margin-bottom:6px"><i class="pi pi-table" style="font-size:10px"></i> Variables added by this source:</div>
+        <div class="nt-token-row">
+          <span class="nt-token" *ngFor="let col of selectedBindingColumns">{{ col }}</span>
+        </div>
+      </div>
+      <div class="nt-field" style="margin-top:4px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+          <label class="nt-label" style="margin:0">Parameter Mappings</label>
+          <div style="display:flex;gap:8px">
+            <button type="button" class="nt-btn nt-btn--ghost nt-btn--sm" (click)="autoFillBindingMappings()">
+              <i class="pi pi-bolt"></i> Auto Map
+            </button>
+            <button type="button" class="nt-btn nt-btn--ghost nt-btn--sm" (click)="addBindingMappingRow()">
+              <i class="pi pi-plus"></i> Add Row
+            </button>
+          </div>
+        </div>
+        <ng-container *ngIf="bindingMappings.length > 0">
+          <div class="nt-kv-header"><span>SQL Parameter</span><span>Template Variable</span><span></span></div>
+          <div class="nt-kv-list">
+            <div class="nt-kv-row" *ngFor="let row of bindingMappings; let i = index">
+              <input pInputText [(ngModel)]="row.param" [ngModelOptions]="{standalone:true}" placeholder="userId" />
+              <input pInputText [(ngModel)]="row.variable" [ngModelOptions]="{standalone:true}" placeholder="userId" />
+              <button class="nt-icon-btn nt-icon-btn--danger" (click)="removeBindingMappingRow(i)"><i class="pi pi-trash"></i></button>
+            </div>
+          </div>
+        </ng-container>
+        <div class="nt-hint" *ngIf="!bindingMappings.length">Click Auto Map if the data source has known parameters, or add rows manually.</div>
+      </div>
+    </form>
+  </div>
+  <ng-template pTemplate="footer">
+    <div class="nt-dialog-footer">
+      <button class="nt-btn nt-btn--ghost" (click)="showBindingDialog = false">Cancel</button>
+      <button class="nt-btn nt-btn--primary" (click)="addBinding()"><i class="pi pi-link"></i> Add Binding</button>
+    </div>
+  </ng-template>
+</p-dialog>
+
+<!-- Resolver dialog -->
+<p-dialog header="Add Resolver" [(visible)]="showResolverDialog" [modal]="true"
+  [draggable]="false" [style]="{ width: '720px', maxWidth: '95vw' }">
+  <div class="nt-dialog-body">
+    <form [formGroup]="resolverForm">
+      <div class="nt-field">
+        <label class="nt-label">Resolver Type <span class="nt-req">*</span></label>
+        <p-select [options]="resolverTypes" optionLabel="label" optionValue="id"
+          formControlName="resolverType" (onChange)="onResolverTypeChange()"></p-select>
+        <span class="nt-hint" *ngIf="resolverTypeDescription">{{ resolverTypeDescription }}</span>
+      </div>
+
+      <div class="nt-field" *ngIf="resolverTypeValue === 1">
+        <label class="nt-label">User ID Field <span class="nt-req">*</span></label>
+        <p-select [options]="availableTemplateVariables" formControlName="userIdField"
+          placeholder="Choose a variable from event payload" [editable]="true"
+          (onChange)="setResolverConfigValue('field', $event.value)"></p-select>
+        <span class="nt-hint">The event payload field that contains the target user's ID</span>
+      </div>
+
+      <div class="nt-field" *ngIf="resolverTypeValue === 2">
+        <label class="nt-label">Role <span class="nt-req">*</span></label>
+        <p-select [options]="audienceRoles" optionLabel="roleName" optionValue="roleCode"
+          formControlName="role" placeholder="Choose a role" [filter]="true"
+          (onChange)="setResolverConfigValue('role', $event.value)"></p-select>
+      </div>
+
+      <div class="nt-field" *ngIf="resolverTypeValue === 3">
+        <label class="nt-label">Group <span class="nt-req">*</span></label>
+        <p-select [options]="audienceGroups" optionLabel="groupName" optionValue="groupCode"
+          formControlName="groupCode" placeholder="Choose a group" [filter]="true"
+          (onChange)="setResolverConfigValue('groupCode', $event.value)"></p-select>
+      </div>
+
+      <ng-container *ngIf="resolverTypeValue === 4">
+        <div class="nt-field">
+          <label class="nt-label">Data Source <span class="nt-req">*</span></label>
+          <p-select [options]="dataSourceOptions" formControlName="dataSourceId"
+            placeholder="Select SQL data source" (onChange)="onResolverDataSourceChange()"></p-select>
+        </div>
+        <div *ngIf="selectedResolverColumns.length > 0" class="nt-columns-preview">
+          <div class="nt-hint" style="margin-bottom:6px">Returned columns (must include a user ID column):</div>
+          <div class="nt-token-row">
+            <span class="nt-token" *ngFor="let col of selectedResolverColumns">{{ col }}</span>
+          </div>
+        </div>
+        <div class="nt-field">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+            <label class="nt-label" style="margin:0">Parameters</label>
+            <div style="display:flex;gap:8px">
+              <button type="button" class="nt-btn nt-btn--ghost nt-btn--sm" (click)="autoFillResolverMappings()">
+                <i class="pi pi-bolt"></i> Auto Map
+              </button>
+              <button type="button" class="nt-btn nt-btn--ghost nt-btn--sm" (click)="addResolverMappingRow()">
+                <i class="pi pi-plus"></i> Add Row
+              </button>
+            </div>
+          </div>
+          <ng-container *ngIf="resolverMappings.length > 0">
+            <div class="nt-kv-header"><span>SQL Parameter</span><span>Template Variable</span><span></span></div>
+            <div class="nt-kv-list">
+              <div class="nt-kv-row" *ngFor="let row of resolverMappings; let i = index">
+                <input pInputText [(ngModel)]="row.param" [ngModelOptions]="{standalone:true}" placeholder="userId" />
+                <input pInputText [(ngModel)]="row.variable" [ngModelOptions]="{standalone:true}" placeholder="userId" />
+                <button class="nt-icon-btn nt-icon-btn--danger" (click)="removeResolverMappingRow(i)"><i class="pi pi-trash"></i></button>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </ng-container>
+
+      <div class="nt-hint-block" *ngIf="resolverTypeValue === 5">
+        <i class="pi pi-broadcast"></i>
+        All active users in the tenant will receive this notification.
+      </div>
+
+      <!-- Extra config rows for all resolver types -->
+      <div class="nt-field" *ngIf="resolverTypeValue !== 5">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+          <label class="nt-label" style="margin:0">Extra Settings</label>
+          <button type="button" class="nt-btn nt-btn--ghost nt-btn--sm" (click)="addResolverConfigRow()">
+            <i class="pi pi-plus"></i> Add Setting
+          </button>
+        </div>
+        <ng-container *ngIf="resolverConfigRows.length > 0">
+          <div class="nt-kv-header"><span>Key</span><span>Value</span><span></span></div>
+          <div class="nt-kv-list">
+            <div class="nt-kv-row" *ngFor="let row of resolverConfigRows; let i = index">
+              <input pInputText [(ngModel)]="row.key" [ngModelOptions]="{standalone:true}" placeholder="field" />
+              <input pInputText [(ngModel)]="row.value" [ngModelOptions]="{standalone:true}" placeholder="value" />
+              <button class="nt-icon-btn nt-icon-btn--danger" (click)="removeResolverConfigRow(i)"><i class="pi pi-trash"></i></button>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </form>
+  </div>
+  <ng-template pTemplate="footer">
+    <div class="nt-dialog-footer">
+      <button class="nt-btn nt-btn--ghost" (click)="showResolverDialog = false">Cancel</button>
+      <button class="nt-btn nt-btn--primary" (click)="addResolver()"><i class="pi pi-user-plus"></i> Add Resolver</button>
+    </div>
+  </ng-template>
+</p-dialog>
+
+<!-- Locale dialog -->
+<p-dialog [header]="editingLocaleId ? 'Edit Localisation' : 'Add Localisation'"
+  [(visible)]="showLocaleDialog" [modal]="true" [draggable]="false"
+  [style]="{ width: '760px', maxWidth: '95vw' }">
+  <div class="nt-dialog-body">
+    <form [formGroup]="localeForm">
+      <div class="nt-row-2">
+        <div class="nt-field">
+          <label class="nt-label">Language Code <span class="nt-req">*</span></label>
+          <input pInputText formControlName="languageCode" placeholder="en, fr, ar, de�" />
+          <span class="nt-hint">ISO 639-1 code (2 letters)</span>
+        </div>
+        <div class="nt-field">
+          <label class="nt-label">Subject <span class="nt-req">*</span></label>
+          <input pInputText formControlName="title" placeholder="Localised subject line" />
+        </div>
+      </div>
+      <div class="nt-field">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+          <label class="nt-label" style="margin:0">Body <span class="nt-req">*</span></label>
+          <span class="nt-hint" style="margin:0">HTML or plain text</span>
+        </div>
+        <textarea pTextarea formControlName="body" [rows]="14"
+          placeholder="Translated body — drag or click variables below to insert them"
+          (drop)="onLocaleBodyDrop($event)" (dragover)="onBodyDragOver($event)"
+          style="font-family:var(--s-font-mono, monospace);font-size:13px;line-height:1.6;resize:vertical"></textarea>
+      </div>
+      <div *ngIf="availableTemplateVariables.length > 0" style="margin-top:10px">
+        <div class="nt-hint" style="margin-bottom:6px"><i class="pi pi-code" style="font-size:10px"></i> Click to insert variable</div>
+        <div class="nt-token-row">
+          <button class="nt-token" type="button" *ngFor="let key of availableTemplateVariables"
+            draggable="true" (dragstart)="onColumnDragStart($event, key)"
+            (click)="insertLocaleToken('{{' + key + '}}')">
+            <i class="pi pi-plus" style="font-size:9px"></i>{{ key }}
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <ng-template pTemplate="footer">
+    <div class="nt-dialog-footer">
+      <button class="nt-btn nt-btn--ghost" (click)="showLocaleDialog = false">Cancel</button>
+      <button class="nt-btn nt-btn--primary" (click)="addLocale()">
+        <i class="pi" [class.pi-check]="editingLocaleId" [class.pi-language]="!editingLocaleId"></i>
+        {{ editingLocaleId ? 'Update Locale' : 'Add Locale' }}
+      </button>
+    </div>
+  </ng-template>
+</p-dialog>

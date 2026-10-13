@@ -1,0 +1,141 @@
+<div class="np-page">
+  <div class="np-page-header">
+    <div>
+      <div class="np-eyebrow"><i class="pi pi-file-excel"></i> Automation</div>
+      <div class="np-page-title">Scheduled Reports</div>
+      <div class="np-page-subtitle">Generate Excel files from data sources and email them on a recurring schedule.</div>
+    </div>
+    <div class="np-btn-row">
+      <button class="np-btn np-btn--ghost" (click)="loadReports()"><i class="pi pi-refresh"></i> Refresh</button>
+      <button class="np-btn np-btn--primary" (click)="openCreate()"><i class="pi pi-plus"></i> New Report</button>
+    </div>
+  </div>
+
+  <p-message *ngIf="status" [severity]="status.type" [text]="status.message"></p-message>
+
+  <div class="np-card">
+    <div class="np-card-body np-card-body--flush">
+      <p-table [value]="reports()" [loading]="loading()" styleClass="p-datatable-sm">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Name</th>
+            <th>Data Source</th>
+            <th>Schedule</th>
+            <th>Recipients</th>
+            <th style="width:90px">Status</th>
+            <th>Last Run</th>
+            <th style="width:140px"></th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-r>
+          <tr>
+            <td style="font-weight:500;color:var(--s-text)">{{ r.name }}</td>
+            <td><span class="np-muted">{{ r.dataSourceName || r.dataSourceId }}</span></td>
+            <td>
+              <span class="np-badge np-badge--blue" style="margin-right:6px">{{ r.scheduleType }}</span>
+              <span class="np-muted" style="font-size:11px" *ngIf="r.cronExpression">{{ r.cronExpression }}</span>
+              <span class="np-muted" style="font-size:11px" *ngIf="r.delayMinutes">+{{ r.delayMinutes }}m</span>
+            </td>
+            <td><span class="np-muted">{{ (r.recipients || []).length }} recipient(s)</span></td>
+            <td>
+              <span [class]="'np-badge ' + (r.isActive ? 'np-badge--green' : 'np-badge--gray')">
+                {{ r.isActive ? 'Active' : 'Paused' }}
+              </span>
+            </td>
+            <td><span class="np-muted">{{ r.lastRunAt ? (r.lastRunAt | date:'short') : '—' }}</span></td>
+            <td>
+              <div class="np-btn-row">
+                <button class="np-btn np-btn--ghost" style="padding:3px 8px;font-size:11px" (click)="runNow(r)">
+                  <i class="pi pi-play"></i> Run
+                </button>
+                <button class="np-btn np-btn--danger" style="padding:3px 8px;font-size:11px" (click)="remove(r)">
+                  <i class="pi pi-trash"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr><td colspan="7">
+            <div class="np-empty">
+              <i class="pi pi-file-excel"></i>
+              <div class="np-empty-title">No scheduled reports yet</div>
+              <p class="np-muted" style="font-size:12px">Create a report to email Excel files from a data source automatically.</p>
+            </div>
+          </td></tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+
+  <!-- Create dialog -->
+  <p-dialog header="New Scheduled Report" [(visible)]="dialogVisible" [modal]="true" [style]="{ width: '580px' }">
+    <form [formGroup]="form" class="np-form" style="padding:4px 0">
+      <div class="np-field">
+        <label class="np-label">Report Name <span style="color:var(--s-red)">*</span></label>
+        <input pInputText formControlName="name" placeholder="Daily congé export" />
+      </div>
+
+      <div class="np-field">
+        <label class="np-label">Data Source <span style="color:var(--s-red)">*</span></label>
+        <p-select
+          [options]="dataSources()"
+          optionLabel="name"
+          optionValue="id"
+          formControlName="dataSourceId"
+          placeholder="Select a data source"
+          [filter]="true"
+        ></p-select>
+      </div>
+
+      <div class="np-form-row">
+        <div class="np-field">
+          <label class="np-label">File Name</label>
+          <input pInputText formControlName="fileName" placeholder="report.xlsx" />
+        </div>
+        <div class="np-field">
+          <label class="np-label">Sheet Name</label>
+          <input pInputText formControlName="sheetName" placeholder="Sheet1" />
+        </div>
+      </div>
+
+      <div class="np-field">
+        <label class="np-label">Recipients <span class="np-muted" style="font-size:11px">(comma-separated emails)</span></label>
+        <input pInputText formControlName="recipients" placeholder="a@company.com, b@company.com" />
+      </div>
+
+      <div class="np-field">
+        <label class="np-label">Email Subject</label>
+        <input pInputText formControlName="emailSubject" />
+      </div>
+
+      <div class="np-field">
+        <label class="np-label">Email Body</label>
+        <textarea pTextarea formControlName="emailBody" rows="2"></textarea>
+      </div>
+
+      <div class="np-field">
+        <label class="np-label">Schedule Type</label>
+        <p-select [options]="scheduleTypes" formControlName="scheduleType"></p-select>
+      </div>
+
+      <div class="np-field" *ngIf="scheduleType === 'Recurring'">
+        <label class="np-label">Cron Expression</label>
+        <input pInputText formControlName="cronExpression" placeholder="0 8 * * *" />
+        <span class="np-hint">Standard 5-field cron. Example: <span class="np-code">0 8 * * *</span> = every day at 08:00.</span>
+      </div>
+
+      <div class="np-field" *ngIf="scheduleType === 'Scheduled'">
+        <label class="np-label">Delay (minutes)</label>
+        <input pInputText type="number" formControlName="delayMinutes" />
+      </div>
+    </form>
+
+    <ng-template pTemplate="footer">
+      <div class="np-btn-row np-btn-row--end">
+        <button class="np-btn np-btn--ghost" (click)="dialogVisible=false"><i class="pi pi-times"></i> Cancel</button>
+        <button class="np-btn np-btn--primary" (click)="save()"><i class="pi pi-check"></i> Create Report</button>
+      </div>
+    </ng-template>
+  </p-dialog>
+</div>

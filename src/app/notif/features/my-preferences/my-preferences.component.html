@@ -1,0 +1,111 @@
+<div class="np-page">
+  <div class="np-page-header">
+    <div>
+      <div class="np-eyebrow"><i class="pi pi-user"></i> Personal</div>
+      <div class="np-page-title">My Notification Preferences</div>
+      <div class="np-page-subtitle">
+        Choose how you receive notifications. Signed in as <strong style="color:var(--s-text)">{{ userId() || 'unknown' }}</strong>.
+      </div>
+    </div>
+  </div>
+
+  <p-message *ngIf="status" [severity]="status.type" [text]="status.message"></p-message>
+
+  <div class="np-grid-2">
+    <!-- Channel preferences -->
+    <div class="np-card">
+      <div class="np-card-header">
+        <div class="np-card-title"><i class="pi pi-send"></i> Notification Channels</div>
+      </div>
+      <div class="np-card-body">
+        <div class="np-empty np-empty--compact" *ngIf="channels().length === 0">
+          <i class="pi pi-send"></i>
+          <div>No channels available.</div>
+        </div>
+        <div class="np-toggle-list">
+          <div class="np-toggle-item" *ngFor="let pref of channels()">
+            <p-toggleSwitch
+              [(ngModel)]="pref.isEnabled"
+              [disabled]="busy()"
+              (onChange)="toggleChannel(pref)"
+            ></p-toggleSwitch>
+            <label class="np-toggle-label">
+              <span class="np-toggle-name">{{ pref.label }}</span>
+              <span class="np-toggle-hint">Receive notifications on {{ pref.label }}</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Browser push + devices -->
+    <div class="np-card">
+      <div class="np-card-header">
+        <div class="np-card-title"><i class="pi pi-bell"></i> Browser Notifications</div>
+        <ng-container *ngIf="webPush.isSupported; else unsupportedBadge">
+          <span [class]="'np-badge ' + (webPush.permission === 'granted' ? 'np-badge--green' : 'np-badge--gray')">
+            {{ webPush.permission === 'granted' ? 'Enabled' : 'Not enabled' }}
+          </span>
+        </ng-container>
+        <ng-template #unsupportedBadge>
+          <span class="np-badge np-badge--amber">Unsupported</span>
+        </ng-template>
+      </div>
+      <div class="np-card-body">
+        <div class="np-row-item" style="margin-bottom:14px">
+          <div class="np-row-icon" [style.background]="webPush.permission === 'granted' ? 'rgba(34,197,94,0.15)' : 'var(--s-bg-3)'">
+            <i class="pi pi-bell" [style.color]="webPush.permission === 'granted' ? 'var(--s-green)' : 'var(--s-text-2)'"></i>
+          </div>
+          <div class="np-row-body">
+            <div class="np-row-name">Web Push</div>
+            <div class="np-row-meta">Receive notifications on this device even when the app is closed.</div>
+          </div>
+        </div>
+        <button class="np-btn np-btn--primary" style="width:100%"
+          [disabled]="!webPush.isSupported || busy()" (click)="enableBrowserPush()">
+          <i class="pi pi-bell"></i> Enable Browser Notifications
+        </button>
+      </div>
+
+      <div class="np-card-header" style="border-top:1px solid var(--s-border);padding-top:12px">
+        <div class="np-card-title"><i class="pi pi-desktop"></i> My Devices</div>
+        <span class="np-badge np-badge--gray">{{ devices().length }}</span>
+      </div>
+      <div class="np-card-body np-card-body--flush">
+        <p-table [value]="devices()" styleClass="p-datatable-sm">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Device</th>
+              <th>Platform</th>
+              <th style="width:80px">Status</th>
+              <th style="width:80px"></th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-device>
+            <tr>
+              <td style="font-weight:500">{{ device.deviceName || 'Device' }}</td>
+              <td><span class="np-muted">{{ device.platform }}</span></td>
+              <td>
+                <span [class]="'np-badge ' + (device.isActive !== false ? 'np-badge--green' : 'np-badge--gray')">
+                  {{ device.isActive !== false ? 'Active' : 'Inactive' }}
+                </span>
+              </td>
+              <td>
+                <button *ngIf="device.isActive !== false"
+                  class="np-btn np-btn--danger" style="padding:3px 8px;font-size:11px"
+                  (click)="deactivateDevice(device)">
+                  <i class="pi pi-trash"></i>
+                </button>
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr><td colspan="4">
+              <div class="np-empty np-empty--compact"><i class="pi pi-desktop"></i><div>No registered devices.</div></div>
+            </td></tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,205 @@
+<div class="np-page">
+  <div class="np-page-header">
+    <div>
+      <div class="np-eyebrow"><i class="pi pi-users"></i> Administration</div>
+      <div class="np-page-title">Users</div>
+      <div class="np-page-subtitle">Manage user notification preferences and push device registrations.</div>
+    </div>
+  </div>
+
+  <p-message *ngIf="status" [severity]="status.type" [text]="status.message"></p-message>
+
+  <p-tabs [value]="0">
+    <p-tablist>
+      <p-tab [value]="0"><i class="pi pi-sliders-h" style="margin-right:6px"></i> Preferences</p-tab>
+      <p-tab [value]="1"><i class="pi pi-desktop" style="margin-right:6px"></i> Devices</p-tab>
+    </p-tablist>
+    <p-tabpanels>
+
+      <!-- Preferences tab -->
+      <p-tabpanel [value]="0">
+        <div class="np-split" style="margin-top:4px">
+          <!-- Lookup -->
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <div class="np-card">
+              <div class="np-card-header">
+                <div class="np-card-title"><i class="pi pi-search"></i> Look Up User</div>
+              </div>
+              <div class="np-card-body">
+                <div class="np-form-row" style="align-items:flex-end">
+                  <div class="np-field">
+                    <label class="np-label">User ID</label>
+                    <input pInputText [(ngModel)]="preferenceUserId" placeholder="user-1" />
+                  </div>
+                  <button class="np-btn np-btn--primary" style="white-space:nowrap" (click)="loadPreferences()">
+                    <i class="pi pi-search"></i> Load
+                  </button>
+                </div>
+              </div>
+              <div class="np-card-body np-card-body--flush">
+                <p-table [value]="preferences" styleClass="p-datatable-sm">
+                  <ng-template pTemplate="header">
+                    <tr>
+                      <th>Channel</th>
+                      <th style="width:80px">Enabled</th>
+                      <th>Language</th>
+                    </tr>
+                  </ng-template>
+                  <ng-template pTemplate="body" let-pref>
+                    <tr>
+                      <td>{{ pref.channelId }}</td>
+                      <td>
+                        <span [class]="'np-badge ' + (pref.isEnabled ? 'np-badge--green' : 'np-badge--gray')">
+                          {{ pref.isEnabled ? 'Yes' : 'No' }}
+                        </span>
+                      </td>
+                      <td><span class="np-muted">{{ pref.preferredLanguage || '—' }}</span></td>
+                    </tr>
+                  </ng-template>
+                  <ng-template pTemplate="emptymessage">
+                    <tr><td colspan="3">
+                      <div class="np-empty np-empty--compact"><i class="pi pi-sliders-h"></i><div>No preferences loaded.</div></div>
+                    </td></tr>
+                  </ng-template>
+                </p-table>
+              </div>
+            </div>
+
+            <div class="np-card">
+              <div class="np-card-header">
+                <div class="np-card-title"><i class="pi pi-save"></i> Set Preference</div>
+              </div>
+              <div class="np-card-body">
+                <form class="np-form" [formGroup]="preferenceForm">
+                  <div class="np-form-row">
+                    <div class="np-field">
+                      <label class="np-label">User ID</label>
+                      <input pInputText formControlName="userId" />
+                    </div>
+                    <div class="np-field">
+                      <label class="np-label">Channel</label>
+                      <p-select [options]="channels" optionLabel="label" optionValue="id" formControlName="channelId"></p-select>
+                    </div>
+                  </div>
+                  <div class="np-form-row">
+                    <div class="np-field">
+                      <label class="np-label">Preferred Language</label>
+                      <input pInputText formControlName="preferredLanguage" placeholder="en" />
+                    </div>
+                    <div class="np-toggle-item" style="padding-top:20px">
+                      <p-checkbox formControlName="isEnabled" binary="true" inputId="prefEnabled"></p-checkbox>
+                      <label class="np-toggle-label" for="prefEnabled">
+                        <span class="np-toggle-name">Enabled</span>
+                      </label>
+                    </div>
+                  </div>
+                  <div class="np-btn-row np-btn-row--end">
+                    <button class="np-btn np-btn--primary" (click)="savePreference()">
+                      <i class="pi pi-save"></i> Save Preference
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </p-tabpanel>
+
+      <!-- Devices tab -->
+      <p-tabpanel [value]="1">
+        <div class="np-split" style="margin-top:4px">
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <div class="np-card">
+              <div class="np-card-header">
+                <div class="np-card-title"><i class="pi pi-search"></i> Look Up Devices</div>
+              </div>
+              <div class="np-card-body">
+                <div class="np-form-row" style="align-items:flex-end">
+                  <div class="np-field">
+                    <label class="np-label">User ID</label>
+                    <input pInputText [(ngModel)]="deviceUserId" placeholder="user-1" />
+                  </div>
+                  <button class="np-btn np-btn--primary" style="white-space:nowrap" (click)="loadDevices()">
+                    <i class="pi pi-search"></i> Load
+                  </button>
+                </div>
+              </div>
+              <div class="np-card-body np-card-body--flush">
+                <p-table [value]="devices" styleClass="p-datatable-sm">
+                  <ng-template pTemplate="header">
+                    <tr>
+                      <th>Token</th>
+                      <th>Platform</th>
+                      <th style="width:80px">Active</th>
+                      <th style="width:140px"></th>
+                    </tr>
+                  </ng-template>
+                  <ng-template pTemplate="body" let-device>
+                    <tr>
+                      <td><span class="np-mono" style="font-size:11px">{{ device.token }}</span></td>
+                      <td><span class="np-muted">{{ device.platform }}</span></td>
+                      <td>
+                        <span [class]="'np-badge ' + (device.isActive ? 'np-badge--green' : 'np-badge--gray')">
+                          {{ device.isActive ? 'Yes' : 'No' }}
+                        </span>
+                      </td>
+                      <td>
+                        <div class="np-btn-row">
+                          <button class="np-btn np-btn--ghost" style="padding:3px 8px;font-size:11px" (click)="markSeen(device)">
+                            <i class="pi pi-eye"></i>
+                          </button>
+                          <button class="np-btn np-btn--danger" style="padding:3px 8px;font-size:11px" (click)="deactivate(device)">
+                            <i class="pi pi-times"></i>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  </ng-template>
+                  <ng-template pTemplate="emptymessage">
+                    <tr><td colspan="4">
+                      <div class="np-empty np-empty--compact"><i class="pi pi-desktop"></i><div>No devices loaded.</div></div>
+                    </td></tr>
+                  </ng-template>
+                </p-table>
+              </div>
+            </div>
+
+            <div class="np-card">
+              <div class="np-card-header">
+                <div class="np-card-title"><i class="pi pi-plus"></i> Register Device</div>
+              </div>
+              <div class="np-card-body">
+                <form class="np-form" [formGroup]="deviceForm">
+                  <div class="np-form-row">
+                    <div class="np-field">
+                      <label class="np-label">User ID</label>
+                      <input pInputText formControlName="userId" />
+                    </div>
+                    <div class="np-field">
+                      <label class="np-label">Platform</label>
+                      <input pInputText formControlName="platform" placeholder="web, android, ios" />
+                    </div>
+                  </div>
+                  <div class="np-field">
+                    <label class="np-label">Token</label>
+                    <input pInputText formControlName="token" />
+                  </div>
+                  <div class="np-field">
+                    <label class="np-label">Device Name</label>
+                    <input pInputText formControlName="deviceName" placeholder="My Laptop" />
+                  </div>
+                  <div class="np-btn-row np-btn-row--end">
+                    <button class="np-btn np-btn--primary" (click)="registerDevice()">
+                      <i class="pi pi-plus"></i> Register Device
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </p-tabpanel>
+
+    </p-tabpanels>
+  </p-tabs>
+</div>

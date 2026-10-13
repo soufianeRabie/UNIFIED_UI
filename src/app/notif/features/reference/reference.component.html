@@ -1,0 +1,70 @@
+<div class="np-page">
+  <div class="np-page-header">
+    <div>
+      <div class="np-eyebrow"><i class="pi pi-book"></i> System</div>
+      <div class="np-page-title">Reference Data</div>
+      <div class="np-page-subtitle">Fixed system enumerations for channels and priorities. Read-only.</div>
+    </div>
+    <div class="np-btn-row">
+      <button class="np-btn np-btn--ghost" (click)="load()"><i class="pi pi-refresh"></i> Refresh</button>
+    </div>
+  </div>
+
+  <p-message *ngIf="status" [severity]="status.type" [text]="status.message"></p-message>
+
+  <div class="np-grid-2">
+    <!-- Channels -->
+    <div class="np-card">
+      <div class="np-card-header">
+        <div class="np-card-title"><i class="pi pi-send"></i> Channels</div>
+        <span class="np-badge np-badge--blue">{{ channels.length }}</span>
+      </div>
+      <div class="np-card-body np-card-body--flush">
+        <p-table [value]="channels" styleClass="p-datatable-sm">
+          <ng-template pTemplate="header">
+            <tr><th style="width:60px">ID</th><th>Code</th><th>Label</th></tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-item>
+            <tr>
+              <td><span class="np-muted">{{ item.id }}</span></td>
+              <td><span class="np-code">{{ item.code }}</span></td>
+              <td>{{ item.label }}</td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr><td colspan="3">
+              <div class="np-empty np-empty--compact"><i class="pi pi-send"></i> No channels</div>
+            </td></tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </div>
+
+    <!-- Priorities -->
+    <div class="np-card">
+      <div class="np-card-header">
+        <div class="np-card-title"><i class="pi pi-flag"></i> Priorities</div>
+        <span class="np-badge np-badge--blue">{{ priorities.length }}</span>
+      </div>
+      <div class="np-card-body np-card-body--flush">
+        <p-table [value]="priorities" styleClass="p-datatable-sm">
+          <ng-template pTemplate="header">
+            <tr><th style="width:60px">ID</th><th>Code</th><th>Label</th></tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-item>
+            <tr>
+              <td><span class="np-muted">{{ item.id }}</span></td>
+              <td><span class="np-code">{{ item.code }}</span></td>
+              <td>{{ item.label }}</td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr><td colspan="3">
+              <div class="np-empty np-empty--compact"><i class="pi pi-flag"></i> No priorities</div>
+            </td></tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,97 @@
+<div class="np-page">
+  <div class="np-page-header">
+    <div>
+      <div class="np-eyebrow"><i class="pi pi-cog"></i> Configuration</div>
+      <div class="np-page-title">Settings</div>
+      <div class="np-page-subtitle">Configure API connection, tenant context, and authentication.</div>
+    </div>
+    <div class="np-btn-row">
+      <button class="np-btn np-btn--ghost" (click)="resetDefaults()"><i class="pi pi-undo"></i> Reset</button>
+      <button class="np-btn np-btn--primary" [permAction]="perm.canUpdate(PAGE_CODE)" (click)="save()"><i class="pi pi-save"></i> Save Settings</button>
+    </div>
+  </div>
+
+  <p-message *ngIf="status" [severity]="status.type" [text]="status.message"></p-message>
+
+  <!-- Diagnostic banner when tenant is missing -->
+  <div *ngIf="!resolvedTenantId"
+    style="display:flex;align-items:center;gap:12px;padding:14px 18px;background:var(--s-red-bg);border:1px solid rgba(248,113,113,0.3);border-radius:10px;margin-bottom:4px">
+    <i class="pi pi-exclamation-triangle" style="color:var(--s-red);font-size:18px;flex-shrink:0"></i>
+    <div>
+      <div style="font-size:13px;font-weight:600;color:var(--s-red)">Tenant ID not resolved</div>
+      <div style="font-size:12px;color:var(--s-text-2);margin-top:2px">
+        Enter your tenant ID below and click Save — this fixes the <span class="np-code">Missing X-Tenant-Id header</span> error on all API requests.
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="resolvedTenantId"
+    style="display:flex;align-items:center;gap:12px;padding:12px 18px;background:var(--s-green-bg);border:1px solid rgba(52,211,153,0.2);border-radius:10px;margin-bottom:4px">
+    <i class="pi pi-check-circle" style="color:var(--s-green);font-size:16px;flex-shrink:0"></i>
+    <div style="font-size:12px;color:var(--s-text-2)">
+      Tenant resolved: <span class="np-code" style="color:var(--s-green)">{{ resolvedTenantId }}</span>
+      <span *ngIf="sessionTenantId" style="margin-left:8px;color:var(--s-text-3)">(from session)</span>
+    </div>
+  </div>
+
+  <div class="np-grid-2">
+    <div class="np-card">
+      <div class="np-card-header">
+        <div class="np-card-title"><i class="pi pi-server"></i> API Connection</div>
+      </div>
+      <div class="np-card-body">
+        <form class="np-form" [formGroup]="form">
+          <div class="np-field">
+            <label class="np-label">API Base URL <span style="color:var(--s-red)">*</span></label>
+            <input pInputText formControlName="apiBaseUrl" placeholder="http://localhost:5003" />
+            <span class="np-hint">Base URL without /api suffix — services append /api/ automatically</span>
+          </div>
+          <div class="np-field">
+            <label class="np-label">Tenant ID <span style="color:var(--s-red)">*</span></label>
+            <input pInputText formControlName="tenantId" placeholder="e.g. DEFAULT or your company code" />
+            <span class="np-hint">
+              Sent as <span class="np-code">X-Tenant-Id</span> header on every request.
+              <ng-container *ngIf="sessionTenantId">
+                Current session value: <strong style="color:var(--s-accent)">{{ sessionTenantId }}</strong>
+              </ng-container>
+              <ng-container *ngIf="!sessionTenantId">
+                Not found in session — enter it manually and save.
+              </ng-container>
+            </span>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="np-card">
+      <div class="np-card-header">
+        <div class="np-card-title"><i class="pi pi-info-circle"></i> Notes</div>
+      </div>
+      <div class="np-card-body">
+        <div class="np-row-list">
+          <div class="np-row-item" style="background:var(--s-accent-glow);border-color:rgba(79,142,247,0.3)">
+            <div class="np-row-icon" style="background:rgba(79,142,247,0.2)"><i class="pi pi-lock"></i></div>
+            <div class="np-row-body">
+              <div class="np-row-name">Authentication</div>
+              <div class="np-row-meta">Bearer token is read automatically from your SecurityUi session — no manual input needed.</div>
+            </div>
+          </div>
+          <div class="np-row-item">
+            <div class="np-row-icon"><i class="pi pi-tag"></i></div>
+            <div class="np-row-body">
+              <div class="np-row-name">Tenant Header</div>
+              <div class="np-row-meta">All requests include <span class="np-code">X-Tenant-Id</span>. Leaving it blank causes 400 errors from the API.</div>
+            </div>
+          </div>
+          <div class="np-row-item">
+            <div class="np-row-icon"><i class="pi pi-save"></i></div>
+            <div class="np-row-body">
+              <div class="np-row-name">Persistence</div>
+              <div class="np-row-meta">Stored in browser localStorage. Reload the page after saving to apply changes.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
