@@ -1,0 +1,15 @@
+/* ==========================================================================
+   S UI — global entry. Add once to the host's angular.json "styles":
+
+     "projects/s-ui/styles/index.css"
+
+   Layer order is fixed here so host styles (unlayered) always win over the
+   library, and tokens always lose to everything.
+   ========================================================================== */
+
+@layer tokens, base, components;
+
+@import url("./tokens.css");
+@import url("./base.css");
+@import url("./controls.css");
+@import url("./overlay.css");

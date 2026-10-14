@@ -1,0 +1,53 @@
+/* ==========================================================================
+   Native form controls  ·  <input s-input>, <select s-input>, <textarea s-input>
+   Global because inputs are void elements and cannot carry component styles.
+   ========================================================================== */
+
+@layer components {
+
+  .s-control {
+    inline-size: 100%;
+    block-size: 34px;
+    padding: 0 var(--space-3);
+    font: inherit;
+    font-size: var(--text-base);
+    color: var(--ink);
+    background: var(--paper-raised);
+    border: 1px solid var(--rule-strong);
+    border-radius: var(--radius-sm);
+    transition: border-color var(--duration-fast) var(--ease-standard),
+                box-shadow var(--duration-fast) var(--ease-standard);
+  }
+
+  .s-control::placeholder { color: var(--ink-3); opacity: 1; }
+  .s-control:hover:not(:disabled) { border-color: var(--ink-3); }
+  .s-control:focus { outline: none; border-color: var(--seal); box-shadow: var(--focus-ring); }
+  .s-control:disabled { color: var(--ink-3); background: var(--paper-sunk); cursor: not-allowed; }
+
+  .s-control[aria-invalid="true"] { border-color: var(--alert); }
+  .s-control[aria-invalid="true"]:focus {
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--alert) 22%, transparent);
+  }
+
+  .s-control[data-size="sm"] { block-size: 28px; font-size: var(--text-sm); }
+  .s-control[data-mono] { font-family: var(--font-mono); font-variant-ligatures: none; }
+
+  textarea.s-control {
+    block-size: auto;
+    min-block-size: 84px;
+    padding-block: var(--space-2);
+    line-height: var(--leading-normal);
+    resize: vertical;
+  }
+
+  select.s-control {
+    appearance: none;
+    padding-inline-end: 32px;
+    cursor: pointer;
+    background-image: linear-gradient(45deg, transparent 50%, var(--ink-3) 50%),
+                      linear-gradient(135deg, var(--ink-3) 50%, transparent 50%);
+    background-position: calc(100% - 15px) 50%, calc(100% - 10px) 50%;
+    background-size: 5px 5px;
+    background-repeat: no-repeat;
+  }
+}

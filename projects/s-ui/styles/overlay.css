@@ -1,0 +1,24 @@
+/* ==========================================================================
+   Overlays (dialogs). Positioning comes from @angular/cdk/overlay-prebuilt.css,
+   which the host lists in angular.json before this package's index.css.
+   ========================================================================== */
+
+@layer components {
+
+  .s-dialog-backdrop {
+    background: var(--overlay);
+  }
+
+  .cdk-overlay-backdrop.s-dialog-backdrop.cdk-overlay-backdrop-showing { opacity: 1; }
+
+  .s-dialog-panel {
+    animation: s-dialog-in var(--duration-base) var(--ease-standard);
+  }
+
+  .s-dialog-panel .cdk-dialog-container,
+  .s-dialog-panel > * { outline: none; }
+
+  @keyframes s-dialog-in {
+    from { opacity: 0; transform: translateY(6px) scale(.985); }
+  }
+}

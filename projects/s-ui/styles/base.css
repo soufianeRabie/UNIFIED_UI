@@ -1,0 +1,41 @@
+/* ==========================================================================
+   Dossier base  ·  document-level defaults built only on tokens.css
+   ========================================================================== */
+
+@layer base {
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    margin: 0;
+    font-family: var(--font-sans);
+    font-feature-settings: "cv05" 1, "ss01" 1;
+    line-height: var(--leading-normal);
+    color: var(--ink);
+    background: var(--paper);
+  }
+
+  ::selection { background: var(--seal-wash); color: var(--ink); }
+
+  /* One visible focus style for keyboard users, nothing for mouse clicks. */
+  :focus-visible {
+    outline: 2px solid var(--seal);
+    outline-offset: 2px;
+  }
+
+  /* Numbers line up in tables and counters. */
+  table, .num, [data-numeric] { font-variant-numeric: tabular-nums; }
+
+  /* References people read aloud: ids, codes, matricules. */
+  code, kbd, samp, .mono {
+    font-family: var(--font-mono);
+    font-variant-ligatures: none;
+    letter-spacing: -0.01em;
+  }
+
+  * { scrollbar-color: var(--rule-strong) transparent; scrollbar-width: thin; }
+}
