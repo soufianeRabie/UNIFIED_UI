@@ -46,6 +46,10 @@ interface MenuNode {
             <span class="s-nav-icon">🔑</span>
             <span class="s-nav-text">{{ 'SECU.NAV.MY_SECURITY' | translate }}</span>
           </a>
+          <a class="s-nav-item" routerLink="/notif" (click)="closeMobile()">
+            <span class="s-nav-icon">🔔</span>
+            <span class="s-nav-text">Notifications</span>
+          </a>
           @if (canAccessAuthSettings()) {
             <a class="s-nav-item" [routerLink]="baseUrl + '/auth-settings'" routerLinkActive="active" (click)="closeMobile()">
               <span class="s-nav-icon">⚙</span>

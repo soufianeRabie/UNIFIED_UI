@@ -40,6 +40,10 @@ interface NavItem { label: string; path: string; icon: string; }
               }
             </a>
           }
+          <a class="nl-nav-item" routerLink="/admin/users">
+            <span class="nl-nav-icon"><i class="pi pi-shield"></i></span>
+            <span class="nl-nav-label">Security</span>
+          </a>
         </nav>
 
         <div class="nl-sidebar-footer">
