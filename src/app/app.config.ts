@@ -38,11 +38,11 @@ export const appConfig: ApplicationConfig = {
       },
     }),
     provideHttpClient(withInterceptors([authInterceptor])),
-    provideTranslateHttpLoader({
-      prefix: '/i18n/',
-      suffix: '.json',
-    }),
     provideTranslateService({
+      loader: provideTranslateHttpLoader({
+        prefix: '/i18n/',
+        suffix: '.json',
+      }),
       fallbackLang: 'fr',
       lang: 'fr',
     }),

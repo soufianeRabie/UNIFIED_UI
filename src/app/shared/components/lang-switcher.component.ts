@@ -14,7 +14,7 @@ import { LangService } from '../../core/services/lang.service';
       [title]="'LANG.SWITCH' | translate"
       type="button"
     >
-      <span class="lang-flag">{{ lang.current === 'fr' ? '�«�·' : '�¬�§' }}</span>
+      <span class="lang-flag">{{ lang.current === 'fr' ? '🇫🇷' : '🇬🇧' }}</span>
       <span class="lang-label">{{ lang.current === 'fr' ? 'FR' : 'EN' }}</span>
     </button>
   `,
