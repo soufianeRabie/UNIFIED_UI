@@ -1,0 +1,66 @@
+:host {
+  display: block;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+  padding: var(--space-2) var(--space-5);
+  border-block-end: 1px solid var(--rule);
+}
+
+.chip {
+  display: inline-flex;
+  gap: var(--space-1);
+  align-items: center;
+  max-inline-size: 100%;
+  padding-inline: var(--space-3) var(--space-1);
+  font-size: var(--text-sm);
+  color: var(--seal-deep);
+  background: var(--seal-wash);
+  border: 1px solid var(--seal);
+  border-radius: var(--radius-pill);
+}
+
+.text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.remove {
+  display: grid;
+  place-items: center;
+  inline-size: 22px;
+  block-size: 22px;
+  font-size: var(--text-2xs);
+  color: inherit;
+  cursor: pointer;
+  background: none;
+  border: 0;
+  border-radius: var(--radius-pill);
+}
+
+.remove:hover {
+  background: var(--paper-raised);
+}
+
+.remove:focus-visible,
+.clear-all:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.clear-all {
+  padding: var(--space-1) var(--space-2);
+  font: inherit;
+  font-size: var(--text-sm);
+  color: var(--ink-2);
+  text-decoration: underline;
+  cursor: pointer;
+  background: none;
+  border: 0;
+  border-radius: var(--radius-xs);
+}

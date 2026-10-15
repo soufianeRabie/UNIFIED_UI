@@ -19,14 +19,51 @@
               [attr.data-priority]="header.column.priority"
               [attr.aria-sort]="header.ariaSort"
             >
-              @if (header.column.sortable) {
-                <button type="button" class="sort" (click)="toggleSort(header.column)">
+              <div class="head">
+                @if (header.sortable) {
+                  <button type="button" class="sort" (click)="onSort(header.column, $event)">
+                    {{ header.column.header }}
+                    <s-icon [name]="header.sortIcon" />
+                    @if (header.order) {
+                      <span class="order">{{ header.order }}</span>
+                    }
+                  </button>
+                } @else {
                   {{ header.column.header }}
-                  <s-icon [name]="header.sortIcon" />
-                </button>
-              } @else {
-                {{ header.column.header }}
-              }
+                }
+                @if (header.filterField; as field) {
+                  <button
+                    #filterButton
+                    type="button"
+                    class="filter"
+                    [class.active]="!!header.condition"
+                    [attr.aria-label]="header.filterLabel"
+                    [attr.title]="header.filterLabel"
+                    aria-haspopup="dialog"
+                    [attr.aria-expanded]="openFilter() === header.column.key"
+                    (click)="toggleFilter(header.column.key)"
+                  >
+                    <s-icon [name]="header.condition ? 'filter-fill' : 'filter'" />
+                  </button>
+                  <s-popover
+                    [open]="openFilter() === header.column.key"
+                    (openChange)="$event || openFilter.set(null)"
+                    [anchor]="filterButton"
+                    [label]="header.filterLabel"
+                    width="md"
+                  >
+                    @if (openFilter() === header.column.key) {
+                      <s-column-filter
+                        [field]="field"
+                        [label]="header.column.header"
+                        [condition]="header.condition"
+                        [limits]="limits()"
+                        (applied)="applyFilter(header.column.key, $event)"
+                      />
+                    }
+                  </s-popover>
+                }
+              </div>
             </th>
           }
           @if (rowActions()) {
@@ -96,6 +133,11 @@
     </table>
   </div>
   @if (total() !== null) {
-    <s-pagination [(page)]="page" [pageSize]="pageSize()" [total]="total() ?? 0" />
+    <s-pagination
+      [page]="paging().page"
+      (pageChange)="onPage($event)"
+      [pageSize]="paging().size"
+      [total]="paging().total"
+    />
   }
 }

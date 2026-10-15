@@ -1,0 +1,21 @@
+@if (view().chips.length > 0) {
+  <div class="chips" role="group" [attr.aria-label]="view().label">
+    @for (chip of view().chips; track chip.field) {
+      <span class="chip">
+        <span class="text" dir="auto">{{ chip.text }}</span>
+        <button
+          type="button"
+          class="remove"
+          [attr.aria-label]="chip.remove"
+          [attr.title]="chip.remove"
+          (click)="remove(chip.field)"
+        >
+          <s-icon name="times" />
+        </button>
+      </span>
+    }
+    @if (view().chips.length > 1) {
+      <button type="button" class="clear-all" (click)="removeAll()">{{ view().clearAll }}</button>
+    }
+  </div>
+}

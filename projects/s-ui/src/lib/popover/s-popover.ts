@@ -51,6 +51,8 @@ export class SPopover {
   private readonly panel = viewChild.required<TemplateRef<unknown>>('panel');
   private ref: OverlayRef | null = null;
   private trap: FocusTrap | null = null;
+  /** The user has been working inside the panel (focus entered it and no outside click since). */
+  private focusInside = false;
 
   constructor() {
     effect(() => {
@@ -91,17 +93,28 @@ export class SPopover {
       }
     });
     ref.outsidePointerEvents().subscribe((event) => {
+      this.focusInside = false;
       if (!anchor.contains(event.target as Node)) this.close('outside');
     });
+    ref.overlayElement.addEventListener('focusin', () => (this.focusInside = true));
     this.ref = ref;
     this.trap = this.focusTraps.create(ref.overlayElement);
     void this.trap.focusInitialElementWhenReady();
   }
 
   private hide(): void {
+    // Closed while the user worked inside (Apply, a pick, Escape) — possibly after the focused content was already
+    // removed: focus would be lost to <body>, so it returns to the trigger. After an outside click it stays where
+    // the user clicked.
+    const active = this.document.activeElement;
+    const lost =
+      !active || active === this.document.body || !!this.ref?.overlayElement.contains(active);
+    const restore = this.focusInside && lost;
+    this.focusInside = false;
     this.trap?.destroy();
     this.trap = null;
     this.ref?.dispose();
     this.ref = null;
+    if (restore) this.anchor().focus();
   }
 }

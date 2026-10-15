@@ -36,4 +36,6 @@ export * from './lib/popover';
 export * from './lib/select';
 export * from './lib/calendar';
 export * from './lib/date-picker';
+export * from './lib/column-filter';
+export * from './lib/filter-chips';
 export * from './lib/query';

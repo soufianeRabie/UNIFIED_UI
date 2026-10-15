@@ -1,0 +1,16 @@
+:host {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.request {
+  max-block-size: 320px;
+  padding: var(--space-3);
+  margin: var(--space-3) 0 0;
+  overflow: auto;
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--ink-2);
+  background: var(--paper-sunk);
+  border-radius: var(--radius-sm);
+}

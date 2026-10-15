@@ -1,0 +1,132 @@
+<form class="filter" [attr.aria-label]="view().title" (submit)="apply($event)">
+  <div class="title">{{ view().title }}</div>
+
+  <s-select
+    [options]="view().operators"
+    [value]="draft().op"
+    [aria-label]="view().text.operator"
+    controlSize="sm"
+    (valueChange)="setOperator($event)"
+  />
+
+  @switch (view().kind) {
+    @case ('text') {
+      <input
+        s-input
+        controlSize="sm"
+        [attr.aria-label]="view().text.value"
+        [value]="draft().text"
+        (input)="update({ text: inputValue($event) })"
+      />
+    }
+    @case ('number') {
+      <input
+        s-input
+        controlSize="sm"
+        inputmode="decimal"
+        [attr.aria-label]="view().text.value"
+        [value]="draft().text"
+        (input)="update({ text: inputValue($event) })"
+      />
+    }
+    @case ('numberRange') {
+      <div class="pair">
+        <input
+          s-input
+          controlSize="sm"
+          inputmode="decimal"
+          [placeholder]="view().text.from"
+          [attr.aria-label]="view().text.from"
+          [value]="draft().from"
+          (input)="update({ from: inputValue($event) })"
+        />
+        <input
+          s-input
+          controlSize="sm"
+          inputmode="decimal"
+          [placeholder]="view().text.to"
+          [attr.aria-label]="view().text.to"
+          [value]="draft().to"
+          (input)="update({ to: inputValue($event) })"
+        />
+      </div>
+    }
+    @case ('day') {
+      <s-date-picker
+        controlSize="sm"
+        [aria-label]="view().text.value"
+        [value]="draft().day"
+        (valueChange)="update({ day: $event })"
+      />
+    }
+    @case ('dayRange') {
+      <s-date-picker
+        mode="range"
+        controlSize="sm"
+        [aria-label]="view().text.value"
+        [range]="view().range"
+        (rangeChange)="setRange($event)"
+      />
+    }
+    @case ('boolean') {
+      <div class="segmented" role="group" [attr.aria-label]="view().text.value">
+        <button
+          type="button"
+          [attr.aria-pressed]="draft().flag === true"
+          (click)="update({ flag: true })"
+        >
+          {{ view().text.yes }}
+        </button>
+        <button
+          type="button"
+          [attr.aria-pressed]="draft().flag === false"
+          (click)="update({ flag: false })"
+        >
+          {{ view().text.no }}
+        </button>
+      </div>
+    }
+    @case ('choice') {
+      <s-select
+        controlSize="sm"
+        [options]="view().choices"
+        [value]="draft().choices[0] ?? null"
+        [aria-label]="view().text.value"
+        (valueChange)="setChoices($event)"
+      />
+    }
+    @case ('choices') {
+      <s-select
+        multiple
+        controlSize="sm"
+        [options]="view().choices"
+        [value]="draft().choices"
+        [aria-label]="view().text.value"
+        (valueChange)="setChoices($event)"
+      />
+    }
+    @case ('list') {
+      <textarea
+        s-input
+        rows="4"
+        [attr.aria-label]="view().text.values"
+        [placeholder]="view().text.values"
+        [value]="draft().text"
+        (input)="update({ text: inputValue($event) })"
+      ></textarea>
+    }
+  }
+
+  @if (view().error; as error) {
+    <p class="error" role="alert">{{ error }}</p>
+  }
+
+  <div class="actions">
+    <button type="button" s-button variant="ghost" size="sm" (click)="clear()">
+      {{ view().text.clear }}
+    </button>
+    <button type="submit" s-button variant="primary" size="sm" [disabled]="!view().canApply">
+      {{ view().text.apply }}
+    </button>
+  </div>
+</form>

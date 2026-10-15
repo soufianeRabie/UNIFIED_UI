@@ -9,32 +9,39 @@ import {
   input,
   model,
   numberAttribute,
+  signal,
 } from '@angular/core';
+import { SColumnFilter } from '../column-filter/s-column-filter';
 import { SUiLabels } from '../core/s-ui-labels';
 import { SEmpty } from '../empty/s-empty';
 import { SIcon } from '../icon/s-icon';
 import { SNotice } from '../notice/s-notice';
 import { SPagination } from '../pagination/s-pagination';
+import { SPopover } from '../popover/s-popover';
+import type { SFilterCondition, SQuery, SQueryField, SQueryLimits } from '../query/s-query.types';
+import { setColumnFilter, setPage, toggleSort } from '../query/s-query.utils';
 import { SCell } from './s-cell.directive';
 import { SRowActions } from './s-row-actions.directive';
 import type { SColumn, SSort } from './s-data-table.types';
+import { headerViews, reachableTotal } from './s-data-table.utils';
 
 const SKELETON_ROWS = [0, 1, 2, 3, 4];
 
 /**
- * The one table. Server-driven: the screen owns the request; the table owns
- * rendering, sort state, paging, loading, empty and error states.
+ * The one table. Server-driven: the screen owns the request; the table owns rendering, sort state, paging,
+ * column filters, loading, empty and error states.
  *
- *   <s-data-table [rows]="store.users()" [columns]="columns" rowKey="id"
- *                 [loading]="store.loading()" [error]="store.error()"
- *                 [total]="store.total()" [(page)]="page" [(sort)]="sort">
- *     <ng-template s-cell="status" [rows]="store.users()" let-user>…</ng-template>
- *     <ng-template s-row-actions [rows]="store.users()" let-user>…</ng-template>
- *   </s-data-table>
+ * Query mode (handbook 08) — sort (Shift+click adds keys), a filter button per filterable column and paging
+ * all update one `SQuery`:
+ *
+ *   <s-data-table [rows]="store.users()" [columns]="columns" rowKey="id" [total]="store.total()"
+ *                 [(query)]="query" [fields]="schema.fields" [limits]="schema.limits" />
+ *
+ * Simple mode: `[(page)]` and `[(sort)]` (one key) without a query.
  */
 @Component({
   selector: 's-data-table',
-  imports: [NgTemplateOutlet, SEmpty, SIcon, SNotice, SPagination],
+  imports: [NgTemplateOutlet, SColumnFilter, SEmpty, SIcon, SNotice, SPagination, SPopover],
   templateUrl: './s-data-table.html',
   styleUrl: './s-data-table.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -56,11 +63,17 @@ export class SDataTable<T extends object> {
   readonly total = input<number | null>(null);
   readonly pageSize = input(20, { transform: numberAttribute });
   readonly page = model(1);
-  /** Cycles asc → desc → none on a sortable header. */
+  /** Simple mode: cycles asc → desc → none on a sortable header. */
   readonly sort = model<SSort | null>(null);
+
+  /** Query mode: the whole list state. Columns match fields by `key` = field name. */
+  readonly query = model<SQuery | null>(null);
+  readonly fields = input<readonly SQueryField[]>([]);
+  readonly limits = input<SQueryLimits | null>(null);
 
   private readonly cellTemplates = contentChildren(SCell<T>);
   protected readonly rowActions = contentChild(SRowActions<T>);
+  protected readonly openFilter = signal<string | null>(null);
 
   protected readonly text = computed(() => {
     this.labels.version();
@@ -71,20 +84,15 @@ export class SDataTable<T extends object> {
   });
 
   protected readonly headers = computed(() => {
-    const sort = this.sort();
-    return this.columns().map((column) => {
-      const active = sort?.key === column.key;
-      return {
-        column,
-        ariaSort:
-          column.sortable && active ? (sort.dir === 'asc' ? 'ascending' : 'descending') : null,
-        sortIcon: !active
-          ? 'sort-alt'
-          : sort.dir === 'asc'
-            ? 'sort-amount-up-alt'
-            : 'sort-amount-down',
-      };
-    });
+    this.labels.version();
+    return headerViews(this.columns(), {
+      sort: this.sort(),
+      query: this.query(),
+      fields: this.fields(),
+    }).map((header) => ({
+      ...header,
+      filterLabel: this.labels.get('S.FILTER.OPEN', { column: header.column.header }),
+    }));
   });
 
   protected readonly body = computed(() => {
@@ -102,17 +110,47 @@ export class SDataTable<T extends object> {
     }));
   });
 
+  protected readonly paging = computed(() => {
+    const query = this.query();
+    return {
+      page: query?.page ?? this.page(),
+      size: query?.size ?? this.pageSize(),
+      total: reachableTotal(this.total() ?? 0, this.limits()?.maxResultWindow ?? null),
+    };
+  });
+
   protected readonly columnCount = computed(
     () => this.columns().length + (this.rowActions() ? 1 : 0),
   );
   protected readonly showSkeleton = computed(() => this.loading() && this.rows().length === 0);
   protected readonly skeleton = SKELETON_ROWS;
 
-  protected toggleSort(column: SColumn): void {
+  protected onSort(column: SColumn, event: MouseEvent): void {
+    const query = this.query();
+    if (query) {
+      const options = { multi: event.shiftKey, maxSort: this.limits()?.maxSort };
+      this.query.set(toggleSort(query, column.key, options));
+      return;
+    }
     const current = this.sort();
     if (current?.key !== column.key) this.sort.set({ key: column.key, dir: 'asc' });
     else if (current.dir === 'asc') this.sort.set({ key: column.key, dir: 'desc' });
     else this.sort.set(null);
+  }
+
+  protected toggleFilter(key: string): void {
+    this.openFilter.update((open) => (open === key ? null : key));
+  }
+
+  protected applyFilter(key: string, condition: SFilterCondition | null): void {
+    this.query.update((query) => (query ? setColumnFilter(query, key, condition) : query));
+    this.openFilter.set(null);
+  }
+
+  protected onPage(page: number): void {
+    const query = this.query();
+    if (query) this.query.set(setPage(query, page));
+    else this.page.set(page);
   }
 }
 

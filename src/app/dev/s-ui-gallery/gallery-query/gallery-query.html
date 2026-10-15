@@ -1,0 +1,23 @@
+<s-panel>
+  <s-panel-header>Query table · Shift+click adds sort keys</s-panel-header>
+  <s-filter-bar>
+    <s-search placeholder="Search username or email" (searched)="search($event)" />
+  </s-filter-bar>
+  <s-filter-chips [(query)]="query" [fields]="fields" [columns]="columns" />
+  <s-data-table
+    [rows]="rows"
+    [columns]="columns"
+    rowKey="id"
+    caption="Users (query mode)"
+    [total]="145"
+    [(query)]="query"
+    [fields]="fields"
+    [limits]="limits"
+  />
+</s-panel>
+
+<s-panel padding="5">
+  <s-heading level="4">Request body</s-heading>
+  <s-text size="sm" tone="subtle">POST /api/secu/users/query</s-text>
+  <pre class="request">{{ request() | json }}</pre>
+</s-panel>

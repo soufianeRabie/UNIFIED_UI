@@ -107,6 +107,59 @@ th[aria-sort] .sort {
   font-size: var(--text-2xs);
 }
 
+.head {
+  display: flex;
+  gap: var(--space-1);
+  align-items: center;
+}
+
+[data-align='end'] .head {
+  justify-content: flex-end;
+}
+
+[data-align='center'] .head {
+  justify-content: center;
+}
+
+.order {
+  display: grid;
+  place-items: center;
+  min-inline-size: 16px;
+  block-size: 16px;
+  font-size: var(--text-2xs);
+  color: var(--seal-contrast);
+  background: var(--seal);
+  border-radius: var(--radius-pill);
+}
+
+.filter {
+  display: grid;
+  place-items: center;
+  inline-size: 22px;
+  block-size: 22px;
+  font-size: var(--text-2xs);
+  color: var(--ink-3);
+  cursor: pointer;
+  background: none;
+  border: 0;
+  border-radius: var(--radius-xs);
+}
+
+.filter:hover,
+.filter[aria-expanded='true'] {
+  color: var(--ink);
+  background: var(--paper-raised);
+}
+
+.filter.active {
+  color: var(--seal);
+}
+
+.filter:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
 .actions-col {
   inline-size: 1%;
   white-space: nowrap;
