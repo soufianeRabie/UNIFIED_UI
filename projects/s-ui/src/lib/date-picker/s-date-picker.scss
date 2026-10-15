@@ -1,0 +1,98 @@
+:host {
+  display: block;
+  min-inline-size: 0;
+}
+
+.control {
+  display: flex;
+  align-items: center;
+  block-size: 34px;
+  background: var(--paper-raised);
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius-sm);
+  transition:
+    border-color var(--duration-fast) var(--ease-standard),
+    box-shadow var(--duration-fast) var(--ease-standard);
+}
+
+.control[data-size='sm'] {
+  block-size: 28px;
+  font-size: var(--text-sm);
+}
+
+.control:hover:not(.disabled) {
+  border-color: var(--ink-3);
+}
+
+.control:focus-within {
+  border-color: var(--seal);
+  box-shadow: var(--focus-ring);
+}
+
+.control.disabled {
+  background: var(--paper-sunk);
+}
+
+.trigger {
+  display: flex;
+  flex: 1;
+  gap: var(--space-2);
+  align-items: center;
+  min-inline-size: 0;
+  block-size: 100%;
+  padding-inline: var(--space-3);
+  font: inherit;
+  color: var(--ink);
+  text-align: start;
+  cursor: pointer;
+  background: none;
+  border: 0;
+}
+
+.trigger:focus-visible {
+  outline: none;
+}
+
+.trigger:disabled {
+  color: var(--ink-3);
+  cursor: not-allowed;
+}
+
+.icon {
+  flex: none;
+  color: var(--ink-3);
+}
+
+.text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.placeholder {
+  color: var(--ink-3);
+}
+
+.clear {
+  display: grid;
+  flex: none;
+  place-items: center;
+  inline-size: 28px;
+  block-size: 28px;
+  margin-inline-end: var(--space-1);
+  color: var(--ink-3);
+  cursor: pointer;
+  background: none;
+  border: 0;
+  border-radius: var(--radius-xs);
+}
+
+.clear:hover {
+  color: var(--ink);
+  background: var(--paper-sunk);
+}
+
+.clear:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}

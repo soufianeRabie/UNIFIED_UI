@@ -13,7 +13,7 @@
   (click)="toggle()"
   (keydown.arrowDown)="open.set(true)"
 >
-  <span class="text" [class.placeholder]="!view().summary">{{
+  <span class="text" dir="auto" [class.placeholder]="!view().summary">{{
     view().summary ?? view().placeholder
   }}</span>
   <s-icon name="chevron-down" class="chevron" />
@@ -51,7 +51,7 @@
     @for (option of view().visible; track $index) {
       <li class="option" [cdkOption]="option.value" [cdkOptionDisabled]="!!option.disabled">
         <s-icon name="check" class="check" />
-        <span>{{ option.label }}</span>
+        <span dir="auto">{{ option.label }}</span>
       </li>
     } @empty {
       <li class="none" role="presentation">{{ view().empty }}</li>

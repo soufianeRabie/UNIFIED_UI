@@ -1,0 +1,29 @@
+<s-panel padding="5">
+  <s-stack gap="4">
+    <s-heading level="2">Widgets</s-heading>
+    <s-grid columns="2" gap="4">
+      <s-stack gap="3">
+        <s-field label="Status">
+          <s-select [options]="statuses" [(value)]="status" />
+        </s-field>
+        <s-field label="Roles" hint="Several values; the list filters as you type">
+          <s-select [options]="roles" multiple [(value)]="selectedRoles" />
+        </s-field>
+        <s-field label="Born on">
+          <s-date-picker [(value)]="day" />
+        </s-field>
+        <s-field label="Created between">
+          <s-date-picker mode="range" [(range)]="period" />
+        </s-field>
+        <s-text size="sm" tone="subtle"
+          >Values: {{ status() }} · {{ selectedRoles() }} · {{ day() }} · {{ period()?.start }} →
+          {{ period()?.end }}</s-text
+        >
+      </s-stack>
+      <s-stack gap="2">
+        <s-calendar [(value)]="calendarDay" min="2026-01-01" />
+        <s-text size="sm" tone="subtle">Picked: {{ calendarDay() ?? '—' }}</s-text>
+      </s-stack>
+    </s-grid>
+  </s-stack>
+</s-panel>

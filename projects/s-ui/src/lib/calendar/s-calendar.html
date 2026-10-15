@@ -1,0 +1,67 @@
+<div class="head">
+  <button
+    type="button"
+    s-icon-button
+    icon="chevron-left"
+    variant="ghost"
+    size="sm"
+    [aria-label]="view().previous"
+    (click)="moveMonth(-1)"
+  ></button>
+  <div class="title" [id]="titleId" aria-live="polite">{{ view().title }}</div>
+  <button
+    type="button"
+    s-icon-button
+    icon="chevron-right"
+    variant="ghost"
+    size="sm"
+    [aria-label]="view().next"
+    (click)="moveMonth(1)"
+  ></button>
+</div>
+
+<table role="grid" class="grid" [attr.aria-labelledby]="titleId">
+  <thead>
+    <tr>
+      @for (weekday of view().weekdays; track $index) {
+        <th scope="col" [attr.abbr]="weekday.long">{{ weekday.short }}</th>
+      }
+    </tr>
+  </thead>
+  <tbody>
+    @for (week of view().weeks; track $index) {
+      <tr>
+        @for (day of week; track day.iso) {
+          <td
+            role="gridcell"
+            [attr.aria-selected]="day.selected"
+            [class.in-range]="day.inRange"
+            [class.range-start]="day.rangeStart"
+            [class.range-end]="day.rangeEnd"
+          >
+            <button
+              type="button"
+              class="day"
+              [attr.data-iso]="day.iso"
+              [attr.tabindex]="day.focusable ? 0 : -1"
+              [attr.aria-label]="day.label"
+              [attr.aria-current]="day.today ? 'date' : null"
+              [attr.aria-pressed]="day.selected"
+              [class.outside]="!day.inMonth"
+              [class.today]="day.today"
+              [disabled]="day.disabled"
+              (click)="pick(day.iso)"
+              (keydown)="onKeydown($event)"
+            >
+              {{ day.text }}
+            </button>
+          </td>
+        }
+      </tr>
+    }
+  </tbody>
+</table>
+
+<div class="foot">
+  <button type="button" class="link" (click)="goToToday()">{{ view().todayLabel }}</button>
+</div>

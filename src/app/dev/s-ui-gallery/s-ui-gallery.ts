@@ -27,6 +27,7 @@ import {
   SText,
   type SSort,
 } from '@s/ui';
+import { GalleryWidgets } from './gallery-widgets/gallery-widgets';
 import { GALLERY_COLUMNS, GALLERY_USERS, type GalleryUser } from './s-ui-gallery.data';
 
 type TableState = 'data' | 'loading' | 'empty' | 'error';
@@ -39,6 +40,7 @@ type TableState = 'data' | 'loading' | 'empty' | 'error';
 @Component({
   selector: 'app-s-ui-gallery',
   imports: [
+    GalleryWidgets,
     SButton,
     SCell,
     SDataTable,

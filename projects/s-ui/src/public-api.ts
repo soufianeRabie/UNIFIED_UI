@@ -34,4 +34,6 @@ export * from './lib/dialog';
 export * from './lib/confirm';
 export * from './lib/popover';
 export * from './lib/select';
+export * from './lib/calendar';
+export * from './lib/date-picker';
 export * from './lib/query';

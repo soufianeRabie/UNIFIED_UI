@@ -1,0 +1,128 @@
+:host {
+  display: block;
+  inline-size: max-content;
+  padding: var(--space-3);
+  font-variant-numeric: tabular-nums;
+}
+
+.head {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  justify-content: space-between;
+  margin-block-end: var(--space-2);
+}
+
+.title {
+  font-family: var(--font-serif);
+  font-size: var(--text-md);
+  font-weight: var(--weight-semibold);
+  color: var(--ink);
+  text-transform: capitalize;
+}
+
+.grid {
+  border-collapse: separate;
+  border-spacing: 0 2px;
+}
+
+th {
+  padding-block: var(--space-1);
+  font-size: var(--text-2xs);
+  font-weight: var(--weight-semibold);
+  color: var(--ink-3);
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-caps);
+}
+
+td {
+  padding: 0;
+  text-align: center;
+}
+
+.day {
+  inline-size: 36px;
+  block-size: 34px;
+  font: inherit;
+  font-size: var(--text-sm);
+  color: var(--ink);
+  cursor: pointer;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+}
+
+.day:hover:not(:disabled) {
+  background: var(--paper-sunk);
+}
+
+.day:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.day.outside {
+  color: var(--ink-3);
+}
+
+.day.today {
+  font-weight: var(--weight-semibold);
+  border-color: var(--rule-strong);
+}
+
+.day:disabled {
+  color: var(--ink-3);
+  text-decoration: line-through;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+td.in-range,
+td.range-start,
+td.range-end {
+  background: var(--seal-wash);
+}
+
+/* Logical radii: the band rounds at the reading start and end, in LTR and RTL alike. */
+td.range-start {
+  border-start-start-radius: var(--radius-sm);
+  border-end-start-radius: var(--radius-sm);
+}
+
+td.range-end {
+  border-start-end-radius: var(--radius-sm);
+  border-end-end-radius: var(--radius-sm);
+}
+
+td[aria-selected='true'] .day {
+  font-weight: var(--weight-semibold);
+  color: var(--seal-contrast);
+  background: var(--seal);
+}
+
+.foot {
+  display: flex;
+  justify-content: flex-end;
+  margin-block-start: var(--space-2);
+}
+
+.link {
+  padding: var(--space-1) var(--space-2);
+  font: inherit;
+  font-size: var(--text-sm);
+  color: var(--seal);
+  cursor: pointer;
+  background: none;
+  border: 0;
+  border-radius: var(--radius-xs);
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+.link:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}

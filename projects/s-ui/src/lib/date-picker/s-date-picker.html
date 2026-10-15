@@ -1,0 +1,38 @@
+<div class="control" [attr.data-size]="controlSize()" [class.disabled]="disabled()">
+  <button
+    #trigger
+    type="button"
+    class="trigger"
+    [attr.id]="field?.controlId ?? null"
+    [attr.aria-label]="ariaLabel() ?? null"
+    [attr.aria-describedby]="field?.describedBy() ?? null"
+    [attr.aria-invalid]="field?.invalid() || null"
+    aria-haspopup="dialog"
+    [attr.aria-expanded]="open()"
+    [disabled]="disabled()"
+    (click)="toggle()"
+  >
+    <s-icon name="calendar" class="icon" />
+    <span class="text" dir="auto" [class.placeholder]="view().empty">{{
+      view().text ?? view().placeholder
+    }}</span>
+  </button>
+  @if (!view().empty && !disabled()) {
+    <button type="button" class="clear" [attr.aria-label]="view().clear" (click)="clear()">
+      <s-icon name="times" />
+    </button>
+  }
+</div>
+
+<s-popover [(open)]="open" [anchor]="trigger" [label]="view().placeholder" (closed)="onClosed()">
+  <s-calendar
+    [mode]="mode()"
+    [value]="value()"
+    [range]="range()"
+    [min]="min()"
+    [max]="max()"
+    (valueChange)="onDay($event)"
+    (rangeChange)="onRange($event)"
+    (picked)="open.set(false); trigger.focus()"
+  />
+</s-popover>
