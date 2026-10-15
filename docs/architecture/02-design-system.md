@@ -78,14 +78,14 @@ projects/s-ui/src/lib/button/
   [title]="'SECU.USERS.TITLE' | translate"
   [subtitle]="'SECU.USERS.SUBTITLE' | translate"
 >
-  <button s-button variant="primary" icon="plus" sPageActions (click)="create()">
+  <button s-button variant="primary" icon="plus" s-page-actions (click)="create()">
     {{ 'SECU.USERS.NEW' | translate }}
   </button>
 </s-page-header>
 
 <s-panel>
   <s-filter-bar>
-    <s-search [(value)]="query" (search)="store.search($event)" />
+    <s-search [(value)]="query" (searched)="store.search($event)" />
     <s-switch [(checked)]="showInactive">{{ 'COMMON.SHOW_INACTIVE' | translate }}</s-switch>
   </s-filter-bar>
 

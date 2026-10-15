@@ -1,0 +1,15 @@
+<s-icon class="icon" name="search" />
+<input
+  class="s-control"
+  type="search"
+  [attr.aria-label]="text().placeholder"
+  [placeholder]="text().placeholder"
+  [value]="value()"
+  (input)="onInput($event)"
+  (keydown.escape)="clear()"
+/>
+@if (value()) {
+  <button type="button" class="clear" [attr.aria-label]="text().clear" (click)="clear()">
+    <s-icon name="times" />
+  </button>
+}

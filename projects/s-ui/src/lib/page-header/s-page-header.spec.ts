@@ -6,7 +6,7 @@ import { SPageHeader } from './s-page-header';
   imports: [SPageHeader],
   template: `
     <s-page-header title="Users" subtitle="Manage accounts" eyebrow="Security">
-      <button type="button" sPageActions>New user</button>
+      <button type="button" s-page-actions>New user</button>
     </s-page-header>
     <s-page-header title="Bare" />
   `,

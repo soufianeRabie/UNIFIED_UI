@@ -242,6 +242,16 @@ export default tseslint.config(
       ],
     },
   },
+  // Every @s/ui attribute is kebab-case like its components: <input s-input>, <ng-template s-cell>.
+  {
+    files: ['projects/s-ui/**/*.ts'],
+    rules: {
+      '@angular-eslint/directive-selector': [
+        'error',
+        { type: 'attribute', prefix: 's', style: 'kebab-case' },
+      ],
+    },
+  },
   {
     files: ['projects/s-ui/**/*.ts'],
     rules: {

@@ -60,7 +60,7 @@ users-list.html ──(intent: search/page/sort/save/delete)──► UsersStore
 A page template is only composition. If you need a `<div>` with a class, you need an `@s/ui` component instead.
 
 ```html
-<s-page-header …><button s-button sPageActions …></button></s-page-header>
+<s-page-header …><button s-button s-page-actions …></button></s-page-header>
 <s-panel>
   <s-filter-bar>…</s-filter-bar>
   <s-data-table …>

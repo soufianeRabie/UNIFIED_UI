@@ -8,7 +8,7 @@ import { SPanelHeader } from './s-panel-header';
   template: `
     <s-panel tone="accent" padding="5">
       <p>body</p>
-      <s-panel-header>Title <button type="button" sPanelActions>Add</button></s-panel-header>
+      <s-panel-header>Title <button type="button" s-panel-actions>Add</button></s-panel-header>
     </s-panel>
   `,
 })
@@ -24,7 +24,7 @@ describe('SPanel', () => {
     expect(panel.firstElementChild?.tagName).toBe('S-PANEL-HEADER');
   });
 
-  it('puts [sPanelActions] in the header actions slot', () => {
+  it('puts [s-panel-actions] in the header actions slot', () => {
     const fixture = TestBed.createComponent(Host);
     fixture.detectChanges();
     const actions = fixture.nativeElement.querySelector('s-panel-header .actions') as HTMLElement;

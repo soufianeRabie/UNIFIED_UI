@@ -7,12 +7,12 @@
 
 ## 1. Current status
 
-| Field                   | Value                                                                                                                                         |
-| ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Current phase**       | Phase 1 — Design system foundation (1.1–1.2 done)                                                                                             |
-| **Last completed step** | 1.3b text, page header, actions/status components — 2026-10-15                                                                                |
-| **Next step**           | 1.3c forms: `SInput` (directive, uses `styles/controls.css`), `SField`, `SSwitch` (ControlValueAccessor), `SSearch` (debounced), `SFilterBar` |
-| **Blocked by**          | —                                                                                                                                             |
+| Field                   | Value                                                                                                                                           |
+| ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Current phase**       | Phase 1 — Design system foundation (1.1–1.2 done)                                                                                               |
+| **Last completed step** | 1.3c form components — 2026-10-15                                                                                                               |
+| **Next step**           | 1.3d data: `SDataTable` (typed columns, `s-cell` / `s-row-actions` templates, sort, skeleton, empty, error, responsive priority), `SPagination` |
+| **Blocked by**          | —                                                                                                                                               |
 
 ### Phase checklist (details in `docs/architecture/07-migration-plan.md`)
 
@@ -29,7 +29,7 @@
   - [ ] 1.3 Components, one folder each with spec (02 §2 Phase 1 list)
     - [x] 1.3a core (`scale.types`, `SUiI18n` contract + `SUiLabels`, `provideSUi`, `_scale.scss`) + layout (`SStack`, `SRow`, `SGrid`, `SPanel`, `SPanelHeader`); app bridge `sUiI18nAdapter`; `S.*` keys in en/fr
     - [x] 1.3b `SText`, `SHeading`, `SNotice`, `SPageHeader`, `SIcon`, `SButton`, `SIconButton`, `SStamp`, `SEmpty`, `SKpi`
-    - [ ] 1.3c forms (input, field, switch, search, filter bar)
+    - [x] 1.3c `SField` (+ `S_FIELD` context), `SInput` (directive), `SSwitch` (ControlValueAccessor), `SSearch` (debounced `searched`), `SFilterBar`
     - [ ] 1.3d data (data table, cell, row actions, pagination)
     - [ ] 1.3e overlays (dialog, confirm)
 - [ ] **Phase 2 — Shell + reference screen (Users)** in `src/app/domains/security`
@@ -94,6 +94,8 @@ Written before the handbook; violates ADR 0005 (inline templates/styles, several
 ## 5. Log (newest first)
 
 ### 2026-10-15
+
+- **1.3c forms:** `field/` (`SField` provides `S_FIELD`: id, `aria-describedby` → hint/error, `aria-invalid`; error is `role=alert`), `input/` (`SInput` directive on input/select/textarea, consumes `S_FIELD`; `controlSize` not `size` — native attribute clash), `switch/` (`role=switch`, labelled by projected text, CVA incl. form-disabled, logical `inset-inline-start` so it mirrors in RTL), `search/` (`[(value)]`, debounced `(searched)` — not `search`, a native event; clear button + Escape; labels via `SUiLabels`), `filter-bar/` (`role=search`). Conventions: all `@s/ui` attributes kebab-case (`s-page-actions`, `s-panel-actions` renamed; ESLint directive-selector kebab for `projects/s-ui`). Handbook 02 §4 updated. **Verified:** `verify` ✔ — 25 files / 46 tests.
 
 - **1.3b text / page / actions:** 10 components, one folder each with spec: `text/`, `heading/` (+types), `notice/`, `page-header/`, `icon/` (decorative unless labelled; directional glyphs mirror in RTL), `button/` + `icon-button/` (+types) sharing `core/_button.scss`, `stamp/`, `empty/`, `kpi/`. API decisions: `SIconButton` takes its accessible name as **`aria-label`** (required input `ariaLabel` aliased `aria-label`) so the template a11y linter recognises it; ESLint component selectors may be attributes (`button[s-button]`); new token `--text-display` (fluid page title) instead of a raw `clamp()` in a component; Sass `list.nth`. Handbook 02/04 updated. **Verified:** `verify` ✔ — 20 files / 36 tests.
 

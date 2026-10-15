@@ -1,0 +1,14 @@
+@if (label(); as text) {
+  <label class="label" [for]="controlId">
+    {{ text }}
+    @if (required()) {
+      <span class="required" aria-hidden="true">*</span>
+    }
+  </label>
+}
+<ng-content />
+@if (error(); as message) {
+  <span class="error" role="alert" [id]="errorId">{{ message }}</span>
+} @else if (hint(); as text) {
+  <span class="hint" [id]="hintId">{{ text }}</span>
+}

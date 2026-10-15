@@ -5,7 +5,7 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
  * page's only `<h1>`), a one-line subtitle, and the screen's main actions.
  *
  *   <s-page-header [title]="'SECU.USERS.TITLE' | translate">
- *     <button s-button variant="primary" sPageActions>…</button>
+ *     <button s-button variant="primary" s-page-actions>…</button>
  *   </s-page-header>
  */
 @Component({

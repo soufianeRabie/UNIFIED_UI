@@ -5,7 +5,7 @@ import type { PanelPadding, PanelTone } from './s-panel.types';
  * A surface: the card every list, form and detail section sits on.
  *
  *   <s-panel padding="5">
- *     <s-panel-header>Title <button s-button sPanelActions>…</button></s-panel-header>
+ *     <s-panel-header>Title <button s-button s-panel-actions>…</button></s-panel-header>
  *     …
  *   </s-panel>
  */

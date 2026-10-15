@@ -1,0 +1,12 @@
+<button
+  type="button"
+  role="switch"
+  class="track"
+  [attr.aria-checked]="checked()"
+  [attr.aria-labelledby]="labelId"
+  [disabled]="disabled() || formDisabled()"
+  (click)="toggle()"
+>
+  <span class="thumb"></span>
+</button>
+<span class="label" [id]="labelId"><ng-content /></span>

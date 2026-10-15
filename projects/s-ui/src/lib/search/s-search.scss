@@ -1,0 +1,51 @@
+:host {
+  position: relative;
+  display: block;
+  flex: 1 1 260px;
+  min-inline-size: 200px;
+}
+
+.icon {
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: 11px;
+  font-size: var(--text-sm);
+  color: var(--ink-3);
+  pointer-events: none;
+  translate: 0 -50%;
+}
+
+input {
+  padding-inline: 32px;
+}
+
+input::-webkit-search-cancel-button {
+  display: none;
+}
+
+.clear {
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-end: var(--space-1);
+  display: grid;
+  place-items: center;
+  inline-size: 26px;
+  block-size: 26px;
+  padding: 0;
+  color: var(--ink-3);
+  cursor: pointer;
+  background: none;
+  border: 0;
+  border-radius: var(--radius-sm);
+  translate: 0 -50%;
+}
+
+.clear:hover {
+  color: var(--ink);
+  background: var(--paper-sunk);
+}
+
+.clear:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
