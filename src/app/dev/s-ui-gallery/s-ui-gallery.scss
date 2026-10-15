@@ -1,0 +1,8 @@
+// Dev tool without the app shell: give the page its own breathing room.
+:host {
+  display: block;
+  max-inline-size: 1280px;
+  min-block-size: 100dvh;
+  padding: var(--space-8) var(--space-6);
+  margin-inline: auto;
+}

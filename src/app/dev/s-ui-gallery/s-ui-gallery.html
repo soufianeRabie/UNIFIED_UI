@@ -1,0 +1,156 @@
+<s-stack gap="6">
+  <s-page-header
+    eyebrow="Design system · dev only"
+    title="S UI gallery"
+    subtitle="Every @s/ui component, rendered from tokens."
+  >
+    <button type="button" s-button s-page-actions icon="sun" (click)="setTheme('light')">
+      Light
+    </button>
+    <button type="button" s-button s-page-actions icon="moon" (click)="setTheme('dark')">
+      Dark
+    </button>
+    <button type="button" s-button s-page-actions icon="arrows-h" (click)="toggleDirection()">
+      LTR / RTL
+    </button>
+  </s-page-header>
+
+  <s-grid columns="4" gap="4">
+    <s-kpi [value]="4" label="Users" icon="users" />
+    <s-kpi [value]="activeCount()" label="Active" icon="check-circle" tone="success" />
+    <s-kpi [value]="8" label="Roles" icon="id-card" tone="special" />
+    <s-kpi [value]="2" label="Pending" icon="clock" tone="warning" />
+  </s-grid>
+
+  <s-panel>
+    <s-panel-header>
+      Users
+      <s-row s-panel-actions gap="2">
+        <button type="button" s-button size="sm" (click)="state.set('data')">Data</button>
+        <button type="button" s-button size="sm" (click)="state.set('loading')">Loading</button>
+        <button type="button" s-button size="sm" (click)="state.set('empty')">Empty</button>
+        <button type="button" s-button size="sm" (click)="state.set('error')">Error</button>
+      </s-row>
+    </s-panel-header>
+    <s-filter-bar>
+      <s-search [(value)]="query" placeholder="Search by username or name" />
+      <s-switch [(checked)]="showInactive">Show inactive</s-switch>
+    </s-filter-bar>
+    <s-data-table
+      [rows]="users()"
+      [columns]="columns"
+      rowKey="id"
+      caption="Users"
+      [loading]="state() === 'loading'"
+      [error]="state() === 'error' ? 'The users could not be loaded. Try again in a moment.' : null"
+      [total]="57"
+      [(page)]="page"
+      [(sort)]="sort"
+      emptyTitle="No users match your filters"
+      emptyIcon="users"
+    >
+      <ng-template s-cell="active" [rows]="users()" let-user>
+        <s-stamp [tone]="user.active ? 'success' : 'neutral'" [dot]="user.active">
+          {{ user.active ? 'Active' : 'Inactive' }}
+        </s-stamp>
+      </ng-template>
+      <ng-template s-row-actions [rows]="users()" let-user>
+        <button
+          type="button"
+          s-icon-button
+          icon="pencil"
+          variant="ghost"
+          size="sm"
+          aria-label="Edit"
+          (click)="dialogOpen.set(true)"
+        ></button>
+        <button
+          type="button"
+          s-icon-button
+          icon="trash"
+          variant="danger"
+          size="sm"
+          aria-label="Delete"
+          (click)="remove(user)"
+        ></button>
+      </ng-template>
+    </s-data-table>
+  </s-panel>
+  <s-text size="sm" tone="subtle">Last action: {{ lastAction() }}</s-text>
+
+  <s-grid columns="2" gap="4">
+    <s-panel padding="5">
+      <s-stack gap="4">
+        <s-heading level="2">Form</s-heading>
+        <s-grid columns="2" gap="3">
+          <s-field label="Username" hint="Letters, digits and dots" required>
+            <input s-input mono value="k.benali" />
+          </s-field>
+          <s-field label="Email" error="Enter a valid email address">
+            <input s-input type="email" value="k.benali@" />
+          </s-field>
+        </s-grid>
+        <s-field label="Role">
+          <select s-input>
+            <option>Manager</option>
+            <option>Auditor</option>
+          </select>
+        </s-field>
+        <s-field label="Notes" hint="Visible to administrators only">
+          <textarea s-input></textarea>
+        </s-field>
+        <s-switch [checked]="true">Account active</s-switch>
+        <s-row gap="2" justify="end">
+          <button type="button" s-button variant="ghost">Cancel</button>
+          <button type="button" s-button variant="primary" icon="check">Save</button>
+        </s-row>
+      </s-stack>
+    </s-panel>
+
+    <s-stack gap="4">
+      <s-panel padding="5" tone="accent">
+        <s-stack gap="3">
+          <s-heading level="4">Typography</s-heading>
+          <s-heading level="1">Document title</s-heading>
+          <s-text tone="muted">Secondary text carries supporting detail.</s-text>
+          <s-text mono>REF-2026-00451</s-text>
+          <s-row gap="2" wrap>
+            <s-stamp tone="success" dot>Granted</s-stamp>
+            <s-stamp tone="special">Pending review</s-stamp>
+            <s-stamp tone="warning">Expiring</s-stamp>
+            <s-stamp tone="danger">Revoked</s-stamp>
+            <s-stamp>Draft</s-stamp>
+          </s-row>
+        </s-stack>
+      </s-panel>
+      <s-notice tone="success">Changes saved.</s-notice>
+      <s-notice tone="warning">This token expires in 3 days.</s-notice>
+      <s-notice tone="danger">The provider rejected the message.</s-notice>
+      <s-notice>Notifications are sent in the recipient's language.</s-notice>
+      <s-row gap="2" wrap>
+        <button type="button" s-button variant="primary">Primary</button>
+        <button type="button" s-button>Secondary</button>
+        <button type="button" s-button variant="ghost">Ghost</button>
+        <button type="button" s-button variant="danger" icon="trash">Danger</button>
+        <button type="button" s-button loading>Saving</button>
+        <button type="button" s-button disabled>Disabled</button>
+      </s-row>
+      <s-panel tone="muted">
+        <s-empty icon="inbox" title="Nothing here yet"
+          >Empty states explain what will appear.</s-empty
+        >
+      </s-panel>
+    </s-stack>
+  </s-grid>
+</s-stack>
+
+<s-dialog [(open)]="dialogOpen" title="Edit user">
+  <s-stack gap="3">
+    <s-field label="Full name"><input s-input value="Karima Benali" /></s-field>
+    <s-field label="Email"><input s-input type="email" value="k.benali@example.com" /></s-field>
+  </s-stack>
+  <ng-container s-dialog-footer>
+    <button type="button" s-button variant="ghost" (click)="dialogOpen.set(false)">Cancel</button>
+    <button type="button" s-button variant="primary" (click)="dialogOpen.set(false)">Save</button>
+  </ng-container>
+</s-dialog>

@@ -45,7 +45,11 @@
 
 
 /* ── Base Reset ──────────────────────────────────────────────────────────── */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+/* The reset lives in the `base` layer (declared in projects/s-ui/styles/index.css):
+   @s/ui components override it, while every unlayered legacy rule still wins. */
+@layer base {
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+}
 
 html { font-size: 14px; -webkit-font-smoothing: antialiased; }
 

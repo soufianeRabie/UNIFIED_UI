@@ -1,3 +1,4 @@
+import { isDevMode } from '@angular/core';
 import { Routes } from '@angular/router';
 
 import { authGuard } from './core/guards/auth.guard';
@@ -58,6 +59,12 @@ export const routes: Routes = [
     path: 'notif',
     canActivate: [authGuard],
     loadChildren: () => import('./notif/notif.routes').then((m) => m.NOTIF_ROUTES),
+  },
+  {
+    // Design-system gallery for reviewers; never matched in production builds.
+    path: 'dev/ui',
+    canMatch: [() => isDevMode()],
+    loadComponent: () => import('./dev/s-ui-gallery/s-ui-gallery').then((m) => m.SUiGallery),
   },
   {
     path: '**',

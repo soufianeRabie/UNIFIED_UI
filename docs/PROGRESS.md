@@ -7,12 +7,12 @@
 
 ## 1. Current status
 
-| Field                   | Value                                                                                                                               |
-| ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| **Current phase**       | Phase 1 — Design system foundation (1.1–1.2 done)                                                                                   |
-| **Last completed step** | 1.3e overlays — Phase 1 component set complete — 2026-10-15                                                                         |
-| **Next step**           | 1.4 Visual review: dev-only gallery route rendering every component (light/dark/RTL), then Phase 2 (shell + Users reference screen) |
-| **Blocked by**          | —                                                                                                                                   |
+| Field                   | Value                                                                                                                                                                            |
+| ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Current phase**       | Phase 1 complete → Phase 2 — Shell + reference screen (Users)                                                                                                                    |
+| **Last completed step** | 1.4 Visual review gallery `/dev/ui` — Phase 1 done — 2026-10-15                                                                                                                  |
+| **Next step**           | Phase 2.1 — `core/shell` (`SAppShell`-style frame: sidebar nav from the permission menu, topbar with breadcrumbs + language switcher) replacing `secu-layout` and `notif-layout` |
+| **Blocked by**          | —                                                                                                                                                                                |
 
 ### Phase checklist (details in `docs/architecture/07-migration-plan.md`)
 
@@ -22,17 +22,17 @@
   - [x] 0.3 Delete dead code (20 unreachable files, Tailwind, broken `@secu/ui` dependency, scaffold `secu/app.*`)
   - [x] 0.4 `scripts/check-i18n.mjs` (`npm run i18n:check`, part of `verify`) + 189 missing keys filled (en + fr)
   - [x] 0.5 Repair corrupted glyphs (lost emoji/symbol bytes) in legacy templates
-- [ ] **Phase 1 — Design system foundation (`projects/s-ui`)**
+- [x] **Phase 1 — Design system foundation (`projects/s-ui`)** (done 2026-10-15)
   - [x] Tokens written: `projects/s-ui/styles/tokens.css`, `base.css`, `controls.css`, `overlay.css`, `index.css`
   - [x] 1.1 Wire into the build: `angular.json` styles (CDK overlay, self-hosted fonts, `s-ui/styles/index.css`), `@s/ui` path alias, legacy `--s-*` palette bridged to tokens
   - [x] 1.2 Multi-language foundation (ADR 0006): `public/i18n/languages.json` registry, `core/i18n` (`LanguageCatalog`, `I18nStore`, `acceptLanguageInterceptor`, `provideI18n`, `LanguageSwitcher`), `<html lang dir>`, N-language `check-i18n`, `DomI18nService` generalised, `ar.json` starter (disabled)
-  - [ ] 1.3 Components, one folder each with spec (02 §2 Phase 1 list)
+  - [x] 1.3 Components, one folder each with spec (02 §2 Phase 1 list)
     - [x] 1.3a core (`scale.types`, `SUiI18n` contract + `SUiLabels`, `provideSUi`, `_scale.scss`) + layout (`SStack`, `SRow`, `SGrid`, `SPanel`, `SPanelHeader`); app bridge `sUiI18nAdapter`; `S.*` keys in en/fr
     - [x] 1.3b `SText`, `SHeading`, `SNotice`, `SPageHeader`, `SIcon`, `SButton`, `SIconButton`, `SStamp`, `SEmpty`, `SKpi`
     - [x] 1.3c `SField` (+ `S_FIELD` context), `SInput` (directive), `SSwitch` (ControlValueAccessor), `SSearch` (debounced `searched`), `SFilterBar`
     - [x] 1.3d `SDataTable` (+ `s-cell`, `s-row-actions` typed templates, types), `SPagination`
     - [x] 1.3e `SDialog` (declarative `[(open)]`), `SConfirm` service (`alertdialog`, focus on Cancel)
-  - [ ] 1.4 Visual review page (dev only)
+  - [x] 1.4 Visual review gallery `src/app/dev/s-ui-gallery` at `/dev/ui` (dev builds only)
 - [ ] **Phase 2 — Shell + reference screen (Users)** in `src/app/domains/security`
 - [ ] **Phase 3 — Security domain screens**
 - [ ] **Phase 4 — Notification domain screens**
@@ -81,20 +81,23 @@ Written before the handbook; violates ADR 0005 (inline templates/styles, several
 
 ## 4. Known issues / open items
 
-| #   | Issue                                                                                                                                                 | Owner decision needed?                      |
-| --- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------- |
-| 1   | 27 rows in `hr_management."NOT_NOTIFICATION"` + 33 Hangfire jobs created 2026-10-14 ~22:36 by a mis-configured run — not cleaned                      | Yes: delete or keep                         |
-| 2   | 189 translation keys missing (en + fr); generated keys like `DOM_FALLBACK.TEXT_178`                                                                   | No — Phase 0.4                              |
-| 3   | ~~~440 corrupted characters~~ fixed in 0.5 (originals restored; emoji icons are replaced by `s-icon` during migration)                                | No                                          |
-| 4   | Security seeder leaves admin `tenant_id` NULL → notification API rejects calls (`Missing X-Tenant-Id`)                                                | Yes: seed a default tenant in SECURITY_API? |
-| 5   | Gmail app password was stored in plain text in old config → rotate it                                                                                 | Owner action                                |
-| 6   | Old folders still on disk: `C:\SecurityUi`, `C:\DATA SOUFIANE RABYA\NotificationApi\NotificationApi`, `HR_MANAGEMENT\{NOTIFICATION_API,SECURITY_API}` | Yes: delete when confirmed                  |
+| #   | Issue                                                                                                                                                            | Owner decision needed?                      |
+| --- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------- |
+| 1   | 27 rows in `hr_management."NOT_NOTIFICATION"` + 33 Hangfire jobs created 2026-10-14 ~22:36 by a mis-configured run — not cleaned                                 | Yes: delete or keep                         |
+| 2   | 189 translation keys missing (en + fr); generated keys like `DOM_FALLBACK.TEXT_178`                                                                              | No — Phase 0.4                              |
+| 3   | ~~~440 corrupted characters~~ fixed in 0.5 (originals restored; emoji icons are replaced by `s-icon` during migration)                                           | No                                          |
+| 4   | Security seeder leaves admin `tenant_id` NULL → notification API rejects calls (`Missing X-Tenant-Id`)                                                           | Yes: seed a default tenant in SECURITY_API? |
+| 5   | Gmail app password was stored in plain text in old config → rotate it                                                                                            | Owner action                                |
+| 7   | Legacy `DomI18nService` also rewrites text and `aria-label`s of new `@s/ui` components (seen in the gallery: "Edit" → "Modifier") — harmless, removed in Phase 5 | No                                          |
+| 6   | Old folders still on disk: `C:\SecurityUi`, `C:\DATA SOUFIANE RABYA\NotificationApi\NotificationApi`, `HR_MANAGEMENT\{NOTIFICATION_API,SECURITY_API}`            | Yes: delete when confirmed                  |
 
 ---
 
 ## 5. Log (newest first)
 
 ### 2026-10-15
+
+- **1.4 Visual review:** dev-only gallery `src/app/dev/s-ui-gallery/` (route `/dev/ui`, `canMatch: isDevMode()`, strict-linted) rendering every component with sample data + Light/Dark/RTL toggles and table state switches. Reviewed in the browser: narrow layout (grids collapse, low/medium-priority columns hide), desktop layout, dark + RTL (everything mirrors, switch thumb uses logical inset), dialog (serif title, focus on first field, page hidden from AT), confirm (`alertdialog`, focus on Cancel, red "Supprimer"), French `S.*` labels via the adapter ("1–20 sur 57"). **Bug found + fixed:** the legacy universal reset `* { margin:0; padding:0 }` was unlayered and beat `@layer components` (inputs had no padding) → moved into `@layer base` in `secu.styles.css`; verified legacy Users screen values unchanged (title margin 0, td 11/14px, search 7/10/30px). **Phase 1 complete.**
 
 - **1.3e overlays:** `dialog/` (`SDialog`: `[(open)]` + `title` + `width` sm/md/lg; CDK Dialog with focus trap, Escape/backdrop close, focus restore, autofocus on the first form field, page hidden from assistive tech while open; `s-dialog-footer` slot) and `confirm/` (`SConfirm.ask(options): Promise<boolean>` → `SConfirmDialog` `role=alertdialog`, `aria-labelledby/describedby`, danger tone = red "Delete", focus starts on Cancel). Shared `core/_dialog.scss` frame. Handbook 02 §5 corrected (CDK hides the page instead of `aria-modal`). **Verified:** `verify` ✔ — 29 files / 62 tests. **All Phase 1 components built:** 24 public components/directives/services in 22 folders.
 
