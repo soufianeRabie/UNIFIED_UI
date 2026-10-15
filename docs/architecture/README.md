@@ -16,6 +16,8 @@ When the code and this handbook disagree, the code is wrong — or the handbook 
 | 08  | [Query contract](08-query-contract.md)         | You build a list, a table or a list API                    |
 | ADR | [Decision records](adr/)                       | You want the _why_ behind a rule                           |
 
+Back-end rules (shared .NET packages, errors, protection, database portability, concurrency): `PLATFORM_DOTNET/docs/architecture/`.
+
 ## The rules
 
 1. **One responsibility per file.** A component is a folder: `.ts`, `.html`, `.scss`, `.spec.ts`. Types, DTOs, mappers and constants live in their own files.
@@ -29,4 +31,5 @@ When the code and this handbook disagree, the code is wrong — or the handbook 
 9. **Every string is translated, every control is accessible.** WCAG 2.2 AA is the floor. ([02](02-design-system.md), [03](03-angular-standards.md))
 10. **Lists are queried server-side through one contract.** `POST /query` with paging, sort, search and a filter tree; tables bind to `SQuery`. ([08](08-query-contract.md))
 11. **Every widget is ours, every component is thin.** No native/third-party widgets; logic lives in pure, tested functions. ([ADR 0008](adr/0008-own-widgets-thin-components.md))
-12. **Nothing merges red.** Lint, style lint, types, tests and budgets pass, or the PR does not merge. ([06](06-quality-gates.md))
+12. **Errors are codes.** The UI translates `ERRORS.<code>` with `args` and maps `errors[].path` to fields; server text is only a fallback. ([ADR 0009](adr/0009-error-codes-contract.md))
+13. **Nothing merges red.** Lint, style lint, types, tests and budgets pass, or the PR does not merge. ([06](06-quality-gates.md))

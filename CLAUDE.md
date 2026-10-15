@@ -4,7 +4,7 @@
 
 1. `docs/PROGRESS.md` — current phase, next step, known issues, environment facts.
 2. `docs/architecture/README.md` — the ten rules.
-3. The handbook page(s) for the step you are about to do (`docs/architecture/01`–`07`, `adr/`).
+3. The handbook page(s) for the step you are about to do (`docs/architecture/01`–`08`, `adr/`). For any back-end step: `../PLATFORM_DOTNET/CLAUDE.md` and `../PLATFORM_DOTNET/docs/architecture/` (shared .NET packages, errors as codes, protection, DB portability, concurrency).
 
 ## Non-negotiable
 
