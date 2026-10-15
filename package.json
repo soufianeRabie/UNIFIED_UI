@@ -25,7 +25,8 @@
           "parser": "angular"
         }
       }
-    ]
+    ],
+    "endOfLine": "auto"
   },
   "private": true,
   "packageManager": "npm@11.6.4",
@@ -45,14 +46,10 @@
     "@ngx-translate/core": "^18.0.0",
     "@ngx-translate/http-loader": "^18.0.0",
     "@primeuix/themes": "^2.0.3",
-    "@secu/ui": "file:../../SecuLib/dist/secu-ui",
-    "autoprefixer": "^10.4.24",
-    "postcss": "^8.5.6",
     "primeicons": "^7.0.0",
     "primeng": "^21.1.1",
     "quill": "^2.0.3",
     "rxjs": "~7.8.0",
-    "tailwindcss": "^3.4.17",
     "tslib": "^2.3.0"
   },
   "devDependencies": {

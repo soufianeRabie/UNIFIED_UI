@@ -7,19 +7,19 @@
 
 ## 1. Current status
 
-| Field                   | Value                                                                                                                |
-| ----------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| **Current phase**       | Phase 0 — Guard rails (0.1 + 0.2 done)                                                                               |
-| **Last completed step** | 0.2 Stylelint + Prettier + `npm run verify` — 2026-10-15                                                             |
-| **Next step**           | 0.3 Delete dead code (car-rental services/models in `src/app/core`, `@tailwind` lines, broken `@secu/ui` dependency) |
-| **Blocked by**          | —                                                                                                                    |
+| Field                   | Value                                                                  |
+| ----------------------- | ---------------------------------------------------------------------- |
+| **Current phase**       | Phase 0 — Guard rails (0.1–0.3 done)                                   |
+| **Last completed step** | 0.3 Dead code removed — 2026-10-15                                     |
+| **Next step**           | 0.4 `scripts/check-i18n.mjs` + fill missing translation keys (en + fr) |
+| **Blocked by**          | —                                                                      |
 
 ### Phase checklist (details in `docs/architecture/07-migration-plan.md`)
 
 - [ ] **Phase 0 — Guard rails**
   - [x] 0.1 ESLint + angular-eslint + boundaries (errors for `projects/s-ui/**`, `src/app/domains/**`; warnings for legacy)
   - [x] 0.2 Stylelint (no raw colours/`!important`/`::ng-deep`/numeric z-index) + Prettier + `npm run verify`
-  - [ ] 0.3 Delete dead code (done so far: scaffold duplicate `src/app/secu/app.*`): car-rental services/models in `src/app/core` (customer, invoice, branch…), `@tailwind` lines in `src/styles.scss`, broken `"@secu/ui": "file:../../SecuLib/dist/secu-ui"` dependency
+  - [x] 0.3 Delete dead code (20 unreachable files, Tailwind, broken `@secu/ui` dependency, scaffold `secu/app.*`)
   - [ ] 0.4 `scripts/check-i18n.mjs` + fill the 189 missing keys (en + fr)
 - [ ] **Phase 1 — Design system foundation (`projects/s-ui`)**
   - [x] Tokens written: `projects/s-ui/styles/tokens.css`, `base.css`, `controls.css`, `overlay.css`, `index.css`
@@ -86,6 +86,9 @@ Written before the handbook; violates ADR 0005 (inline templates/styles, several
 ## 5. Log (newest first)
 
 ### 2026-10-15
+
+- **0.3 Dead code:** import-graph reachability from `main.ts` + specs (static + lazy `import()`) found 20 unreachable files → deleted: car-rental services (analytics, branch, customer, invoice, payment, pricing, reservation, vehicle, vehicle-category), `theme.service`, models (analytics, billing, fleet, organization, page-response, pricing, rental), `secu/directives/has-action.directive.ts`, `secu/guards/secu-auth.guard.ts`, `shared/layout/main-layout.component.ts` (also removed 2 of the 3 boundary violations). Removed never-configured Tailwind (`@tailwind` lines were emitted raw into the CSS bundle) and deps `tailwindcss`, `postcss`, `autoprefixer`, `@secu/ui` (broken `file:` link). Prettier `endOfLine: auto` (CRLF checkouts on Windows). **Verified:** 104/104 files reachable, format ✔, lint ✔, lint:styles ✔, build ✔ (788 kB), tests ✔ 2/2.
+- Note: local services (5000/5003/4200) were stopped when the previous session ended — restart per §2 when a browser check is needed.
 
 - **0.1 ESLint** (`eslint.config.mjs`): angular-eslint 21 + typescript-eslint + boundaries v7 (`boundaries/dependencies` policies = handbook 01 §3, same-domain via `{{ from.element.captured.scope }}`), restricted imports (HTTP/DTO/PrimeNG), restricted syntax (default export, decorators, console), `component-max-inline-declarations` 0, `max-lines`. Strict = errors for `projects/s-ui`, `src/app/domains`; legacy = presets downgraded to warnings. Verified with a deliberately bad probe file in `src/app/domains` → 17/17 violations reported, then deleted.
 - **Legacy baseline** (to shrink to 0 by Phase 5): ESLint 2 169 warnings (top: 715 inline styles, 280 button-has-type, 262 prefer-signals, 206 label-control, 157 control-flow), 3 boundary violations (`core/services/oidc-auth.service.ts` → secu, `shared/layout/main-layout.component.ts` → secu ×2). Stylelint ~1 600 findings (582 `!important`, 451 raw values, 441 physical properties).
