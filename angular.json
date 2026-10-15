@@ -40,6 +40,7 @@
               "node_modules/@fontsource/ibm-plex-mono/400.css",
               "node_modules/@fontsource/ibm-plex-mono/500.css",
               "node_modules/@fontsource/ibm-plex-mono/600.css",
+              "projects/s-tokens/styles/index.css",
               "projects/s-ui/styles/index.css",
               "src/styles.scss"
             ]
@@ -86,7 +87,11 @@
         "test": {
           "builder": "@angular/build:unit-test",
           "options": {
-            "include": ["**/*.spec.ts", "../projects/s-ui/src/**/*.spec.ts"]
+            "include": [
+              "**/*.spec.ts",
+              "../projects/s-ui/src/**/*.spec.ts",
+              "../projects/s-core/src/**/*.spec.ts"
+            ]
           }
         }
       }

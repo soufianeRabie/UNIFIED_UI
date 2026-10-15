@@ -1,4 +1,4 @@
-import { isoFromParts, toUtcDate } from '../core/iso-date.utils';
+import { isoFromParts, toUtcDate } from '../date/iso-date.utils';
 
 /** Calendar text from `Intl` (ADR 0008 §2): every locale, every script, no translation files. */
 

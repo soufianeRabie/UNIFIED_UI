@@ -1,4 +1,4 @@
-import type { SColumn } from '@s/ui';
+import type { SColumn } from '@s/core';
 
 export interface GalleryUser {
   readonly id: string;

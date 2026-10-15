@@ -12,19 +12,13 @@ import {
   model,
   output,
 } from '@angular/core';
-import { addMonths, isoPartsOf, todayIso } from '../core/iso-date.utils';
+import { addMonths, isoPartsOf, todayIso } from '@s/core';
 import { SUiLabels } from '../core/s-ui-labels';
 import { SIconButton } from '../icon-button/s-icon-button';
-import { isOutside, monthGrid, pickRange } from './s-calendar-grid.utils';
-import {
-  dayLabel,
-  dayNumber,
-  firstDayOfWeek,
-  monthTitle,
-  weekdayNames,
-} from './s-calendar-intl.utils';
-import { nextFocusedDay } from './s-calendar-keys.utils';
-import type { CalendarMode, SDateRange } from './s-calendar.types';
+import { isOutside, monthGrid, pickRange } from '@s/core';
+import { dayLabel, dayNumber, firstDayOfWeek, monthTitle, weekdayNames } from '@s/core';
+import { nextFocusedDay } from '@s/core';
+import type { CalendarMode, SDateRange } from '@s/core';
 
 let nextId = 0;
 

@@ -9,7 +9,7 @@
 ## Non-negotiable
 
 - The handbook in `docs/architecture/` is the contract. Do not write code that breaks it. If a rule must change, propose an ADR to the owner first.
-- One component per folder (`.ts` / `.html` / `.scss` / `.types.ts` / `.spec.ts` / `index.ts`). No inline templates or styles, no `style=""`, no raw colours/sizes outside `projects/s-ui/styles/tokens.css`.
+- One component per folder (`.ts` / `.html` / `.scss` / `.types.ts` / `.spec.ts` / `index.ts`). No inline templates or styles, no `style=""`, no raw colours/sizes outside `projects/s-tokens/styles/tokens.css`.
 - Layers: `features → ui / data-access → domain`; `@s/ui` never imports app code; DTOs stay in `data-access`.
 - Angular 21 modern APIs only: standalone, OnPush, `inject()`, signal `input/model/output`, `@if/@for`.
 - Never commit secrets. Real `appsettings*.json` in the API repos are git-ignored on purpose.

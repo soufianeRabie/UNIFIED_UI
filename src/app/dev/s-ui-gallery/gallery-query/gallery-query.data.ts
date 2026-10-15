@@ -1,4 +1,4 @@
-import { operatorsFor, type SColumn, type SQueryField, type SQueryLimits } from '@s/ui';
+import { operatorsFor, type SColumn, type SQueryField, type SQueryLimits } from '@s/core';
 
 export const QUERY_COLUMNS: readonly SColumn[] = [
   { key: 'username', header: 'Username', sortable: true, mono: true },

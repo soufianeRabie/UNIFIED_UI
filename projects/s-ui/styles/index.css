@@ -1,15 +1,8 @@
 /* ==========================================================================
-   S UI — global entry. Add once to the host's angular.json "styles":
+   S UI — Angular-specific global styles (CDK overlays). Load after @s/tokens:
 
+     "projects/s-tokens/styles/index.css",
      "projects/s-ui/styles/index.css"
-
-   Layer order is fixed here so host styles (unlayered) always win over the
-   library, and tokens always lose to everything.
    ========================================================================== */
 
-@layer tokens, base, components;
-
-@import './tokens.css';
-@import './base.css';
-@import './controls.css';
 @import './overlay.css';

@@ -1,7 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { SCalendar } from './s-calendar';
-import type { SDateRange } from './s-calendar.types';
+import type { SDateRange } from '@s/core';
 
 @Component({
   imports: [SCalendar],

@@ -27,7 +27,11 @@ import { join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
-const SOURCE_DIRS = [join(ROOT, 'src', 'app'), join(ROOT, 'projects', 's-ui', 'src')];
+const SOURCE_DIRS = [
+  join(ROOT, 'src', 'app'),
+  join(ROOT, 'projects', 's-ui', 'src'),
+  join(ROOT, 'projects', 's-core', 'src'),
+];
 const LOCALE_DIR = join(ROOT, 'public', 'i18n');
 const KEY_PATTERN = /['"`]([A-Z][A-Z0-9_]*(?:\.[A-Z0-9_]+)+)['"`]/g;
 const GENERATED_PATTERN = /^(DOM_FALLBACK|AUTO_INLINE_[A-Z_]+)\./;

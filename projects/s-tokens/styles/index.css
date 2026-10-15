@@ -1,0 +1,15 @@
+/* ==========================================================================
+   S tokens — global entry, framework-free (ADR 0010). Add once, first:
+
+     Angular:  angular.json "styles": ["projects/s-tokens/styles/index.css", …]
+     React:    import '@s/tokens/styles/index.css' in the root layout
+
+   Layer order is fixed here so host styles (unlayered) always win over the
+   design system, and tokens always lose to everything.
+   ========================================================================== */
+
+@layer tokens, base, components;
+
+@import './tokens.css';
+@import './base.css';
+@import './controls.css';

@@ -1,7 +1,7 @@
 /* ═══════════════════════════════════════════════════════════════════════════
    SECU MODULE — legacy global styles (Phase 5: deleted once every screen is
    migrated to @s/ui). The palette below is a BRIDGE: every legacy variable now
-   points at a dossier token (projects/s-ui/styles/tokens.css), so un-migrated
+   points at a dossier token (projects/s-tokens/styles/tokens.css), so un-migrated
    screens follow the design system, light and dark.
    ═══════════════════════════════════════════════════════════════════════════ */
 
@@ -45,7 +45,7 @@
 
 
 /* ── Base Reset ──────────────────────────────────────────────────────────── */
-/* The reset lives in the `base` layer (declared in projects/s-ui/styles/index.css):
+/* The reset lives in the `base` layer (declared in projects/s-tokens/styles/index.css):
    @s/ui components override it, while every unlayered legacy rule still wins. */
 @layer base {
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }

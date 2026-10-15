@@ -1,5 +1,6 @@
 import { Injectable, computed, inject } from '@angular/core';
-import { S_UI_DEFAULT_LABELS, S_UI_I18N, type SUiLabelKey } from './s-ui-i18n';
+import { S_UI_DEFAULT_LABELS, type SUiLabelKey } from '@s/core';
+import { S_UI_I18N } from './s-ui-i18n';
 
 const DEFAULT_LOCALE = 'en-GB';
 

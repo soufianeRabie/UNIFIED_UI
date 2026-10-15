@@ -98,7 +98,7 @@ export default {
   overrides: [
     {
       // The one file that owns raw values.
-      files: ['projects/s-ui/styles/tokens.css'],
+      files: ['projects/s-tokens/styles/tokens.css'],
       rules: {
         'color-no-hex': null,
         'function-disallowed-list': null,

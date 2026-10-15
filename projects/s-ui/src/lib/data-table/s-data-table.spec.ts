@@ -2,7 +2,7 @@ import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { SCell } from './s-cell.directive';
 import { SDataTable } from './s-data-table';
-import type { SColumn, SSort } from './s-data-table.types';
+import type { SColumn, SSort } from '@s/core';
 import { SRowActions } from './s-row-actions.directive';
 
 interface User {

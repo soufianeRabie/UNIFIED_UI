@@ -18,12 +18,12 @@ import { SIcon } from '../icon/s-icon';
 import { SNotice } from '../notice/s-notice';
 import { SPagination } from '../pagination/s-pagination';
 import { SPopover } from '../popover/s-popover';
-import type { SFilterCondition, SQuery, SQueryField, SQueryLimits } from '../query/s-query.types';
-import { setColumnFilter, setPage, toggleSort } from '../query/s-query.utils';
+import type { SFilterCondition, SQuery, SQueryField, SQueryLimits } from '@s/core';
+import { setColumnFilter, setPage, toggleSort } from '@s/core';
 import { SCell } from './s-cell.directive';
 import { SRowActions } from './s-row-actions.directive';
-import type { SColumn, SSort } from './s-data-table.types';
-import { headerViews, reachableTotal } from './s-data-table.utils';
+import type { SColumn, SSort } from '@s/core';
+import { headerViews, reachableTotal } from '@s/core';
 
 const SKELETON_ROWS = [0, 1, 2, 3, 4];
 

@@ -9,10 +9,8 @@ import {
   SPanelHeader,
   SSearch,
   SText,
-  createQuery,
-  setSearch,
-  type SQuery,
 } from '@s/ui';
+import { createQuery, setSearch, type SQuery } from '@s/core';
 import { toQueryRequestDto } from '../../../core/query';
 import { QUERY_COLUMNS, QUERY_FIELDS, QUERY_LIMITS, QUERY_ROWS } from './gallery-query.data';
 

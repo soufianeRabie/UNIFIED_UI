@@ -1,0 +1,7 @@
+{
+  "name": "@s/core",
+  "version": "0.1.0",
+  "description": "S design system core: framework-free query model, filters, dates and calendar logic, label keys.",
+  "private": true,
+  "sideEffects": false
+}

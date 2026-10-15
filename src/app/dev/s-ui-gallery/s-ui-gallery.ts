@@ -25,8 +25,8 @@ import {
   SStamp,
   SSwitch,
   SText,
-  type SSort,
 } from '@s/ui';
+import { type SSort } from '@s/core';
 import { GalleryQuery } from './gallery-query/gallery-query';
 import { GalleryWidgets } from './gallery-widgets/gallery-widgets';
 import { GALLERY_COLUMNS, GALLERY_USERS, type GalleryUser } from './s-ui-gallery.data';

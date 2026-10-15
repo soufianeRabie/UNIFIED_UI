@@ -1,4 +1,4 @@
-import { addDays, addMonths, isoWeekday } from '../core/iso-date.utils';
+import { addDays, addMonths, isoWeekday } from '../date/iso-date.utils';
 
 /**
  * Keyboard of the day grid (WAI-ARIA date grid pattern). Arrows follow the reading direction: in RTL the left

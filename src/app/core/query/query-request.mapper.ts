@@ -1,4 +1,4 @@
-import type { SFilterGroup, SFilterNode, SQuery } from '@s/ui';
+import type { SFilterGroup, SFilterNode, SQuery } from '@s/core';
 import type { FilterNodeDto, QueryRequestDto } from './query-request.dto';
 
 /**

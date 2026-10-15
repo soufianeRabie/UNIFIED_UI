@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input, model } from '@angular/core';
-import { operatorLabelKey } from '../column-filter/s-column-filter.utils';
+import { operatorLabelKey } from '@s/core';
 import { SUiLabels } from '../core/s-ui-labels';
-import type { SColumn } from '../data-table/s-data-table.types';
+import type { SColumn } from '@s/core';
 import { SIcon } from '../icon/s-icon';
-import type { SFilterCondition, SQuery, SQueryField } from '../query/s-query.types';
-import { clearFilters, setColumnFilter } from '../query/s-query.utils';
-import { chipValueText } from './s-filter-chips.utils';
+import type { SFilterCondition, SQuery, SQueryField } from '@s/core';
+import { clearFilters, setColumnFilter } from '@s/core';
+import { chipValueText } from '@s/core';
 
 /**
  * The active column filters as removable chips, under the filter bar: users see at a glance why the list is

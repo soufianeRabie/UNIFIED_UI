@@ -9,9 +9,8 @@ import {
   SSelect,
   SStack,
   SText,
-  type SDateRange,
-  type SSelectOption,
 } from '@s/ui';
+import { type SDateRange, type SSelectOption } from '@s/core';
 
 const ROLES: readonly SSelectOption<string>[] = [
   'Administrator',

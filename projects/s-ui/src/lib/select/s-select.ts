@@ -18,14 +18,14 @@ import { SUiLabels } from '../core/s-ui-labels';
 import { S_FIELD } from '../field/s-field.context';
 import { SIcon } from '../icon/s-icon';
 import { SPopover } from '../popover/s-popover';
-import type { SSelectOption } from './s-select.types';
+import type { SSelectOption } from '@s/core';
 import {
   SEARCHABLE_FROM,
   filterOptions,
   selectedValues,
   selectionSummary,
   valueFromSelection,
-} from './s-select.utils';
+} from '@s/core';
 
 /**
  * Our select (ADR 0008): one or many values, keyboard and type-ahead from the CDK listbox, a filter box for long

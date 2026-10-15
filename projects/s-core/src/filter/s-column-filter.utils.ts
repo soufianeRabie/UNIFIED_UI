@@ -1,5 +1,5 @@
-import { addDays, isoOfInstant, startOfDayInstant } from '../core/iso-date.utils';
-import type { SUiLabelKey } from '../core/s-ui-i18n';
+import { addDays, isoOfInstant, startOfDayInstant } from '../date/iso-date.utils';
+import type { SUiLabelKey } from '../i18n/s-labels';
 import { arityOf, defaultOperator } from '../query/s-filter-operators';
 import type {
   SFilterCondition,

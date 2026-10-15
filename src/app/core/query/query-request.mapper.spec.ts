@@ -1,5 +1,5 @@
-import { createQuery, setColumnFilter, setSearch, toggleSort } from '@s/ui';
-import type { SFilterGroup } from '@s/ui';
+import { createQuery, setColumnFilter, setSearch, toggleSort } from '@s/core';
+import type { SFilterGroup } from '@s/core';
 import { toQueryRequestDto } from './query-request.mapper';
 
 describe('toQueryRequestDto', () => {

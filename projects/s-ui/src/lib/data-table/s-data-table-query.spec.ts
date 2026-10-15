@@ -1,10 +1,10 @@
 import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { operatorsFor } from '../query/s-filter-operators';
-import type { SQuery, SQueryField, SQueryLimits } from '../query/s-query.types';
-import { createQuery } from '../query/s-query.utils';
+import { operatorsFor } from '@s/core';
+import type { SQuery, SQueryField, SQueryLimits } from '@s/core';
+import { createQuery } from '@s/core';
 import { SDataTable } from './s-data-table';
-import type { SColumn } from './s-data-table.types';
+import type { SColumn } from '@s/core';
 
 interface Row {
   readonly id: string;

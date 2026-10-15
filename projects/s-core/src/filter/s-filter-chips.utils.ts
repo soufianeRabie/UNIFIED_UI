@@ -1,5 +1,5 @@
 import { formatDay } from '../calendar/s-calendar-intl.utils';
-import { addDays, isoOfInstant } from '../core/iso-date.utils';
+import { addDays, isoOfInstant } from '../date/iso-date.utils';
 import { arityOf } from '../query/s-filter-operators';
 import type { SFilterCondition, SFilterScalar, SQueryField } from '../query/s-query.types';
 

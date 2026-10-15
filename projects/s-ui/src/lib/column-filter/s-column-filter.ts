@@ -8,27 +8,16 @@ import {
   output,
 } from '@angular/core';
 import { SButton } from '../button/s-button';
-import type { SDateRange } from '../calendar/s-calendar.types';
+import type { SDateRange } from '@s/core';
 import { SUiLabels } from '../core/s-ui-labels';
 import { SDatePicker } from '../date-picker/s-date-picker';
 import { SInput } from '../input/s-input';
-import { conditionIssues } from '../query/s-filter-condition.utils';
-import type {
-  SFilterCondition,
-  SFilterOperator,
-  SQueryField,
-  SQueryLimits,
-} from '../query/s-query.types';
+import { conditionIssues } from '@s/core';
+import type { SFilterCondition, SFilterOperator, SQueryField, SQueryLimits } from '@s/core';
 import { SSelect } from '../select/s-select';
-import type { SSelectOption } from '../select/s-select.types';
-import type { FilterDraft } from './s-column-filter.types';
-import {
-  conditionFrom,
-  draftFrom,
-  editorKind,
-  editorOperators,
-  operatorLabelKey,
-} from './s-column-filter.utils';
+import type { SSelectOption } from '@s/core';
+import type { FilterDraft } from '@s/core';
+import { conditionFrom, draftFrom, editorKind, editorOperators, operatorLabelKey } from '@s/core';
 
 /**
  * Type-aware filter editor for one column (handbook 08 §7): the operators of the field's type, the right editor

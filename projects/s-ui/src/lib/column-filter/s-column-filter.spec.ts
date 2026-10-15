@@ -1,7 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { operatorsFor } from '../query/s-filter-operators';
-import type { SFilterCondition, SQueryField, SQueryLimits } from '../query/s-query.types';
+import { operatorsFor } from '@s/core';
+import type { SFilterCondition, SQueryField, SQueryLimits } from '@s/core';
 import { SColumnFilter } from './s-column-filter';
 
 const LIMITS: SQueryLimits = {

@@ -1,5 +1,5 @@
 import { Directive, TemplateRef, inject, input } from '@angular/core';
-import type { SCellContext } from './s-data-table.types';
+import type { SCellContext } from '@s/core';
 
 /**
  * Per-row actions, rendered in a trailing column. Bind the table's rows to

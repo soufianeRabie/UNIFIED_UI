@@ -1,5 +1,5 @@
 import { Directive, TemplateRef, inject, input } from '@angular/core';
-import type { SCellContext } from './s-data-table.types';
+import type { SCellContext } from '@s/core';
 
 /**
  * Custom cell for one column. Bind the table's rows to `[rows]` so the row

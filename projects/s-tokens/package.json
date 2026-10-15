@@ -1,0 +1,9 @@
+{
+  "name": "@s/tokens",
+  "version": "0.1.0",
+  "description": "S design system tokens and base styles (dossier palette, type, spacing, light/dark, RTL): plain CSS for any framework.",
+  "private": true,
+  "sideEffects": [
+    "*.css"
+  ]
+}

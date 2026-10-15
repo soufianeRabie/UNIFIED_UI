@@ -1,12 +1,12 @@
 import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { startOfDayInstant } from '../core/iso-date.utils';
-import type { SColumn } from '../data-table/s-data-table.types';
-import { operatorsFor } from '../query/s-filter-operators';
-import type { SFilterType, SQuery, SQueryField } from '../query/s-query.types';
-import { createQuery, setColumnFilter } from '../query/s-query.utils';
+import { startOfDayInstant } from '@s/core';
+import type { SColumn } from '@s/core';
+import { operatorsFor } from '@s/core';
+import type { SFilterType, SQuery, SQueryField } from '@s/core';
+import { createQuery, setColumnFilter } from '@s/core';
 import { SFilterChips } from './s-filter-chips';
-import { chipValueText } from './s-filter-chips.utils';
+import { chipValueText } from '@s/core';
 
 function field(name: string, type: SFilterType): SQueryField {
   return {

@@ -2,15 +2,15 @@
 
 ## 1. Where CSS may exist
 
-| Location                                                       | Allowed content                                                                                  |
-| -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| `projects/s-ui/styles/tokens.css`                              | The **only** place with raw values: colours, sizes, fonts, shadows, durations                    |
-| `projects/s-ui/styles/base.css`, `controls.css`, `overlay.css` | Document defaults and native-control skins, tokens only                                          |
-| `projects/s-ui/src/lib/**/*.scss`                              | Component styles, `:host`-scoped, tokens only                                                    |
-| `src/app/core/shell/**/*.scss`                                 | Application frame layout (sidebar width, grid areas), tokens only                                |
-| `src/app/domains/**/ui/**/*.scss`                              | Rare: domain visuals that are not generic (e.g. a permission matrix cell). Tokens only, reviewed |
-| `src/app/domains/**/features/**`                               | **No styles.** Pages compose components                                                          |
-| `src/styles/vendor/*.css`                                      | Quarantined third-party overrides (PrimeNG during migration). Deleted at the end of migration    |
+| Location                                                                                      | Allowed content                                                                                  |
+| --------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| `projects/s-tokens/styles/tokens.css`                                                         | The **only** place with raw values: colours, sizes, fonts, shadows, durations                    |
+| `projects/s-tokens/styles/base.css`, `controls.css`; `projects/s-ui/styles/overlay.css` (CDK) | Document defaults and native-control skins, tokens only                                          |
+| `projects/s-ui/src/lib/**/*.scss`                                                             | Component styles, `:host`-scoped, tokens only                                                    |
+| `src/app/core/shell/**/*.scss`                                                                | Application frame layout (sidebar width, grid areas), tokens only                                |
+| `src/app/domains/**/ui/**/*.scss`                                                             | Rare: domain visuals that are not generic (e.g. a permission matrix cell). Tokens only, reviewed |
+| `src/app/domains/**/features/**`                                                              | **No styles.** Pages compose components                                                          |
+| `src/styles/vendor/*.css`                                                                     | Quarantined third-party overrides (PrimeNG during migration). Deleted at the end of migration    |
 
 ## 2. Rules (enforced by Stylelint)
 
@@ -27,7 +27,7 @@
 ## 3. Cascade layers
 
 ```
-@layer tokens, base, components;   ← declared once in s-ui/styles/index.css
+@layer tokens, base, components;   ← declared once in s-tokens/styles/index.css
 ```
 
 Tokens lose to everything; library components lose to application styles. Component `.scss` files are encapsulated by Angular and need no layer.

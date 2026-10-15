@@ -1,9 +1,9 @@
 import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import type { SDateRange } from '../calendar/s-calendar.types';
+import type { SDateRange } from '@s/core';
 import { SDatePicker } from './s-date-picker';
-import { pickerText } from './s-date-picker.utils';
+import { pickerText } from '@s/core';
 
 @Component({
   imports: [SDatePicker, ReactiveFormsModule],

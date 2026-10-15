@@ -3,7 +3,8 @@
  *
  *   import { SStack, SPanel } from '@s/ui';
  *
- * Every folder under lib/ follows the contract in
+ * Angular components only: framework-free logic, types and labels live in `@s/core`, styles in
+ * `@s/tokens` (ADR 0010). Every folder under lib/ follows the contract in
  * docs/architecture/02-design-system.md §3 and is re-exported here through its
  * index.ts. Anything not exported here is private.
  */
@@ -38,4 +39,3 @@ export * from './lib/calendar';
 export * from './lib/date-picker';
 export * from './lib/column-filter';
 export * from './lib/filter-chips';
-export * from './lib/query';

@@ -3,6 +3,14 @@
 `@s/ui` is the only place visual decisions are made. Screens compose it; they never restyle it.
 It ports the KAFALA "S vocabulary" to Angular with the same names and the same dossier design language, so React and Angular products share one system.
 
+| Package     | Folder              | Contains                                                                                          |
+| ----------- | ------------------- | ------------------------------------------------------------------------------------------------- |
+| `@s/tokens` | `projects/s-tokens` | Plain CSS: tokens, base, native-control skins, layer order — any framework                        |
+| `@s/core`   | `projects/s-core`   | Plain TypeScript, no framework: query model, filters, dates/calendar, select, table logic, labels |
+| `@s/ui`     | `projects/s-ui`     | Angular components rendering `@s/core` with `@s/tokens` (a future `@s/react` does the same)       |
+
+Rule: logic with a branch worth testing goes to `@s/core`, never into a component ([ADR 0010](adr/0010-framework-free-core.md)).
+
 ## 1. Principles
 
 1. **Names over looks.** A screen says _what_ (`<s-stamp tone="success">`), never _how_ (`color: green`).

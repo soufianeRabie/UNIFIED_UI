@@ -1,4 +1,4 @@
-import { addDays, compareIso, isoFromParts, isoPartsOf, isoWeekday } from '../core/iso-date.utils';
+import { addDays, compareIso, isoFromParts, isoPartsOf, isoWeekday } from '../date/iso-date.utils';
 import type { CalendarDay, CalendarMode, SDateRange } from './s-calendar.types';
 
 export interface GridInput {

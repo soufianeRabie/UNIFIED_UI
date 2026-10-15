@@ -32,6 +32,7 @@ const HTML_PRESETS = [
 
 /** Folders that already meet the handbook. Add a folder here once it is compliant. */
 const STRICT_DIRS = [
+  'projects/s-core',
   'projects/s-ui',
   'src/app/domains',
   'src/app/core/i18n',
@@ -47,6 +48,7 @@ const LEGACY_HTML = ['src/app/**/*.html'];
 const ELEMENTS = [
   // Element patterns match folders. Order matters: the first match wins, so the
   // specific layers come before the catch-alls (domain root, app root).
+  { type: 's-core', pattern: 'projects/s-core/src' },
   { type: 's-ui', pattern: 'projects/s-ui/src' },
   { type: 'domain', pattern: 'src/app/domains/*/domain', capture: ['scope'] },
   { type: 'data-access', pattern: 'src/app/domains/*/data-access', capture: ['scope'] },
@@ -65,9 +67,13 @@ const anyOf = (...types) => ({ element: { types: { anyOf: types } } });
 
 /** Who may import whom. Anything not allowed here is an error. */
 const POLICIES = [
-  { from: { element: { type: 's-ui' } }, allow: { to: { element: { type: 's-ui' } } } },
-  { from: { element: { type: 'core' } }, allow: { to: anyOf('core', 's-ui') } },
-  { from: { element: { type: 'shared' } }, allow: { to: anyOf('shared', 'core', 's-ui') } },
+  { from: { element: { type: 's-core' } }, allow: { to: { element: { type: 's-core' } } } },
+  { from: { element: { type: 's-ui' } }, allow: { to: anyOf('s-ui', 's-core') } },
+  { from: { element: { type: 'core' } }, allow: { to: anyOf('core', 's-ui', 's-core') } },
+  {
+    from: { element: { type: 'shared' } },
+    allow: { to: anyOf('shared', 'core', 's-ui', 's-core') },
+  },
   { from: { element: { type: 'domain' } }, allow: { to: sameScope('domain') } },
   {
     from: { element: { type: 'data-access' } },
@@ -75,7 +81,14 @@ const POLICIES = [
   },
   {
     from: { element: { type: 'ui' } },
-    allow: { to: [sameScope('ui'), sameScope('domain'), { element: { type: 's-ui' } }] },
+    allow: {
+      to: [
+        sameScope('ui'),
+        sameScope('domain'),
+        { element: { type: 's-ui' } },
+        { element: { type: 's-core' } },
+      ],
+    },
   },
   {
     from: { element: { type: 'feature' } },
@@ -85,7 +98,7 @@ const POLICIES = [
         sameScope('ui'),
         sameScope('data-access'),
         sameScope('domain'),
-        anyOf('shared', 'core', 's-ui'),
+        anyOf('shared', 'core', 's-ui', 's-core'),
       ],
     },
   },
@@ -97,7 +110,7 @@ const POLICIES = [
         sameScope('data-access'),
         sameScope('domain'),
         sameScope('domain-root'),
-        anyOf('shared', 'core', 's-ui'),
+        anyOf('shared', 'core', 's-ui', 's-core'),
       ],
     },
   },
@@ -108,12 +121,12 @@ const POLICIES = [
   },
   {
     from: { element: { type: 'app' } },
-    allow: { to: anyOf('app', 'core', 'shared', 'domain-root', 's-ui', 'legacy') },
+    allow: { to: anyOf('app', 'core', 'shared', 'domain-root', 's-ui', 's-core', 'legacy') },
   },
   // Legacy code may import anything until it is migrated.
   {
     from: { element: { type: 'legacy' } },
-    allow: { to: anyOf('legacy', 'core', 'shared', 's-ui', 'domain-root') },
+    allow: { to: anyOf('legacy', 'core', 'shared', 's-ui', 's-core', 'domain-root') },
   },
 ];
 
@@ -193,7 +206,7 @@ export default tseslint.config(
     plugins: { boundaries },
     settings: {
       'boundaries/elements': ELEMENTS,
-      'boundaries/include': ['src/app/**/*', 'projects/s-ui/src/**/*'],
+      'boundaries/include': ['src/app/**/*', 'projects/s-ui/src/**/*', 'projects/s-core/src/**/*'],
       'import/resolver': {
         typescript: {
           project: ['tsconfig.app.json', 'tsconfig.spec.json'],
@@ -274,6 +287,34 @@ export default tseslint.config(
             {
               group: ['primeng', 'primeng/*', '@ngx-translate/*', '@angular/common/http'],
               message: '@s/ui has no business/i18n/HTTP dependencies (02 §1).',
+            },
+          ],
+        },
+      ],
+    },
+  },
+
+  // @s/core is framework-free (ADR 0010): it must run under Angular, React and Node alike.
+  {
+    files: ['projects/s-core/**/*.ts'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            { group: ['@s/core', '@s/core/*'], message: 'Inside @s/core use relative imports.' },
+            {
+              group: [
+                '@angular/*',
+                'react',
+                'react-*',
+                'rxjs',
+                'rxjs/*',
+                '@s/ui',
+                'primeng',
+                '@ngx-translate/*',
+              ],
+              message: '@s/core is framework-free: plain TypeScript only (ADR 0010).',
             },
           ],
         },

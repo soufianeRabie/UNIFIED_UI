@@ -10,13 +10,13 @@ import {
 } from '@angular/core';
 import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { SCalendar } from '../calendar/s-calendar';
-import type { CalendarMode, SDateRange } from '../calendar/s-calendar.types';
+import type { CalendarMode, SDateRange } from '@s/core';
 import type { ControlSize } from '../core/scale.types';
 import { SUiLabels } from '../core/s-ui-labels';
 import { S_FIELD } from '../field/s-field.context';
 import { SIcon } from '../icon/s-icon';
 import { SPopover } from '../popover/s-popover';
-import { type DatePickerValue, isEmptyPick, pickerText } from './s-date-picker.utils';
+import { type DatePickerValue, isEmptyPick, pickerText } from '@s/core';
 
 /**
  * Our date field (ADR 0008 — never `<input type="date">`): a button showing the date in the user's locale, our

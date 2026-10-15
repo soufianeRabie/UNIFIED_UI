@@ -38,6 +38,7 @@
   - [x] 2.1b Platform packages (`PLATFORM_DOTNET` `ea738bf`, owner: "common / security DLLs, max security, all DBMS, error keys, threading rules"): `Platform.Common`, `Platform.Querying`, `Platform.Web`, `Platform.Security` 0.1.0, 261 tests; `SECURITY_API` adopted (`dbcd7eb`); UI ADR 0009 + handbook 08 §4–6
   - [x] 2.2 `@s/ui` query model (`projects/s-ui/src/lib/query`) + app `core/query` (DTOs, mappers) + `ERRORS.*` keys (en/fr/ar) + i18n gate for error codes
   - [x] 2.3 `@s/ui` widgets: `SPopover`, `SSelect`, `SCalendar`, `SDatePicker`, `SColumnFilter`, `SFilterChips`; `SDataTable` `[(query)]` (`4c235ad`, `3f2e261`, 2.3c)
+  - [x] 2.3d Split (ADR 0010): `@s/tokens` (CSS), `@s/core` (framework-free TS), `@s/ui` (Angular) — React/Next-ready core
   - [ ] 2.4 Shell `core/shell` replacing `secu-layout` / `notif-layout`
   - [ ] 2.5 Users reference screen in `domains/security`; legacy users screen deleted
 - [ ] **Phase 3 — Security domain screens**
@@ -87,7 +88,13 @@ Written before the handbook; violates ADR 0005 (inline templates/styles, several
 
 ---
 
-## 4. Known issues / open items
+## 4. Test debt (write in the test phase — owner decision 2026-10-16)
+
+| Area | What needs tests                                |
+| ---- | ----------------------------------------------- |
+| —    | (nothing yet: everything up to 2.3d is covered) |
+
+## 5. Known issues / open items
 
 | #   | Issue                                                                                                                                                                            | Owner decision needed?                      |
 | --- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------- |
@@ -104,7 +111,12 @@ Written before the handbook; violates ADR 0005 (inline templates/styles, several
 
 ---
 
-## 5. Log (newest first)
+## 6. Log (newest first)
+
+### 2026-10-16
+
+- **2.3d Framework-free split (owner: "will it integrate with React / Next?"):** ADR 0010. `projects/s-tokens` (tokens, base, controls CSS + layer order; `angular.json` loads it before `s-ui/styles` which keeps only CDK overlay CSS), `projects/s-core` (24 files moved with history: `query/`, `date/`, `calendar/`, `select/`, `filter/`, `table/`, `i18n/s-labels.ts`; ESLint forbids `@angular/*`, `react`, `rxjs`… there), `@s/core` path alias, boundaries element `s-core` (anyone may import it, it imports nothing), test include, i18n check scans it. App imports logic/types from `@s/core`, components from `@s/ui`. **Verified:** `verify` ✔ — same 46 files / 133 tests (no behaviour change).
+- **Owner decision — tests deferred:** no new unit tests during development (cost); new untested code is listed under **Test debt** below and covered in a dedicated test phase. `verify` and existing tests stay mandatory.
 
 ### 2026-10-15
 
@@ -172,6 +184,6 @@ Written before the handbook; violates ADR 0005 (inline templates/styles, several
 
 1. **Start:** read `CLAUDE.md`, this file, then `docs/architecture/README.md` and the handbook pages relevant to the next step.
 2. **Before a step:** set "Current phase" / "Next step" in §1 if they changed.
-3. **After each completed step:** tick it in §1, add a dated bullet to §5 (what changed, which files, verification done), update §3/§4 if affected.
+3. **After each completed step:** tick it in §1, add a dated bullet to §6, list untested code in §4 (what changed, which files, verification done), update §3/§4 if affected.
 4. **Never** mark a step done without verification (build, tests, or browser check — say which).
 5. **Commit** progress with the code it describes (`docs: update progress` or inside the feature commit). Push only when the owner has asked for pushes in that session.

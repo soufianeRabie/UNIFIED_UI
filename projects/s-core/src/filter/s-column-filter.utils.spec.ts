@@ -1,4 +1,4 @@
-import { startOfDayInstant } from '../core/iso-date.utils';
+import { startOfDayInstant } from '../date/iso-date.utils';
 import { operatorsFor } from '../query/s-filter-operators';
 import type { SFilterCondition, SFilterType, SQueryField } from '../query/s-query.types';
 import {

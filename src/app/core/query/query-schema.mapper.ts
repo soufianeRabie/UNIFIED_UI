@@ -1,5 +1,5 @@
-import { S_OPERATORS_BY_TYPE } from '@s/ui';
-import type { SFilterOperator, SFilterType, SQueryField, SQueryLimits, SSortKey } from '@s/ui';
+import { S_OPERATORS_BY_TYPE } from '@s/core';
+import type { SFilterOperator, SFilterType, SQueryField, SQueryLimits, SSortKey } from '@s/core';
 import type { QuerySchemaDto, QuerySchemaFieldDto } from './query-schema.dto';
 
 export interface QuerySchema {

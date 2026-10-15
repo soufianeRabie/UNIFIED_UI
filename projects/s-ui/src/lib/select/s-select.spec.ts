@@ -2,7 +2,7 @@ import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { SSelect } from './s-select';
-import type { SSelectOption } from './s-select.types';
+import type { SSelectOption } from '@s/core';
 
 const STATUSES: SSelectOption<string>[] = [
   { value: 'Active', label: 'Active' },
