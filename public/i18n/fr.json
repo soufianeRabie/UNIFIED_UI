@@ -1669,5 +1669,49 @@
       "CONFIRM": "Confirmer",
       "DELETE": "Supprimer"
     }
+  },
+  "ERRORS": {
+    "COMMON": {
+      "VALIDATION_FAILED": "La requête contient des erreurs.",
+      "MALFORMED_REQUEST": "Le corps de la requête est invalide ou ne respecte pas le format attendu.",
+      "MALFORMED_VALUE": "Cette valeur a un format invalide.",
+      "UNAUTHORIZED": "Une authentification est requise.",
+      "FORBIDDEN": "Vous n'avez pas l'autorisation d'effectuer cette action.",
+      "NOT_FOUND": "La ressource demandée est introuvable.",
+      "METHOD_NOT_ALLOWED": "Cette méthode n'est pas autorisée sur cette ressource.",
+      "UNSUPPORTED_MEDIA_TYPE": "Le type de contenu de la requête n'est pas pris en charge.",
+      "CONFLICT": "La requête est en conflit avec l'état actuel de la ressource.",
+      "PAYLOAD_TOO_LARGE": "Le corps de la requête est trop volumineux.",
+      "RATE_LIMITED": "Trop de requêtes. Veuillez réessayer plus tard.",
+      "TIMEOUT": "La requête a pris trop de temps et a été annulée.",
+      "UNAVAILABLE": "Le service est temporairement indisponible.",
+      "UNEXPECTED": "Une erreur inattendue s'est produite.",
+      "LEGACY": "La requête n'a pas pu être traitée."
+    },
+    "QUERY": {
+      "BODY_REQUIRED": "Un corps de requête est obligatoire.",
+      "PAGE_OUT_OF_RANGE": "La page doit être supérieure ou égale à {{min}}.",
+      "SIZE_OUT_OF_RANGE": "La taille de page doit être comprise entre {{min}} et {{max}}.",
+      "RESULT_WINDOW_EXCEEDED": "Seuls les {{max}} premiers résultats peuvent être parcourus. Affinez la recherche ou les filtres.",
+      "SEARCH_TOO_LONG": "La recherche est limitée à {{max}} caractères.",
+      "TOO_MANY_SORTS": "Au plus {{max}} critères de tri sont autorisés.",
+      "FIELD_NOT_SORTABLE": "Le champ « {{field}} » ne peut pas être trié.",
+      "DUPLICATE_SORT": "Le champ « {{field}} » est trié deux fois.",
+      "INVALID_SORT_DIRECTION": "Le sens du tri doit être « asc » ou « desc ».",
+      "INVALID_NODE": "Un groupe (logic, conditions) ou une condition (field, op, value) est attendu.",
+      "TOO_DEEP": "Les groupes de filtres peuvent être imbriqués sur {{max}} niveaux au plus.",
+      "INVALID_LOGIC": "La logique du groupe doit être « and » ou « or ».",
+      "EMPTY_GROUP": "Un groupe de filtres doit contenir au moins une condition.",
+      "TOO_MANY_CONDITIONS": "Au plus {{max}} conditions de filtre sont autorisées.",
+      "FIELD_NOT_FILTERABLE": "Le champ « {{field}} » ne peut pas être filtré.",
+      "UNKNOWN_OPERATOR": "Opérateur inconnu « {{op}} ».",
+      "OPERATOR_NOT_ALLOWED": "L'opérateur « {{op}} » ne peut pas être utilisé sur le champ « {{field}} » ({{type}}).",
+      "SINGLE_VALUE_REQUIRED": "L'opérateur « {{op}} » attend une seule valeur.",
+      "RANGE_REQUIRED": "L'opérateur « between » attend deux valeurs : [début, fin].",
+      "RANGE_INVERTED": "Le début de l'intervalle doit précéder sa fin.",
+      "LIST_SIZE_OUT_OF_RANGE": "L'opérateur « {{op}} » attend entre {{min}} et {{max}} valeurs.",
+      "INVALID_VALUE": "La valeur {{value}} n'est pas valide pour le champ « {{field}} » ({{type}}).",
+      "TEXT_TOO_LONG": "Les valeurs texte sont limitées à {{max}} caractères."
+    }
   }
 }

@@ -13,17 +13,18 @@ It ports the KAFALA "S vocabulary" to Angular with the same names and the same d
 
 ## 2. Component inventory
 
-| Group       | Components                                                                                               | Status                                          |
-| ----------- | -------------------------------------------------------------------------------------------------------- | ----------------------------------------------- |
-| Arrangement | `SStack`, `SRow`, `SGrid`, `SPanel`, `SPanelHeader`, `SSplitView`                                        | Phase 1 (split view: 2)                         |
-| Typography  | `SText`, `SHeading`, `SNotice`                                                                           | Phase 1                                         |
-| Page        | `SPageHeader`, `SBreadcrumbs`, `SSaveBar`                                                                | Phase 1 (breadcrumbs, save bar: 2)              |
-| Actions     | `SButton`, `SIconButton`, `SRowMenu`, `SSegmented`                                                       | Phase 1 (row menu, segmented: 2)                |
-| Status      | `SStamp`, `SKpi`, `SEmpty`, `SAvatar`, `SSkeleton`                                                       | Phase 1 (avatar: 2)                             |
-| Forms       | `SInput` (directive), `SField`, `SSwitch`, `SCheckbox`, `SSelect`, `SCombobox`, `SDatePicker`, `SSearch` | Phase 1: input, field, switch, search · 2: rest |
-| Data        | `SDataTable`, `SColumnFilter`, `SFilterBar`, `SPagination`, `SMatrix`                                    | Phase 1 (column filter, matrix: 2)              |
-| Overlays    | `SDialog`, `SConfirm` (service), `SToast` (service), `SPopover`, `SSheet`                                | Phase 1: dialog, confirm · 2: rest              |
-| Shell       | `SAppShell`, `SSidebarNav`, `STopbar`                                                                    | Phase 2                                         |
+| Group       | Components                                                                                                                                                | Status                                          |
+| ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------- |
+| Arrangement | `SStack`, `SRow`, `SGrid`, `SPanel`, `SPanelHeader`, `SSplitView`                                                                                         | Phase 1 (split view: 2)                         |
+| Typography  | `SText`, `SHeading`, `SNotice`                                                                                                                            | Phase 1                                         |
+| Page        | `SPageHeader`, `SBreadcrumbs`, `SSaveBar`                                                                                                                 | Phase 1 (breadcrumbs, save bar: 2)              |
+| Actions     | `SButton`, `SIconButton`, `SRowMenu`, `SSegmented`                                                                                                        | Phase 1 (row menu, segmented: 2)                |
+| Status      | `SStamp`, `SKpi`, `SEmpty`, `SAvatar`, `SSkeleton`                                                                                                        | Phase 1 (avatar: 2)                             |
+| Forms       | `SInput` (directive), `SField`, `SSwitch`, `SCheckbox`, `SSelect`, `SCombobox`, `SDatePicker`, `SSearch`                                                  | Phase 1: input, field, switch, search · 2: rest |
+| Data        | `SDataTable`, `SColumnFilter`, `SFilterBar`, `SPagination`, `SMatrix`                                                                                     | Phase 1 (column filter, matrix: 2)              |
+| Overlays    | `SDialog`, `SConfirm` (service), `SToast` (service), `SPopover`, `SSheet`                                                                                 | Phase 1: dialog, confirm · 2: rest              |
+| Shell       | `SAppShell`, `SSidebarNav`, `STopbar`                                                                                                                     | Phase 2                                         |
+| Query model | `query/`: `SQuery`, `SFilterGroup`, `SFilterCondition`, `SQueryField`, `SQueryLimits`, operator matrix, pure update + validation functions (no component) | Phase 2 (2.2 done)                              |
 
 ## 3. Folder contract (every component, no exceptions)
 

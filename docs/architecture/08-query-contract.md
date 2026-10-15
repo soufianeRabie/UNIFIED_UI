@@ -189,5 +189,6 @@ Rules: definitions are immutable singletons; scoping runs **before** the user's 
 | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `@s/ui` `query/`   | `SQuery`, `SFilterGroup`, `SFilterCondition`, `SFilterType`, `SFilterOperator`, pure functions (`operatorsFor`, `setColumnFilter`, `removeCondition`, `toggleSort`…) with unit tests |
 | `@s/ui` components | `SDataTable` header filter buttons, `SColumnFilter` (type-aware editor in an `SPopover`), `SFilterChips`, `SSelect`, `SCalendar`, `SDatePicker`                                      |
-| app `data-access`  | `toQueryRequestDto(query)` mapper (UI model → wire), `*-api.ts` `query(dto)`, schema fetch                                                                                           |
+| app `core/query`   | Wire DTOs + `toQueryRequestDto(query)` and `fromQuerySchemaDto(dto)` — one mapper for every API (the contract is platform-wide)                                                      |
+| app `data-access`  | `*-api.ts` `query(dto)` / `schema()` per resource, using `core/query`                                                                                                                |
 | app store          | holds `SQuery` in a signal; any change → one `switchMap` request; resets to page 1 when filter/search/sort change                                                                    |

@@ -2,5 +2,49 @@
   "LANG": {
     "LABEL": "اللغة",
     "SWITCH": "تغيير اللغة"
+  },
+  "ERRORS": {
+    "COMMON": {
+      "VALIDATION_FAILED": "يحتوي الطلب على أخطاء.",
+      "MALFORMED_REQUEST": "محتوى الطلب غير صالح أو لا يطابق الصيغة المتوقعة.",
+      "MALFORMED_VALUE": "هذه القيمة بصيغة غير صالحة.",
+      "UNAUTHORIZED": "المصادقة مطلوبة.",
+      "FORBIDDEN": "ليست لديك صلاحية لتنفيذ هذا الإجراء.",
+      "NOT_FOUND": "المورد المطلوب غير موجود.",
+      "METHOD_NOT_ALLOWED": "هذه الطريقة غير مسموح بها على هذا المورد.",
+      "UNSUPPORTED_MEDIA_TYPE": "نوع محتوى الطلب غير مدعوم.",
+      "CONFLICT": "يتعارض الطلب مع الحالة الحالية للمورد.",
+      "PAYLOAD_TOO_LARGE": "محتوى الطلب كبير جدًا.",
+      "RATE_LIMITED": "طلبات كثيرة جدًا. يرجى المحاولة لاحقًا.",
+      "TIMEOUT": "استغرق الطلب وقتًا طويلًا وتم إلغاؤه.",
+      "UNAVAILABLE": "الخدمة غير متاحة مؤقتًا.",
+      "UNEXPECTED": "حدث خطأ غير متوقع.",
+      "LEGACY": "تعذّرت معالجة الطلب."
+    },
+    "QUERY": {
+      "BODY_REQUIRED": "محتوى الاستعلام مطلوب.",
+      "PAGE_OUT_OF_RANGE": "يجب أن تكون الصفحة {{min}} أو أكثر.",
+      "SIZE_OUT_OF_RANGE": "يجب أن يكون حجم الصفحة بين {{min}} و{{max}}.",
+      "RESULT_WINDOW_EXCEEDED": "يمكن تصفح أول {{max}} نتيجة فقط. ضيّق نطاق البحث أو عوامل التصفية.",
+      "SEARCH_TOO_LONG": "البحث محدود بـ {{max}} حرفًا.",
+      "TOO_MANY_SORTS": "يُسمح بـ {{max}} مفاتيح فرز كحد أقصى.",
+      "FIELD_NOT_SORTABLE": "لا يمكن فرز الحقل «{{field}}».",
+      "DUPLICATE_SORT": "تم فرز الحقل «{{field}}» مرتين.",
+      "INVALID_SORT_DIRECTION": "يجب أن يكون اتجاه الفرز «asc» أو «desc».",
+      "INVALID_NODE": "يُتوقع مجموعة (logic, conditions) أو شرط (field, op, value).",
+      "TOO_DEEP": "يمكن تداخل مجموعات التصفية حتى {{max}} مستويات كحد أقصى.",
+      "INVALID_LOGIC": "يجب أن يكون منطق المجموعة «and» أو «or».",
+      "EMPTY_GROUP": "تحتاج مجموعة التصفية إلى شرط واحد على الأقل.",
+      "TOO_MANY_CONDITIONS": "يُسمح بـ {{max}} شروط تصفية كحد أقصى.",
+      "FIELD_NOT_FILTERABLE": "لا يمكن تصفية الحقل «{{field}}».",
+      "UNKNOWN_OPERATOR": "عامل غير معروف «{{op}}».",
+      "OPERATOR_NOT_ALLOWED": "لا يمكن استخدام العامل «{{op}}» على الحقل «{{field}}» ({{type}}).",
+      "SINGLE_VALUE_REQUIRED": "يحتاج العامل «{{op}}» إلى قيمة واحدة.",
+      "RANGE_REQUIRED": "يحتاج العامل «between» إلى قيمتين: [من، إلى].",
+      "RANGE_INVERTED": "يجب أن تسبق بداية النطاق نهايته.",
+      "LIST_SIZE_OUT_OF_RANGE": "يحتاج العامل «{{op}}» إلى ما بين {{min}} و{{max}} قيم.",
+      "INVALID_VALUE": "القيمة {{value}} غير صالحة للحقل «{{field}}» ({{type}}).",
+      "TEXT_TOO_LONG": "القيم النصية محدودة بـ {{max}} حرفًا."
+    }
   }
 }

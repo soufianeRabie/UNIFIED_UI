@@ -1669,5 +1669,49 @@
       "CONFIRM": "Confirm",
       "DELETE": "Delete"
     }
+  },
+  "ERRORS": {
+    "COMMON": {
+      "VALIDATION_FAILED": "The request contains errors.",
+      "MALFORMED_REQUEST": "The request body is not valid or does not match the expected format.",
+      "MALFORMED_VALUE": "This value has an invalid format.",
+      "UNAUTHORIZED": "Authentication is required.",
+      "FORBIDDEN": "You do not have permission to perform this action.",
+      "NOT_FOUND": "The requested resource was not found.",
+      "METHOD_NOT_ALLOWED": "This method is not allowed on this resource.",
+      "UNSUPPORTED_MEDIA_TYPE": "The request content type is not supported.",
+      "CONFLICT": "The request conflicts with the current state of the resource.",
+      "PAYLOAD_TOO_LARGE": "The request body is too large.",
+      "RATE_LIMITED": "Too many requests. Please try again later.",
+      "TIMEOUT": "The request took too long and was cancelled.",
+      "UNAVAILABLE": "The service is temporarily unavailable.",
+      "UNEXPECTED": "An unexpected error occurred.",
+      "LEGACY": "The request could not be processed."
+    },
+    "QUERY": {
+      "BODY_REQUIRED": "A query body is required.",
+      "PAGE_OUT_OF_RANGE": "Page must be {{min}} or more.",
+      "SIZE_OUT_OF_RANGE": "Page size must be between {{min}} and {{max}}.",
+      "RESULT_WINDOW_EXCEEDED": "Only the first {{max}} results can be browsed. Narrow the search or the filters.",
+      "SEARCH_TOO_LONG": "Search is limited to {{max}} characters.",
+      "TOO_MANY_SORTS": "At most {{max}} sort keys are allowed.",
+      "FIELD_NOT_SORTABLE": "Field '{{field}}' cannot be sorted.",
+      "DUPLICATE_SORT": "Field '{{field}}' is sorted twice.",
+      "INVALID_SORT_DIRECTION": "Sort direction must be 'asc' or 'desc'.",
+      "INVALID_NODE": "Expected a group (logic, conditions) or a condition (field, op, value).",
+      "TOO_DEEP": "Filter groups can be nested at most {{max}} levels deep.",
+      "INVALID_LOGIC": "Group logic must be 'and' or 'or'.",
+      "EMPTY_GROUP": "A filter group needs at least one condition.",
+      "TOO_MANY_CONDITIONS": "At most {{max}} filter conditions are allowed.",
+      "FIELD_NOT_FILTERABLE": "Field '{{field}}' cannot be filtered.",
+      "UNKNOWN_OPERATOR": "Unknown operator '{{op}}'.",
+      "OPERATOR_NOT_ALLOWED": "Operator '{{op}}' cannot be used on field '{{field}}' ({{type}}).",
+      "SINGLE_VALUE_REQUIRED": "Operator '{{op}}' needs a single value.",
+      "RANGE_REQUIRED": "Operator 'between' needs two values: [from, to].",
+      "RANGE_INVERTED": "The start of the range must be before its end.",
+      "LIST_SIZE_OUT_OF_RANGE": "Operator '{{op}}' needs between {{min}} and {{max}} values.",
+      "INVALID_VALUE": "Value {{value}} is not valid for field '{{field}}' ({{type}}).",
+      "TEXT_TOO_LONG": "Text values are limited to {{max}} characters."
+    }
   }
 }

@@ -31,7 +31,13 @@ const HTML_PRESETS = [
 ];
 
 /** Folders that already meet the handbook. Add a folder here once it is compliant. */
-const STRICT_DIRS = ['projects/s-ui', 'src/app/domains', 'src/app/core/i18n', 'src/app/dev'];
+const STRICT_DIRS = [
+  'projects/s-ui',
+  'src/app/domains',
+  'src/app/core/i18n',
+  'src/app/core/query',
+  'src/app/dev',
+];
 const STRICT_TS = STRICT_DIRS.map((d) => `${d}/**/*.ts`);
 const STRICT_HTML = STRICT_DIRS.map((d) => `${d}/**/*.html`);
 const LEGACY_TS = ['src/app/**/*.ts'];
