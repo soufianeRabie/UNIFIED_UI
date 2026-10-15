@@ -1,0 +1,22 @@
+:host {
+  display: inline-flex;
+  flex: none;
+  line-height: 1;
+}
+
+i {
+  font-size: 1em;
+}
+
+// Directional glyphs follow the reading direction.
+:host-context([dir='rtl'])
+  i:is(
+    .pi-angle-left,
+    .pi-angle-right,
+    .pi-arrow-left,
+    .pi-arrow-right,
+    .pi-chevron-left,
+    .pi-chevron-right
+  ) {
+  transform: scaleX(-1);
+}

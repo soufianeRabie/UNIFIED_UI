@@ -7,12 +7,12 @@
 
 ## 1. Current status
 
-| Field                   | Value                                                                                                                              |
-| ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| **Current phase**       | Phase 1 — Design system foundation (1.1–1.2 done)                                                                                  |
-| **Last completed step** | 1.3a `@s/ui` core + layout (stack, row, grid, panel) — 2026-10-15                                                                  |
-| **Next step**           | 1.3b text (`SText`, `SHeading`, `SNotice`), `SPageHeader`, actions (`SIcon`, `SButton`, `SIconButton`, `SStamp`, `SEmpty`, `SKpi`) |
-| **Blocked by**          | —                                                                                                                                  |
+| Field                   | Value                                                                                                                                         |
+| ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Current phase**       | Phase 1 — Design system foundation (1.1–1.2 done)                                                                                             |
+| **Last completed step** | 1.3b text, page header, actions/status components — 2026-10-15                                                                                |
+| **Next step**           | 1.3c forms: `SInput` (directive, uses `styles/controls.css`), `SField`, `SSwitch` (ControlValueAccessor), `SSearch` (debounced), `SFilterBar` |
+| **Blocked by**          | —                                                                                                                                             |
 
 ### Phase checklist (details in `docs/architecture/07-migration-plan.md`)
 
@@ -28,7 +28,7 @@
   - [x] 1.2 Multi-language foundation (ADR 0006): `public/i18n/languages.json` registry, `core/i18n` (`LanguageCatalog`, `I18nStore`, `acceptLanguageInterceptor`, `provideI18n`, `LanguageSwitcher`), `<html lang dir>`, N-language `check-i18n`, `DomI18nService` generalised, `ar.json` starter (disabled)
   - [ ] 1.3 Components, one folder each with spec (02 §2 Phase 1 list)
     - [x] 1.3a core (`scale.types`, `SUiI18n` contract + `SUiLabels`, `provideSUi`, `_scale.scss`) + layout (`SStack`, `SRow`, `SGrid`, `SPanel`, `SPanelHeader`); app bridge `sUiI18nAdapter`; `S.*` keys in en/fr
-    - [ ] 1.3b text, page header, actions/status
+    - [x] 1.3b `SText`, `SHeading`, `SNotice`, `SPageHeader`, `SIcon`, `SButton`, `SIconButton`, `SStamp`, `SEmpty`, `SKpi`
     - [ ] 1.3c forms (input, field, switch, search, filter bar)
     - [ ] 1.3d data (data table, cell, row actions, pagination)
     - [ ] 1.3e overlays (dialog, confirm)
@@ -94,6 +94,8 @@ Written before the handbook; violates ADR 0005 (inline templates/styles, several
 ## 5. Log (newest first)
 
 ### 2026-10-15
+
+- **1.3b text / page / actions:** 10 components, one folder each with spec: `text/`, `heading/` (+types), `notice/`, `page-header/`, `icon/` (decorative unless labelled; directional glyphs mirror in RTL), `button/` + `icon-button/` (+types) sharing `core/_button.scss`, `stamp/`, `empty/`, `kpi/`. API decisions: `SIconButton` takes its accessible name as **`aria-label`** (required input `ariaLabel` aliased `aria-label`) so the template a11y linter recognises it; ESLint component selectors may be attributes (`button[s-button]`); new token `--text-display` (fluid page title) instead of a raw `clamp()` in a component; Sass `list.nth`. Handbook 02/04 updated. **Verified:** `verify` ✔ — 20 files / 36 tests.
 
 - **1.3a `@s/ui` core + layout:** `projects/s-ui/src/lib/core` (scale unions, `SUiI18n` contract with `version` signal + English defaults, `SUiLabels`, `provideSUi`, `_scale.scss` gap/align mixins) and one folder per component: `stack/`, `row/`, `grid/`, `panel/` (`SPanel` + `SPanelHeader` + types) — each `.ts`/`.html`/`.scss`/`.spec.ts`/`index.ts`; `public-api.ts` re-exports folders. App: `core/i18n/s-ui-i18n.adapter.ts` (`provideSUi({ i18n: sUiI18nAdapter })` in `app.config.ts`), `S.*` keys added to en/fr, `check-i18n` now also scans `projects/s-ui`. Test discovery: `angular.json` test `include` adds `../projects/s-ui/src/**/*.spec.ts` (globs resolve from `src/`). ESLint: spec test-host components exempt from inline-template/OnPush rules. **Verified:** `verify` ✔ — 10 files / 25 tests, strict lint + Stylelint clean on `projects/s-ui`.
 

@@ -1,0 +1,30 @@
+@use '../core/button';
+
+@include button.base;
+
+:host {
+  --_fg: var(--ink-2);
+  --_bd: var(--rule);
+
+  inline-size: 34px;
+  padding: 0;
+}
+
+:host(:hover) {
+  --_fg: var(--ink);
+}
+
+:host([data-size='sm']) {
+  inline-size: 28px;
+  padding: 0;
+}
+
+:host([data-variant='ghost']) {
+  --_bd: transparent;
+}
+
+:host([data-variant='danger']:hover:not([disabled])) {
+  --_fg: var(--alert);
+  --_bd: color-mix(in srgb, var(--alert) 40%, transparent);
+  --_bg-hover: var(--alert-wash);
+}

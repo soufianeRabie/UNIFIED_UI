@@ -1,0 +1,60 @@
+@use 'sass:list';
+
+:host {
+  --_c: var(--ink-3);
+  --_w: transparent;
+
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  padding: 2px var(--space-2);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  line-height: 1.5;
+  color: var(--_c);
+  white-space: nowrap;
+  background: var(--_w);
+  border: 1px solid color-mix(in srgb, var(--_c) 35%, transparent);
+  border-radius: var(--radius-xs);
+}
+
+.dot {
+  inline-size: 6px;
+  block-size: 6px;
+  background: currentcolor;
+  border-radius: 50%;
+}
+
+:host([data-tone='neutral']) {
+  border-style: dashed;
+}
+
+$tones: (
+  accent: (
+    var(--seal),
+    var(--seal-wash),
+  ),
+  success: (
+    var(--sage),
+    var(--sage-wash),
+  ),
+  warning: (
+    var(--amber-ink),
+    var(--amber-wash),
+  ),
+  danger: (
+    var(--alert),
+    var(--alert-wash),
+  ),
+  special: (
+    var(--stamp),
+    var(--stamp-wash),
+  ),
+);
+
+@each $tone, $pair in $tones {
+  :host([data-tone='#{$tone}']) {
+    --_c: #{list.nth($pair, 1)};
+    --_w: #{list.nth($pair, 2)};
+  }
+}

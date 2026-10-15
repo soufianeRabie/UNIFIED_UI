@@ -1,0 +1,10 @@
+<div class="text">
+  @if (eyebrow()) {
+    <p class="eyebrow">{{ eyebrow() }}</p>
+  }
+  <h1 class="title">{{ title() }}</h1>
+  @if (subtitle()) {
+    <p class="subtitle">{{ subtitle() }}</p>
+  }
+</div>
+<div class="actions"><ng-content select="[sPageActions]" /></div>

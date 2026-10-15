@@ -1,0 +1,31 @@
+:host {
+  display: block;
+  margin: 0;
+  color: var(--ink);
+  line-height: var(--leading-tight);
+}
+
+:host([data-level='1']) {
+  font-family: var(--font-serif);
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-tight);
+}
+
+:host([data-level='2']) {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semibold);
+}
+
+:host([data-level='3']) {
+  font-size: var(--text-md);
+  font-weight: var(--weight-semibold);
+}
+
+:host([data-level='4']) {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  color: var(--ink-3);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-caps);
+}

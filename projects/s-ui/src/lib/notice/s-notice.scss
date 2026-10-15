@@ -1,0 +1,54 @@
+@use 'sass:list';
+
+:host {
+  --_c: var(--ink);
+  --_w: var(--seal-wash);
+  --_b: var(--seal);
+
+  display: flex;
+  gap: var(--space-2);
+  align-items: flex-start;
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  color: var(--_c);
+  background: var(--_w);
+  border: 1px solid color-mix(in srgb, var(--_b) 30%, transparent);
+  border-radius: var(--radius-sm);
+}
+
+.mark {
+  padding-block-start: 3px;
+  font-size: var(--text-sm);
+}
+
+.body {
+  min-inline-size: 0;
+}
+
+$tones: (
+  success: (
+    var(--sage),
+    var(--sage-wash),
+  ),
+  warning: (
+    var(--amber-ink),
+    var(--amber-wash),
+  ),
+  danger: (
+    var(--alert),
+    var(--alert-wash),
+  ),
+  special: (
+    var(--stamp),
+    var(--stamp-wash),
+  ),
+);
+
+@each $tone, $pair in $tones {
+  :host([data-tone='#{$tone}']) {
+    --_c: #{list.nth($pair, 1)};
+    --_w: #{list.nth($pair, 2)};
+    --_b: #{list.nth($pair, 1)};
+  }
+}

@@ -1,0 +1,25 @@
+@use '../core/button';
+
+@include button.base;
+
+:host([data-variant='primary']) {
+  --_bg: var(--seal);
+  --_fg: var(--seal-contrast);
+  --_bd: var(--seal);
+  --_bg-hover: var(--seal-deep);
+}
+
+:host([data-variant='ghost']) {
+  --_fg: var(--ink-2);
+  --_bd: transparent;
+}
+
+:host([data-variant='ghost']:hover) {
+  --_fg: var(--ink);
+}
+
+:host([data-variant='danger']) {
+  --_fg: var(--alert);
+  --_bd: color-mix(in srgb, var(--alert) 40%, transparent);
+  --_bg-hover: var(--alert-wash);
+}

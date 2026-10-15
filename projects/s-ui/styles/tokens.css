@@ -75,6 +75,8 @@
     --text-xl: 20px;
     --text-2xl: 26px;
     --text-3xl: 32px;
+    /* Fluid page title: grows with the viewport between two steps. */
+    --text-display: clamp(var(--text-xl), 2.4vw, var(--text-3xl));
 
     --weight-regular: 400;
     --weight-medium: 500;

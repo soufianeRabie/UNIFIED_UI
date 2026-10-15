@@ -1,0 +1,6 @@
+@if (loading()) {
+  <s-icon name="spinner" spin />
+} @else if (icon(); as name) {
+  <s-icon [name]="name" />
+}
+<ng-content />

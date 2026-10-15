@@ -59,7 +59,7 @@ projects/s-ui/src/lib/button/
 ## 5. Accessibility contract (WCAG 2.2 AA)
 
 - Every interactive element is reachable and operable by keyboard and shows `:focus-visible` (token `--focus-ring`).
-- Icon-only buttons require `label` (becomes `aria-label` + `title`). The compiler enforces it: `label` is `input.required`.
+- Icon-only buttons require `aria-label` (also used as the tooltip). The compiler enforces it: it is an `input.required`, and the template linter sees it as the button's content.
 - State is never conveyed by colour alone (stamps have text and border; switches show a state label).
 - Dialogs: focus trap, `Escape` closes, focus returns to the trigger, `aria-labelledby` set — provided by CDK.
 - Tables: `<th scope="col">`, `aria-sort` on sortable headers, `aria-busy` while loading.

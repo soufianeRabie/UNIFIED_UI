@@ -15,7 +15,7 @@
 ## 2. Rules (enforced by Stylelint)
 
 1. **No raw colours** — no hex, `rgb()`, `hsl()`, named colours outside `tokens.css`. Tints use `color-mix(in srgb, var(--token) N%, transparent)`.
-2. **No raw lengths for spacing, type or radius** — `var(--space-*)`, `var(--text-*)`, `var(--radius-*)`. Allowed raw values: `0`, `1px` borders, `%`, `fr`, `ch`, `rem`/`px` inside `clamp()` for fluid type, and fixed component geometry (e.g. a 34px control height) inside `@s/ui` only.
+2. **No raw lengths for spacing, type or radius** — `var(--space-*)`, `var(--text-*)`, `var(--radius-*)`. Allowed raw values: `0`, `1px` borders, `%`, `fr`, `ch`, and fixed component geometry (e.g. a 34px control height) inside `@s/ui` only.
 3. **No `!important`** outside `src/styles/vendor/`.
 4. **No `::ng-deep`**, no `ViewEncapsulation.None`.
 5. **No `z-index` numbers** — `var(--layer-*)`.
@@ -34,14 +34,14 @@ Tokens lose to everything; library components lose to application styles. Compon
 
 ## 4. Typography roles
 
-| Role                               | Token / component                                  |
-| ---------------------------------- | -------------------------------------------------- |
-| Page title                         | `SPageHeader` → `--font-serif`, `--text-3xl` fluid |
-| Section title                      | `SHeading level=2/3`                               |
-| Body                               | `--font-sans`, `--text-base` (13px)                |
-| Secondary text                     | `SText tone="muted"`                               |
-| References (ids, codes, usernames) | `SText mono` / column `mono: true` → `--font-mono` |
-| Labels, table headers              | `--text-xs`, caps, `--tracking-caps`               |
+| Role                               | Token / component                                        |
+| ---------------------------------- | -------------------------------------------------------- |
+| Page title                         | `SPageHeader` → `--font-serif`, `--text-display` (fluid) |
+| Section title                      | `SHeading level=2/3`                                     |
+| Body                               | `--font-sans`, `--text-base` (13px)                      |
+| Secondary text                     | `SText tone="muted"`                                     |
+| References (ids, codes, usernames) | `SText mono` / column `mono: true` → `--font-mono`       |
+| Labels, table headers              | `--text-xs`, caps, `--tracking-caps`                     |
 
 ## 5. Colour roles
 

@@ -125,7 +125,8 @@ const TS_RULES = (level) => ({
   ],
   '@angular-eslint/component-selector': [
     level,
-    { type: 'element', prefix: ['s', 'app', 'secu', 'notif'], style: 'kebab-case' },
+    // Attribute selectors keep native semantics: <button s-button>, <input s-input>.
+    { type: ['element', 'attribute'], prefix: ['s', 'app', 'secu', 'notif'], style: 'kebab-case' },
   ],
   '@angular-eslint/directive-selector': [
     level,
