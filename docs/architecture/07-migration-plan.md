@@ -4,13 +4,13 @@ From today's code (one large stylesheet per module, templates and styles inline,
 
 ## Starting point (Oct 2026)
 
-| Area | Today |
-|---|---|
-| Structure | `src/app/secu`, `src/app/notif`, `src/app/core` (contains leftover car-rental services: customers, invoices, branches) |
-| Components | 125 TS files, templates mostly inline, 708 inline `style=""`, emoji/corrupted icons |
-| Styles | `secu.styles.css` (77 kB) + `notif.styles.css` (67 kB) global, PrimeNG Lara overridden with `!important` |
-| i18n | 976 keys used, 189 missing, many generated keys (`DOM_FALLBACK.TEXT_178`) |
-| Tests / lint | 2 specs, no ESLint, no Stylelint |
+| Area         | Today                                                                                                                  |
+| ------------ | ---------------------------------------------------------------------------------------------------------------------- |
+| Structure    | `src/app/secu`, `src/app/notif`, `src/app/core` (contains leftover car-rental services: customers, invoices, branches) |
+| Components   | 125 TS files, templates mostly inline, 708 inline `style=""`, emoji/corrupted icons                                    |
+| Styles       | `secu.styles.css` (77 kB) + `notif.styles.css` (67 kB) global, PrimeNG Lara overridden with `!important`               |
+| i18n         | 976 keys used, 189 missing, many generated keys (`DOM_FALLBACK.TEXT_178`)                                              |
+| Tests / lint | 2 specs, no ESLint, no Stylelint                                                                                       |
 
 ## Phase 0 — Guard rails (first, ~1–2 days)
 

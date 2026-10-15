@@ -58,15 +58,15 @@ UNIFIED_UI/
  shared ──► core ──► @s/ui ◄── (everyone)
 ```
 
-| Layer | May import | Must not import | Contains |
-|---|---|---|---|
-| `@s/ui` | Angular, `@angular/cdk`, `primeicons` | anything under `src/app` | generic components, tokens |
-| `core` | `@s/ui`, Angular | `shared`, `domains` | singletons, shell |
-| `shared` | `@s/ui`, `core` | `domains` | cross-domain app pieces |
-| `domain` | nothing (plain TS) | Angular, RxJS, HTTP | models, value objects, rules |
-| `data-access` | `domain`, `core/http` | `ui`, `features`, `@s/ui` | API clients, DTOs, mappers, stores |
-| `ui` | `domain`, `@s/ui` | `data-access`, `features`, HttpClient | presentational components (inputs/outputs only) |
-| `features` | everything in its own domain, `shared`, `core`, `@s/ui` | another domain's internals | pages: wire stores to ui |
+| Layer         | May import                                              | Must not import                       | Contains                                        |
+| ------------- | ------------------------------------------------------- | ------------------------------------- | ----------------------------------------------- |
+| `@s/ui`       | Angular, `@angular/cdk`, `primeicons`                   | anything under `src/app`              | generic components, tokens                      |
+| `core`        | `@s/ui`, Angular                                        | `shared`, `domains`                   | singletons, shell                               |
+| `shared`      | `@s/ui`, `core`                                         | `domains`                             | cross-domain app pieces                         |
+| `domain`      | nothing (plain TS)                                      | Angular, RxJS, HTTP                   | models, value objects, rules                    |
+| `data-access` | `domain`, `core/http`                                   | `ui`, `features`, `@s/ui`             | API clients, DTOs, mappers, stores              |
+| `ui`          | `domain`, `@s/ui`                                       | `data-access`, `features`, HttpClient | presentational components (inputs/outputs only) |
+| `features`    | everything in its own domain, `shared`, `core`, `@s/ui` | another domain's internals            | pages: wire stores to ui                        |
 
 **Cross-domain access** goes only through the other domain's `index.ts` (models and injection tokens, never components or stores). If two domains need the same thing, it moves to `shared` or `core`.
 
@@ -80,16 +80,16 @@ These rules are enforced by `eslint-plugin-boundaries` (see [06](06-quality-gate
 
 ## 5. Naming map
 
-| Thing | Folder / file | Class | Selector |
-|---|---|---|---|
-| DS component | `projects/s-ui/src/lib/button/s-button.ts` | `SButton` | `s-button` / `button[s-button]` |
-| Domain page | `domains/security/features/users-list/users-list.ts` | `UsersList` | `secu-users-list` |
-| Domain ui component | `domains/security/ui/user-form/user-form.ts` | `UserForm` | `secu-user-form` |
-| Core component | `core/shell/sidebar/sidebar.ts` | `Sidebar` | `app-sidebar` |
-| API client | `data-access/users-api.ts` | `UsersApi` | — |
-| Store | `data-access/users-store.ts` | `UsersStore` | — |
-| DTO | `data-access/dto/user.dto.ts` | `UserDto` (interface) | — |
-| Mapper | `data-access/mappers/user.mapper.ts` | `toUser()` functions | — |
-| Model | `domain/user.ts` | `User` (interface/type) | — |
+| Thing               | Folder / file                                        | Class                   | Selector                        |
+| ------------------- | ---------------------------------------------------- | ----------------------- | ------------------------------- |
+| DS component        | `projects/s-ui/src/lib/button/s-button.ts`           | `SButton`               | `s-button` / `button[s-button]` |
+| Domain page         | `domains/security/features/users-list/users-list.ts` | `UsersList`             | `secu-users-list`               |
+| Domain ui component | `domains/security/ui/user-form/user-form.ts`         | `UserForm`              | `secu-user-form`                |
+| Core component      | `core/shell/sidebar/sidebar.ts`                      | `Sidebar`               | `app-sidebar`                   |
+| API client          | `data-access/users-api.ts`                           | `UsersApi`              | —                               |
+| Store               | `data-access/users-store.ts`                         | `UsersStore`            | —                               |
+| DTO                 | `data-access/dto/user.dto.ts`                        | `UserDto` (interface)   | —                               |
+| Mapper              | `data-access/mappers/user.mapper.ts`                 | `toUser()` functions    | —                               |
+| Model               | `domain/user.ts`                                     | `User` (interface/type) | —                               |
 
 File and class naming follow the Angular v20+ style guide (no `.component` / `Component` suffixes). Selector prefixes: `s-` design system, `app-` core/shared, `secu-` security, `notif-` notification.

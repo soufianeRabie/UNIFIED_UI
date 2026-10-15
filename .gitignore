@@ -40,3 +40,6 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+# Non-compliant draft code kept as reference for Phase 1 (see docs/PROGRESS.md)
+/.drafts/

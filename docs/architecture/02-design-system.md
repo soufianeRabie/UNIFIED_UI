@@ -5,7 +5,7 @@ It ports the KAFALA "S vocabulary" to Angular with the same names and the same d
 
 ## 1. Principles
 
-1. **Names over looks.** A screen says *what* (`<s-stamp tone="success">`), never *how* (`color: green`).
+1. **Names over looks.** A screen says _what_ (`<s-stamp tone="success">`), never _how_ (`color: green`).
 2. **The scale is the API.** Inputs are typed unions of token steps (`gap: '0'…'6'`, `tone: 'muted' | …`). A component cannot be asked for a value outside the system.
 3. **Native first.** Buttons, inputs and links stay native elements (`button[s-button]`, `input[s-input]`) so forms, routing, focus and assistive tech work for free.
 4. **Grow, don't bypass.** If a screen needs something a component cannot do, the component gets a new input or variant in this library. Local overrides are rejected in review.
@@ -13,17 +13,17 @@ It ports the KAFALA "S vocabulary" to Angular with the same names and the same d
 
 ## 2. Component inventory
 
-| Group | Components | Status |
-|---|---|---|
-| Arrangement | `SStack`, `SRow`, `SGrid`, `SPanel`, `SPanelHeader`, `SSplitView` | Phase 1 (split view: 2) |
-| Typography | `SText`, `SHeading`, `SNotice` | Phase 1 |
-| Page | `SPageHeader`, `SBreadcrumbs`, `SSaveBar` | Phase 1 (breadcrumbs, save bar: 2) |
-| Actions | `SButton`, `SIconButton`, `SRowMenu`, `SSegmented` | Phase 1 (row menu, segmented: 2) |
-| Status | `SStamp`, `SKpi`, `SEmpty`, `SAvatar`, `SSkeleton` | Phase 1 (avatar: 2) |
-| Forms | `SInput` (directive), `SField`, `SSwitch`, `SCheckbox`, `SSelect`, `SCombobox`, `SDatePicker`, `SSearch` | Phase 1: input, field, switch, search · 2: rest |
-| Data | `SDataTable`, `SColumnFilter`, `SFilterBar`, `SPagination`, `SMatrix` | Phase 1 (column filter, matrix: 2) |
-| Overlays | `SDialog`, `SConfirm` (service), `SToast` (service), `SPopover`, `SSheet` | Phase 1: dialog, confirm · 2: rest |
-| Shell | `SAppShell`, `SSidebarNav`, `STopbar` | Phase 2 |
+| Group       | Components                                                                                               | Status                                          |
+| ----------- | -------------------------------------------------------------------------------------------------------- | ----------------------------------------------- |
+| Arrangement | `SStack`, `SRow`, `SGrid`, `SPanel`, `SPanelHeader`, `SSplitView`                                        | Phase 1 (split view: 2)                         |
+| Typography  | `SText`, `SHeading`, `SNotice`                                                                           | Phase 1                                         |
+| Page        | `SPageHeader`, `SBreadcrumbs`, `SSaveBar`                                                                | Phase 1 (breadcrumbs, save bar: 2)              |
+| Actions     | `SButton`, `SIconButton`, `SRowMenu`, `SSegmented`                                                       | Phase 1 (row menu, segmented: 2)                |
+| Status      | `SStamp`, `SKpi`, `SEmpty`, `SAvatar`, `SSkeleton`                                                       | Phase 1 (avatar: 2)                             |
+| Forms       | `SInput` (directive), `SField`, `SSwitch`, `SCheckbox`, `SSelect`, `SCombobox`, `SDatePicker`, `SSearch` | Phase 1: input, field, switch, search · 2: rest |
+| Data        | `SDataTable`, `SColumnFilter`, `SFilterBar`, `SPagination`, `SMatrix`                                    | Phase 1 (column filter, matrix: 2)              |
+| Overlays    | `SDialog`, `SConfirm` (service), `SToast` (service), `SPopover`, `SSheet`                                | Phase 1: dialog, confirm · 2: rest              |
+| Shell       | `SAppShell`, `SSidebarNav`, `STopbar`                                                                    | Phase 2                                         |
 
 ## 3. Folder contract (every component, no exceptions)
 
@@ -44,17 +44,17 @@ projects/s-ui/src/lib/button/
 
 ## 4. Component API rules
 
-| Rule | Why |
-|---|---|
-| `ChangeDetectionStrategy.OnPush`, standalone, signal `input()` / `model()` / `output()` | Predictable rendering, zone-less ready |
-| Variants via `data-*` host attributes, styled with `:host([data-variant="…"])` | One selector per variant, no class soup, no `[ngClass]` |
-| Two-way state uses `model()` (`[(page)]`, `[(open)]`) | Same pattern for every controllable component |
-| Form controls implement `ControlValueAccessor` | Work with reactive forms |
-| No `any` in public types; generics for row/item types (`SDataTable<T>`) | Type safety reaches the screen |
-| Derived view state is `computed()`; templates never call compute methods | Performance + readability |
-| No `@Input` decorators, no `ngClass`, `ngStyle`, `*ngIf`, `*ngFor` | Modern Angular only |
-| No `::ng-deep`, no `ViewEncapsulation.None` | Encapsulation is the guarantee that screens cannot leak styles |
-| Icons are named (`icon="search"`) and resolved by `SIcon` | The glyph set can change in one place |
+| Rule                                                                                    | Why                                                            |
+| --------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| `ChangeDetectionStrategy.OnPush`, standalone, signal `input()` / `model()` / `output()` | Predictable rendering, zone-less ready                         |
+| Variants via `data-*` host attributes, styled with `:host([data-variant="…"])`          | One selector per variant, no class soup, no `[ngClass]`        |
+| Two-way state uses `model()` (`[(page)]`, `[(open)]`)                                   | Same pattern for every controllable component                  |
+| Form controls implement `ControlValueAccessor`                                          | Work with reactive forms                                       |
+| No `any` in public types; generics for row/item types (`SDataTable<T>`)                 | Type safety reaches the screen                                 |
+| Derived view state is `computed()`; templates never call compute methods                | Performance + readability                                      |
+| No `@Input` decorators, no `ngClass`, `ngStyle`, `*ngIf`, `*ngFor`                      | Modern Angular only                                            |
+| No `::ng-deep`, no `ViewEncapsulation.None`                                             | Encapsulation is the guarantee that screens cannot leak styles |
+| Icons are named (`icon="search"`) and resolved by `SIcon`                               | The glyph set can change in one place                          |
 
 ## 5. Accessibility contract (WCAG 2.2 AA)
 
@@ -74,7 +74,10 @@ projects/s-ui/src/lib/button/
 ## 7. Usage example
 
 ```html
-<s-page-header [title]="'SECU.USERS.TITLE' | translate" [subtitle]="'SECU.USERS.SUBTITLE' | translate">
+<s-page-header
+  [title]="'SECU.USERS.TITLE' | translate"
+  [subtitle]="'SECU.USERS.SUBTITLE' | translate"
+>
   <button s-button variant="primary" icon="plus" sPageActions (click)="create()">
     {{ 'SECU.USERS.NEW' | translate }}
   </button>
@@ -86,13 +89,24 @@ projects/s-ui/src/lib/button/
     <s-switch [(checked)]="showInactive">{{ 'COMMON.SHOW_INACTIVE' | translate }}</s-switch>
   </s-filter-bar>
 
-  <s-data-table [rows]="store.users()" [columns]="columns" rowKey="id"
-                [loading]="store.loading()" [total]="store.total()" [(page)]="page">
+  <s-data-table
+    [rows]="store.users()"
+    [columns]="columns"
+    rowKey="id"
+    [loading]="store.loading()"
+    [total]="store.total()"
+    [(page)]="page"
+  >
     <ng-template sCell="status" let-user>
       <s-stamp [tone]="user.active ? 'success' : 'neutral'">…</s-stamp>
     </ng-template>
     <ng-template sRowActions let-user>
-      <button s-icon-button icon="pencil" [label]="'COMMON.EDIT' | translate" (click)="edit(user)"></button>
+      <button
+        s-icon-button
+        icon="pencil"
+        [label]="'COMMON.EDIT' | translate"
+        (click)="edit(user)"
+      ></button>
     </ng-template>
   </s-data-table>
 </s-panel>

@@ -4,37 +4,37 @@ Applies to all TypeScript and templates in `src/app` and `projects/*`. Angular 2
 
 ## 1. Required
 
-| Topic | Rule |
-|---|---|
-| Components | Standalone, `ChangeDetectionStrategy.OnPush`, external `templateUrl` + `styleUrl` |
-| Inputs / outputs | `input()`, `input.required()`, `model()`, `output()` — never decorators |
-| DI | `inject()` in field initialisers — no constructor parameter injection |
-| Templates | Built-in control flow (`@if`, `@for` with `track`, `@switch`, `@defer`) |
-| State | `signal`, `computed`, `linkedSignal`; RxJS only at I/O boundaries (HTTP, websockets, debounced input) and converted with `toSignal` / `rxResource` patterns in stores |
-| Forms | Typed reactive forms (`NonNullableFormBuilder`). No `ngModel` in feature code |
-| Routing | Lazy routes per domain and per page; guards are functions (`CanActivateFn`) |
-| Subscriptions | `takeUntilDestroyed()` or `toSignal`; never manual `unsubscribe` bookkeeping |
-| Types | `strict`, no `any` (use `unknown` + narrowing), no non-null `!` except after an explicit guard |
-| Strings | Every user-visible string is a translation key: `DOMAIN.FEATURE.ELEMENT` (`SECU.USERS.TITLE`) |
+| Topic            | Rule                                                                                                                                                                  |
+| ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Components       | Standalone, `ChangeDetectionStrategy.OnPush`, external `templateUrl` + `styleUrl`                                                                                     |
+| Inputs / outputs | `input()`, `input.required()`, `model()`, `output()` — never decorators                                                                                               |
+| DI               | `inject()` in field initialisers — no constructor parameter injection                                                                                                 |
+| Templates        | Built-in control flow (`@if`, `@for` with `track`, `@switch`, `@defer`)                                                                                               |
+| State            | `signal`, `computed`, `linkedSignal`; RxJS only at I/O boundaries (HTTP, websockets, debounced input) and converted with `toSignal` / `rxResource` patterns in stores |
+| Forms            | Typed reactive forms (`NonNullableFormBuilder`). No `ngModel` in feature code                                                                                         |
+| Routing          | Lazy routes per domain and per page; guards are functions (`CanActivateFn`)                                                                                           |
+| Subscriptions    | `takeUntilDestroyed()` or `toSignal`; never manual `unsubscribe` bookkeeping                                                                                          |
+| Types            | `strict`, no `any` (use `unknown` + narrowing), no non-null `!` except after an explicit guard                                                                        |
+| Strings          | Every user-visible string is a translation key: `DOMAIN.FEATURE.ELEMENT` (`SECU.USERS.TITLE`)                                                                         |
 
 ## 2. Forbidden
 
-| Forbidden | Use instead |
-|---|---|
-| `NgModule` (new code) | standalone + `provideX()` functions |
-| `@Input()` / `@Output()` / `@ViewChild` decorators | signal APIs (`input`, `output`, `viewChild`) |
-| `*ngIf`, `*ngFor`, `[ngClass]`, `[ngStyle]` | `@if`, `@for`, `data-*` attributes / `class.x` bindings |
-| Inline `template:` / `styles:` | `.html` / `.scss` files |
-| `style="…"` and `[style.x]` in templates | `@s/ui` components and tokens (sole exception: data-driven geometry through a CSS custom property, e.g. `[style.--progress]`) |
-| Calling methods that compute in templates (`{{ total() * 2 }}` via a method, `isActive(row)`) | `computed()` view models; plain signal reads are fine |
-| `HttpClient` outside `data-access` | an `*-api.ts` client |
-| DTO types in components | mapped domain models |
-| `localStorage` / `window` access in components | a `core` service with an injection token |
-| `setTimeout` for change detection, `ChangeDetectorRef.detectChanges` hacks | signals |
-| Translation keys generated from text (`DOM_FALLBACK.TEXT_178`) | meaningful keys |
-| `console.log` in committed code | `core/errors` logger |
-| Barrel imports from inside the same library (`import … from '@s/ui'` inside `s-ui`) | relative imports |
-| Default exports | named exports |
+| Forbidden                                                                                     | Use instead                                                                                                                   |
+| --------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `NgModule` (new code)                                                                         | standalone + `provideX()` functions                                                                                           |
+| `@Input()` / `@Output()` / `@ViewChild` decorators                                            | signal APIs (`input`, `output`, `viewChild`)                                                                                  |
+| `*ngIf`, `*ngFor`, `[ngClass]`, `[ngStyle]`                                                   | `@if`, `@for`, `data-*` attributes / `class.x` bindings                                                                       |
+| Inline `template:` / `styles:`                                                                | `.html` / `.scss` files                                                                                                       |
+| `style="…"` and `[style.x]` in templates                                                      | `@s/ui` components and tokens (sole exception: data-driven geometry through a CSS custom property, e.g. `[style.--progress]`) |
+| Calling methods that compute in templates (`{{ total() * 2 }}` via a method, `isActive(row)`) | `computed()` view models; plain signal reads are fine                                                                         |
+| `HttpClient` outside `data-access`                                                            | an `*-api.ts` client                                                                                                          |
+| DTO types in components                                                                       | mapped domain models                                                                                                          |
+| `localStorage` / `window` access in components                                                | a `core` service with an injection token                                                                                      |
+| `setTimeout` for change detection, `ChangeDetectorRef.detectChanges` hacks                    | signals                                                                                                                       |
+| Translation keys generated from text (`DOM_FALLBACK.TEXT_178`)                                | meaningful keys                                                                                                               |
+| `console.log` in committed code                                                               | `core/errors` logger                                                                                                          |
+| Barrel imports from inside the same library (`import … from '@s/ui'` inside `s-ui`)           | relative imports                                                                                                              |
+| Default exports                                                                               | named exports                                                                                                                 |
 
 ## 3. State management
 
@@ -77,10 +77,10 @@ export class UsersStore {
 
 ## 6. File size limits
 
-| File | Soft limit | Hard limit (PR blocked) |
-|---|---|---|
-| Component `.ts` | 150 lines | 250 |
-| Template `.html` | 120 lines | 200 |
-| Store / API client | 200 lines | 300 |
+| File               | Soft limit | Hard limit (PR blocked) |
+| ------------------ | ---------- | ----------------------- |
+| Component `.ts`    | 150 lines  | 250                     |
+| Template `.html`   | 120 lines  | 200                     |
+| Store / API client | 200 lines  | 300                     |
 
 Exceeding a soft limit means the component is doing two jobs: split it into a page + presentational `ui` components.

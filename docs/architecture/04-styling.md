@@ -2,15 +2,15 @@
 
 ## 1. Where CSS may exist
 
-| Location | Allowed content |
-|---|---|
-| `projects/s-ui/styles/tokens.css` | The **only** place with raw values: colours, sizes, fonts, shadows, durations |
-| `projects/s-ui/styles/base.css`, `controls.css`, `overlay.css` | Document defaults and native-control skins, tokens only |
-| `projects/s-ui/src/lib/**/*.scss` | Component styles, `:host`-scoped, tokens only |
-| `src/app/core/shell/**/*.scss` | Application frame layout (sidebar width, grid areas), tokens only |
-| `src/app/domains/**/ui/**/*.scss` | Rare: domain visuals that are not generic (e.g. a permission matrix cell). Tokens only, reviewed |
-| `src/app/domains/**/features/**` | **No styles.** Pages compose components |
-| `src/styles/vendor/*.css` | Quarantined third-party overrides (PrimeNG during migration). Deleted at the end of migration |
+| Location                                                       | Allowed content                                                                                  |
+| -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| `projects/s-ui/styles/tokens.css`                              | The **only** place with raw values: colours, sizes, fonts, shadows, durations                    |
+| `projects/s-ui/styles/base.css`, `controls.css`, `overlay.css` | Document defaults and native-control skins, tokens only                                          |
+| `projects/s-ui/src/lib/**/*.scss`                              | Component styles, `:host`-scoped, tokens only                                                    |
+| `src/app/core/shell/**/*.scss`                                 | Application frame layout (sidebar width, grid areas), tokens only                                |
+| `src/app/domains/**/ui/**/*.scss`                              | Rare: domain visuals that are not generic (e.g. a permission matrix cell). Tokens only, reviewed |
+| `src/app/domains/**/features/**`                               | **No styles.** Pages compose components                                                          |
+| `src/styles/vendor/*.css`                                      | Quarantined third-party overrides (PrimeNG during migration). Deleted at the end of migration    |
 
 ## 2. Rules (enforced by Stylelint)
 
@@ -34,26 +34,26 @@ Tokens lose to everything; library components lose to application styles. Compon
 
 ## 4. Typography roles
 
-| Role | Token / component |
-|---|---|
-| Page title | `SPageHeader` → `--font-serif`, `--text-3xl` fluid |
-| Section title | `SHeading level=2/3` |
-| Body | `--font-sans`, `--text-base` (13px) |
-| Secondary text | `SText tone="muted"` |
+| Role                               | Token / component                                  |
+| ---------------------------------- | -------------------------------------------------- |
+| Page title                         | `SPageHeader` → `--font-serif`, `--text-3xl` fluid |
+| Section title                      | `SHeading level=2/3`                               |
+| Body                               | `--font-sans`, `--text-base` (13px)                |
+| Secondary text                     | `SText tone="muted"`                               |
 | References (ids, codes, usernames) | `SText mono` / column `mono: true` → `--font-mono` |
-| Labels, table headers | `--text-xs`, caps, `--tracking-caps` |
+| Labels, table headers              | `--text-xs`, caps, `--tracking-caps`               |
 
 ## 5. Colour roles
 
-| Meaning | Token family | Example |
-|---|---|---|
-| Primary action, brand, selection | `--seal` | Save button, active nav item |
-| Success / active / granted | `--sage` | "Active" stamp |
-| Warning | `--amber-ink` | expiring token |
-| Error / destructive | `--alert` | delete button, validation |
-| Legal / pending / special | `--stamp` | pending approval |
-| Text | `--ink`, `--ink-2`, `--ink-3` | body, secondary, subtle |
-| Surfaces | `--paper`, `--paper-raised`, `--paper-sunk`, `--paper-deep` | page, card, table header, track |
-| Lines | `--rule`, `--rule-strong` | dividers, control borders |
+| Meaning                          | Token family                                                | Example                         |
+| -------------------------------- | ----------------------------------------------------------- | ------------------------------- |
+| Primary action, brand, selection | `--seal`                                                    | Save button, active nav item    |
+| Success / active / granted       | `--sage`                                                    | "Active" stamp                  |
+| Warning                          | `--amber-ink`                                               | expiring token                  |
+| Error / destructive              | `--alert`                                                   | delete button, validation       |
+| Legal / pending / special        | `--stamp`                                                   | pending approval                |
+| Text                             | `--ink`, `--ink-2`, `--ink-3`                               | body, secondary, subtle         |
+| Surfaces                         | `--paper`, `--paper-raised`, `--paper-sunk`, `--paper-deep` | page, card, table header, track |
+| Lines                            | `--rule`, `--rule-strong`                                   | dividers, control borders       |
 
 Each family has `-wash` (background tint) and `-contrast` (text on a filled background). Never put `--ink` text on a `--seal` fill — use `--seal-contrast`.

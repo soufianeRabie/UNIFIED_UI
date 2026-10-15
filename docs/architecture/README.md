@@ -4,16 +4,16 @@ This handbook is the contract for every line of front-end code in this repositor
 Code review enforces it; tooling (ESLint, Stylelint, tests, budgets) automates as much of it as possible.
 When the code and this handbook disagree, the code is wrong — or the handbook is changed first, through an ADR.
 
-| # | Document | Read it when |
-|---|----------|--------------|
-| 01 | [Architecture](01-architecture.md) | You need to know where code lives and what may import what |
-| 02 | [Design system (`@s/ui`)](02-design-system.md) | You build or change a shared component |
-| 03 | [Angular standards](03-angular-standards.md) | You write any TypeScript or template |
-| 04 | [Styling](04-styling.md) | You write any CSS/SCSS |
-| 05 | [Feature blueprint](05-feature-blueprint.md) | You build or migrate a screen |
-| 06 | [Quality gates](06-quality-gates.md) | You open or review a pull request |
-| 07 | [Migration plan](07-migration-plan.md) | You need to know what is being done next |
-| ADR | [Decision records](adr/) | You want the *why* behind a rule |
+| #   | Document                                       | Read it when                                               |
+| --- | ---------------------------------------------- | ---------------------------------------------------------- |
+| 01  | [Architecture](01-architecture.md)             | You need to know where code lives and what may import what |
+| 02  | [Design system (`@s/ui`)](02-design-system.md) | You build or change a shared component                     |
+| 03  | [Angular standards](03-angular-standards.md)   | You write any TypeScript or template                       |
+| 04  | [Styling](04-styling.md)                       | You write any CSS/SCSS                                     |
+| 05  | [Feature blueprint](05-feature-blueprint.md)   | You build or migrate a screen                              |
+| 06  | [Quality gates](06-quality-gates.md)           | You open or review a pull request                          |
+| 07  | [Migration plan](07-migration-plan.md)         | You need to know what is being done next                   |
+| ADR | [Decision records](adr/)                       | You want the _why_ behind a rule                           |
 
 ## The ten rules
 

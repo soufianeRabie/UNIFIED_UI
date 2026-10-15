@@ -32,15 +32,15 @@ src/app/domains/security/
 
 ## 2. Responsibilities
 
-| File | Does | Never does |
-|---|---|---|
-| `user.ts` | Describes a user as the UI understands it | Mirror the API's field names |
-| `user.dto.ts` | Mirrors the API contract exactly | Get imported outside `data-access` |
-| `user.mapper.ts` | Converts DTO ⇄ model, fills defaults, parses dates | Call HTTP |
-| `users-api.ts` | Builds requests, maps responses and errors | Hold state |
-| `users-store.ts` | Holds page state, debounces search, exposes signals and intents | Touch the DOM or templates |
-| `user-form-dialog.ts` | Renders a form, validates, emits a draft | Inject services or call APIs |
-| `users-list.ts` | Connects store ↔ components, handles navigation and confirmations | Contain business rules or styles |
+| File                  | Does                                                              | Never does                         |
+| --------------------- | ----------------------------------------------------------------- | ---------------------------------- |
+| `user.ts`             | Describes a user as the UI understands it                         | Mirror the API's field names       |
+| `user.dto.ts`         | Mirrors the API contract exactly                                  | Get imported outside `data-access` |
+| `user.mapper.ts`      | Converts DTO ⇄ model, fills defaults, parses dates                | Call HTTP                          |
+| `users-api.ts`        | Builds requests, maps responses and errors                        | Hold state                         |
+| `users-store.ts`      | Holds page state, debounces search, exposes signals and intents   | Touch the DOM or templates         |
+| `user-form-dialog.ts` | Renders a form, validates, emits a draft                          | Inject services or call APIs       |
+| `users-list.ts`       | Connects store ↔ components, handles navigation and confirmations | Contain business rules or styles   |
 
 ## 3. Data flow
 

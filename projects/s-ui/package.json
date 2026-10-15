@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "description": "S design system for Angular: dossier tokens and the S component vocabulary.",
   "private": true,
-  "sideEffects": ["*.css"],
+  "sideEffects": [
+    "*.css"
+  ],
   "peerDependencies": {
     "@angular/cdk": "^21.1.0",
     "@angular/common": "^21.1.0",

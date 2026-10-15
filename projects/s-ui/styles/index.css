@@ -9,7 +9,7 @@
 
 @layer tokens, base, components;
 
-@import url("./tokens.css");
-@import url("./base.css");
-@import url("./controls.css");
-@import url("./overlay.css");
+@import './tokens.css';
+@import './base.css';
+@import './controls.css';
+@import './overlay.css';

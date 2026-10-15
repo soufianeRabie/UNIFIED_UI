@@ -1,0 +1,6 @@
+dist
+.angular
+node_modules
+.drafts
+public
+package-lock.json
