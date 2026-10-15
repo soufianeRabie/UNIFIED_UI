@@ -1,0 +1,10 @@
+@use '../core/scale';
+
+:host {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+}
+
+@include scale.gap;
+@include scale.align;

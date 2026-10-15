@@ -1,0 +1,35 @@
+@use '../core/scale';
+
+:host {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  min-inline-size: 0;
+}
+
+:host([data-wrap]) {
+  flex-wrap: wrap;
+}
+
+:host([data-justify='start']) {
+  justify-content: flex-start;
+}
+
+:host([data-justify='center']) {
+  justify-content: center;
+}
+
+:host([data-justify='end']) {
+  justify-content: flex-end;
+}
+
+:host([data-justify='between']) {
+  justify-content: space-between;
+}
+
+:host([data-justify='around']) {
+  justify-content: space-around;
+}
+
+@include scale.gap;
+@include scale.align;

@@ -259,10 +259,13 @@ export default tseslint.config(
     },
   },
 
-  // Tests may use any, non-null assertions and longer files.
+  // Tests may use any, non-null assertions and longer files; their small host
+  // components keep the template inline, next to the assertions.
   {
     files: ['**/*.spec.ts'],
     rules: {
+      '@angular-eslint/component-max-inline-declarations': 'off',
+      '@angular-eslint/prefer-on-push-component-change-detection': 'off',
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-non-null-assertion': 'off',
       'max-lines': 'off',

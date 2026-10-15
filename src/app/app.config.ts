@@ -16,7 +16,8 @@ import { routes } from './app.routes';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
 import { GlobalErrorHandler } from './core/errors/global-error.handler';
 import { DEFAULT_PERMISSION_CONFIG, PERMISSION_CONFIG } from './secu/permissions/permission.config';
-import { acceptLanguageInterceptor, provideI18n } from './core/i18n';
+import { provideSUi } from '@s/ui';
+import { acceptLanguageInterceptor, provideI18n, sUiI18nAdapter } from './core/i18n';
 import { DomI18nService } from './core/services/dom-i18n.service';
 
 export const appConfig: ApplicationConfig = {
@@ -37,6 +38,7 @@ export const appConfig: ApplicationConfig = {
     }),
     provideHttpClient(withInterceptors([authInterceptor, acceptLanguageInterceptor])),
     provideI18n(),
+    provideSUi({ i18n: sUiI18nAdapter }),
     provideAppInitializer(() => inject(DomI18nService).init()),
   ],
 };

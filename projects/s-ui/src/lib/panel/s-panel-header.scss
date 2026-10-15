@@ -1,0 +1,25 @@
+:host {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-5);
+  border-block-end: 1px solid var(--rule);
+}
+
+.title {
+  min-inline-size: 0;
+  font-size: var(--text-md);
+  font-weight: var(--weight-semibold);
+  color: var(--ink);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.actions:empty {
+  display: none;
+}

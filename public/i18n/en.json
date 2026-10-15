@@ -1644,5 +1644,30 @@
     "ID": "ID",
     "CUSTOMER_NAME": "customerName",
     "VARIABLE_NAME": "variableName"
+  },
+  "S": {
+    "PAGINATION": {
+      "RANGE": "{{from}}–{{to}} of {{total}}",
+      "NAV": "Pagination",
+      "FIRST": "First page",
+      "PREVIOUS": "Previous page",
+      "NEXT": "Next page",
+      "LAST": "Last page",
+      "PAGE": "Page {{page}}"
+    },
+    "TABLE": {
+      "EMPTY": "Nothing to show yet.",
+      "ACTIONS": "Actions"
+    },
+    "SEARCH": {
+      "PLACEHOLDER": "Search…",
+      "CLEAR": "Clear search"
+    },
+    "DIALOG": {
+      "CLOSE": "Close",
+      "CANCEL": "Cancel",
+      "CONFIRM": "Confirm",
+      "DELETE": "Delete"
+    }
   }
 }

@@ -1,0 +1,36 @@
+// Shared :host rules for the spacing and alignment scales (02 §4).
+// Components @use this partial instead of repeating the steps.
+
+@mixin gap {
+  :host([data-gap='0']) {
+    gap: 0;
+  }
+
+  @each $step in 1, 2, 3, 4, 5, 6 {
+    :host([data-gap='#{$step}']) {
+      gap: var(--space-#{$step});
+    }
+  }
+}
+
+@mixin align {
+  :host([data-align='start']) {
+    align-items: flex-start;
+  }
+
+  :host([data-align='center']) {
+    align-items: center;
+  }
+
+  :host([data-align='end']) {
+    align-items: flex-end;
+  }
+
+  :host([data-align='stretch']) {
+    align-items: stretch;
+  }
+
+  :host([data-align='baseline']) {
+    align-items: baseline;
+  }
+}

@@ -1,0 +1,28 @@
+:host {
+  display: block;
+  min-inline-size: 0;
+  overflow: clip;
+  background: var(--paper-raised);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-page);
+}
+
+@each $step in 3, 4, 5, 6 {
+  :host([data-padding='#{$step}']) {
+    padding: var(--space-#{$step});
+  }
+}
+
+:host([data-tone='muted']) {
+  background: var(--paper-sunk);
+  box-shadow: none;
+}
+
+:host([data-tone='accent']) {
+  border-inline-start: 3px solid var(--seal);
+}
+
+:host([data-tone='grave']) {
+  border-block-start: 3px solid var(--alert);
+}

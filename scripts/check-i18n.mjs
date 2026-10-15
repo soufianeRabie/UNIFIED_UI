@@ -11,7 +11,8 @@
  *     their screen is migrated (03 §2),
  *   - keys present in a locale but never used.
  *
- * A "used key" is any quoted UPPER_SNAKE dotted literal in a .ts/.html file,
+ * A "used key" is any quoted UPPER_SNAKE dotted literal in a .ts/.html file
+ * of src/app or projects/s-ui (the library's own `S.*` labels),
  * e.g. 'SECU.USERS.TITLE'. Keys built dynamically must be listed in
  * DYNAMIC_KEY_PREFIXES so they are not reported as unused.
  *
@@ -22,7 +23,7 @@ import { join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
-const SOURCE_DIR = join(ROOT, 'src', 'app');
+const SOURCE_DIRS = [join(ROOT, 'src', 'app'), join(ROOT, 'projects', 's-ui', 'src')];
 const LOCALE_DIR = join(ROOT, 'public', 'i18n');
 const KEY_PATTERN = /['"`]([A-Z][A-Z0-9_]*(?:\.[A-Z0-9_]+)+)['"`]/g;
 const GENERATED_PATTERN = /^(DOM_FALLBACK|AUTO_INLINE_[A-Z_]+)\./;
@@ -46,7 +47,7 @@ function flatten(node, prefix = '', out = new Map()) {
 }
 
 const used = new Map(); // key -> first file:line
-for (const file of walk(SOURCE_DIR)) {
+for (const file of SOURCE_DIRS.flatMap((dir) => walk(dir))) {
   const lines = readFileSync(file, 'utf8').split('\n');
   lines.forEach((line, i) => {
     for (const match of line.matchAll(KEY_PATTERN)) {
@@ -104,7 +105,9 @@ if (process.argv.includes('--json')) {
     ),
   );
 } else {
-  console.log(`i18n: ${used.size} keys used in src/app · enabled: ${enabledCodes.join(', ')}`);
+  console.log(
+    `i18n: ${used.size} keys used in src/app + projects/s-ui · enabled: ${enabledCodes.join(', ')}`,
+  );
   for (const error of errors) console.log(`  ✗ ${error}`);
   for (const code of enabledCodes.filter((c) => missing[c])) {
     console.log(`  ${code}: ${missing[code].length} missing, ${unused[code].length} unused`);

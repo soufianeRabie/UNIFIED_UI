@@ -7,12 +7,12 @@
 
 ## 1. Current status
 
-| Field                   | Value                                                                                                                                                                                       |
-| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Current phase**       | Phase 1 — Design system foundation (1.1–1.2 done)                                                                                                                                           |
-| **Last completed step** | 1.2 Multi-language foundation (registry, RTL, gate) — 2026-10-15                                                                                                                            |
-| **Next step**           | 1.3 Components, one folder each with spec — start with layout (`SStack`, `SRow`, `SGrid`, `SPanel`), text, then actions, forms, data table, overlays; `provideSUi` bridged to ngx-translate |
-| **Blocked by**          | —                                                                                                                                                                                           |
+| Field                   | Value                                                                                                                              |
+| ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| **Current phase**       | Phase 1 — Design system foundation (1.1–1.2 done)                                                                                  |
+| **Last completed step** | 1.3a `@s/ui` core + layout (stack, row, grid, panel) — 2026-10-15                                                                  |
+| **Next step**           | 1.3b text (`SText`, `SHeading`, `SNotice`), `SPageHeader`, actions (`SIcon`, `SButton`, `SIconButton`, `SStamp`, `SEmpty`, `SKpi`) |
+| **Blocked by**          | —                                                                                                                                  |
 
 ### Phase checklist (details in `docs/architecture/07-migration-plan.md`)
 
@@ -26,7 +26,12 @@
   - [x] Tokens written: `projects/s-ui/styles/tokens.css`, `base.css`, `controls.css`, `overlay.css`, `index.css`
   - [x] 1.1 Wire into the build: `angular.json` styles (CDK overlay, self-hosted fonts, `s-ui/styles/index.css`), `@s/ui` path alias, legacy `--s-*` palette bridged to tokens
   - [x] 1.2 Multi-language foundation (ADR 0006): `public/i18n/languages.json` registry, `core/i18n` (`LanguageCatalog`, `I18nStore`, `acceptLanguageInterceptor`, `provideI18n`, `LanguageSwitcher`), `<html lang dir>`, N-language `check-i18n`, `DomI18nService` generalised, `ar.json` starter (disabled)
-  - [ ] 1.3 Components, one folder each with spec (02 §2 Phase 1 list): layout (stack/row/grid/panel), text (text/heading/notice), page header, icon/button/icon-button/stamp/empty/kpi, form (input/field/switch/search/filter-bar), data (data-table/cell/row-actions/pagination), overlay (dialog/confirm); `provideSUi` with ngx-translate
+  - [ ] 1.3 Components, one folder each with spec (02 §2 Phase 1 list)
+    - [x] 1.3a core (`scale.types`, `SUiI18n` contract + `SUiLabels`, `provideSUi`, `_scale.scss`) + layout (`SStack`, `SRow`, `SGrid`, `SPanel`, `SPanelHeader`); app bridge `sUiI18nAdapter`; `S.*` keys in en/fr
+    - [ ] 1.3b text, page header, actions/status
+    - [ ] 1.3c forms (input, field, switch, search, filter bar)
+    - [ ] 1.3d data (data table, cell, row actions, pagination)
+    - [ ] 1.3e overlays (dialog, confirm)
 - [ ] **Phase 2 — Shell + reference screen (Users)** in `src/app/domains/security`
 - [ ] **Phase 3 — Security domain screens**
 - [ ] **Phase 4 — Notification domain screens**
@@ -89,6 +94,8 @@ Written before the handbook; violates ADR 0005 (inline templates/styles, several
 ## 5. Log (newest first)
 
 ### 2026-10-15
+
+- **1.3a `@s/ui` core + layout:** `projects/s-ui/src/lib/core` (scale unions, `SUiI18n` contract with `version` signal + English defaults, `SUiLabels`, `provideSUi`, `_scale.scss` gap/align mixins) and one folder per component: `stack/`, `row/`, `grid/`, `panel/` (`SPanel` + `SPanelHeader` + types) — each `.ts`/`.html`/`.scss`/`.spec.ts`/`index.ts`; `public-api.ts` re-exports folders. App: `core/i18n/s-ui-i18n.adapter.ts` (`provideSUi({ i18n: sUiI18nAdapter })` in `app.config.ts`), `S.*` keys added to en/fr, `check-i18n` now also scans `projects/s-ui`. Test discovery: `angular.json` test `include` adds `../projects/s-ui/src/**/*.spec.ts` (globs resolve from `src/`). ESLint: spec test-host components exempt from inline-template/OnPush rules. **Verified:** `verify` ✔ — 10 files / 25 tests, strict lint + Stylelint clean on `projects/s-ui`.
 
 - **1.2 Multi-language (owner request: any number of languages, e.g. ar):** ADR 0006 + handbook 01/03 updated. `public/i18n/languages.json` registry (code, native label, dir, locale, enabled; default + fallback). New strict module `src/app/core/i18n/`: `LanguageCatalog` (loads registry, safety config if unreachable), `I18nStore` (current/dir/locale signals, `use()`, stored → browser → default, sets `<html lang dir>`, persists, keeps `appLangChange` host-shell contract), `acceptLanguageInterceptor` (`Accept-Language: <locale>` on every request), `provideI18n()`, `LanguageSwitcher` (registry-driven `<select>`, hidden with one language, options in their own script/dir). Deleted `LangService` + flag toggle; `DomI18nService` generalised to N languages (any script via `\p{L}`), marked deprecated (Phase 5). `check-i18n` now registry-driven: fails on enabled-language gaps or bad registry, reports disabled-language coverage. `ar.json` starter (2 keys) + `:root:lang(ar)` font tokens. `APP_INITIALIZER` → `provideAppInitializer`. ESLint boundary elements rewritten as **folder** patterns (file patterns were silently not classifying `domains/*/index.ts` and `src/app/*.ts`); `core/i18n` added to strict set. **Verified:** 14 new unit tests (16/16 total); boundary probes (ui→data-access ✗, domain→feature ✗, cross-domain internals ✗, cross-domain via index ✓, core→legacy warn); browser: switch EN→FR updates page + persists, API calls carry `Accept-Language: fr-FR`; with ar temporarily enabled: gate fails (975 missing) as intended, UI switches to `dir=rtl`, Arabic label shown, missing keys fall back to French, layout mirrors; registry restored (ar disabled). `verify` ✔.
 
