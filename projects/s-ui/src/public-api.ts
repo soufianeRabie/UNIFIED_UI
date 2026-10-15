@@ -32,4 +32,6 @@ export * from './lib/pagination';
 export * from './lib/data-table';
 export * from './lib/dialog';
 export * from './lib/confirm';
+export * from './lib/popover';
+export * from './lib/select';
 export * from './lib/query';

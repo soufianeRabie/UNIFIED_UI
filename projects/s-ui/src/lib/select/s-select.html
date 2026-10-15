@@ -1,0 +1,60 @@
+<button
+  #trigger
+  type="button"
+  class="trigger"
+  [attr.id]="field?.controlId ?? null"
+  [attr.aria-label]="ariaLabel() ?? null"
+  [attr.aria-describedby]="field?.describedBy() ?? null"
+  [attr.aria-invalid]="field?.invalid() || null"
+  aria-haspopup="listbox"
+  [attr.aria-expanded]="open()"
+  [attr.data-size]="controlSize()"
+  [disabled]="disabled()"
+  (click)="toggle()"
+  (keydown.arrowDown)="open.set(true)"
+>
+  <span class="text" [class.placeholder]="!view().summary">{{
+    view().summary ?? view().placeholder
+  }}</span>
+  <s-icon name="chevron-down" class="chevron" />
+</button>
+
+<s-popover
+  [(open)]="open"
+  [anchor]="trigger"
+  [label]="view().placeholder"
+  width="trigger"
+  panelRole="none"
+  (closed)="onClosed()"
+>
+  @if (view().showFilter) {
+    <div class="filter">
+      <input
+        type="search"
+        class="s-control"
+        data-size="sm"
+        [attr.aria-label]="view().filterLabel"
+        [placeholder]="view().filterLabel"
+        [value]="term()"
+        (input)="onFilter($event)"
+      />
+    </div>
+  }
+  <ul
+    class="list"
+    cdkListbox
+    [cdkListboxValue]="selection()"
+    [cdkListboxMultiple]="multiple()"
+    [attr.aria-label]="ariaLabel() ?? view().placeholder"
+    (cdkListboxValueChange)="select($event)"
+  >
+    @for (option of view().visible; track $index) {
+      <li class="option" [cdkOption]="option.value" [cdkOptionDisabled]="!!option.disabled">
+        <s-icon name="check" class="check" />
+        <span>{{ option.label }}</span>
+      </li>
+    } @empty {
+      <li class="none" role="presentation">{{ view().empty }}</li>
+    }
+  </ul>
+</s-popover>

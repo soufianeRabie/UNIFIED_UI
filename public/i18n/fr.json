@@ -1668,6 +1668,58 @@
       "CANCEL": "Annuler",
       "CONFIRM": "Confirmer",
       "DELETE": "Supprimer"
+    },
+    "SELECT": {
+      "PLACEHOLDER": "Sélectionner…",
+      "EMPTY": "Aucune option",
+      "FILTER": "Filtrer les options",
+      "COUNT": "{{count}} sélectionné(s)"
+    },
+    "CALENDAR": {
+      "PREVIOUS": "Mois précédent",
+      "NEXT": "Mois suivant",
+      "TODAY": "Aujourd'hui"
+    },
+    "DATE": {
+      "PLACEHOLDER": "Choisir une date",
+      "RANGE_PLACEHOLDER": "Choisir une période",
+      "CLEAR": "Effacer"
+    },
+    "FILTER": {
+      "OPEN": "Filtrer par {{column}}",
+      "TITLE": "Filtre · {{column}}",
+      "OPERATOR": "Condition",
+      "VALUE": "Valeur",
+      "VALUES": "Valeurs (une par ligne)",
+      "FROM": "Du",
+      "TO": "Au",
+      "YES": "Oui",
+      "NO": "Non",
+      "APPLY": "Appliquer",
+      "CLEAR": "Effacer",
+      "ACTIVE": "Filtres actifs",
+      "REMOVE": "Retirer le filtre : {{label}}",
+      "CLEAR_ALL": "Tout effacer",
+      "OP": {
+        "EQ": "Est",
+        "NEQ": "N'est pas",
+        "CONTAINS": "Contient",
+        "NOT_CONTAINS": "Ne contient pas",
+        "STARTS_WITH": "Commence par",
+        "ENDS_WITH": "Se termine par",
+        "GT": "Supérieur à",
+        "GTE": "Au moins",
+        "LT": "Inférieur à",
+        "LTE": "Au plus",
+        "BETWEEN": "Entre",
+        "IN": "Fait partie de",
+        "NOT_IN": "Ne fait pas partie de",
+        "IS_NULL": "Est vide",
+        "IS_NOT_NULL": "N'est pas vide",
+        "ON": "Le",
+        "BEFORE": "Avant le",
+        "ON_OR_AFTER": "À partir du"
+      }
     }
   },
   "ERRORS": {

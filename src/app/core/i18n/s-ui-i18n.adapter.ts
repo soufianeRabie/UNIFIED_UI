@@ -13,5 +13,6 @@ export function sUiI18nAdapter(): SUiI18n {
   return {
     version: computed(() => store.current()?.code),
     translate: (key, params) => translate.instant(key, params ? { ...params } : undefined),
+    locale: computed(() => store.locale() || 'en-GB'),
   };
 }

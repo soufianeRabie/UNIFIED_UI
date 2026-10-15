@@ -1,0 +1,44 @@
+:host {
+  display: contents;
+}
+
+.panel {
+  max-block-size: min(70vh, 520px);
+  overflow: auto;
+  font-size: var(--text-base);
+  color: var(--ink);
+  background: var(--paper-raised);
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-overlay);
+  animation: s-popover-in var(--duration-fast) var(--ease-standard);
+}
+
+.panel[data-width='trigger'] {
+  min-inline-size: 100%;
+}
+
+.panel[data-width='sm'] {
+  inline-size: 240px;
+}
+
+.panel[data-width='md'] {
+  inline-size: 320px;
+}
+
+.panel[data-width='lg'] {
+  inline-size: 400px;
+}
+
+@keyframes s-popover-in {
+  from {
+    opacity: 0;
+    transform: translateY(-2px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel {
+    animation: none;
+  }
+}

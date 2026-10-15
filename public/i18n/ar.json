@@ -46,5 +46,59 @@
       "INVALID_VALUE": "القيمة {{value}} غير صالحة للحقل «{{field}}» ({{type}}).",
       "TEXT_TOO_LONG": "القيم النصية محدودة بـ {{max}} حرفًا."
     }
+  },
+  "S": {
+    "SELECT": {
+      "PLACEHOLDER": "اختر…",
+      "EMPTY": "لا توجد خيارات",
+      "FILTER": "تصفية الخيارات",
+      "COUNT": "{{count}} محدد"
+    },
+    "CALENDAR": {
+      "PREVIOUS": "الشهر السابق",
+      "NEXT": "الشهر التالي",
+      "TODAY": "اليوم"
+    },
+    "DATE": {
+      "PLACEHOLDER": "اختر تاريخًا",
+      "RANGE_PLACEHOLDER": "اختر الفترة",
+      "CLEAR": "مسح"
+    },
+    "FILTER": {
+      "OPEN": "التصفية حسب {{column}}",
+      "TITLE": "تصفية · {{column}}",
+      "OPERATOR": "الشرط",
+      "VALUE": "القيمة",
+      "VALUES": "القيم (قيمة في كل سطر)",
+      "FROM": "من",
+      "TO": "إلى",
+      "YES": "نعم",
+      "NO": "لا",
+      "APPLY": "تطبيق",
+      "CLEAR": "مسح",
+      "ACTIVE": "عوامل التصفية النشطة",
+      "REMOVE": "إزالة عامل التصفية: {{label}}",
+      "CLEAR_ALL": "مسح الكل",
+      "OP": {
+        "EQ": "يساوي",
+        "NEQ": "لا يساوي",
+        "CONTAINS": "يحتوي على",
+        "NOT_CONTAINS": "لا يحتوي على",
+        "STARTS_WITH": "يبدأ بـ",
+        "ENDS_WITH": "ينتهي بـ",
+        "GT": "أكبر من",
+        "GTE": "على الأقل",
+        "LT": "أقل من",
+        "LTE": "على الأكثر",
+        "BETWEEN": "بين",
+        "IN": "أحد",
+        "NOT_IN": "ليس أيًا من",
+        "IS_NULL": "فارغ",
+        "IS_NOT_NULL": "غير فارغ",
+        "ON": "في",
+        "BEFORE": "قبل",
+        "ON_OR_AFTER": "في أو بعد"
+      }
+    }
   }
 }

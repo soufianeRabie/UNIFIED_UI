@@ -1,0 +1,10 @@
+<ng-template #panel>
+  <div
+    class="panel"
+    [attr.role]="panelRole() === 'dialog' ? 'dialog' : null"
+    [attr.aria-label]="panelRole() === 'dialog' ? label() : null"
+    [attr.data-width]="width()"
+  >
+    <ng-content />
+  </div>
+</ng-template>

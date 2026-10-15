@@ -1,0 +1,122 @@
+:host {
+  display: block;
+  min-inline-size: 0;
+}
+
+.trigger {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  justify-content: space-between;
+  inline-size: 100%;
+  block-size: 34px;
+  padding-inline: var(--space-3) var(--space-2);
+  font: inherit;
+  font-size: var(--text-base);
+  color: var(--ink);
+  text-align: start;
+  cursor: pointer;
+  background: var(--paper-raised);
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius-sm);
+  transition:
+    border-color var(--duration-fast) var(--ease-standard),
+    box-shadow var(--duration-fast) var(--ease-standard);
+}
+
+.trigger[data-size='sm'] {
+  block-size: 28px;
+  font-size: var(--text-sm);
+}
+
+.trigger:hover:not(:disabled) {
+  border-color: var(--ink-3);
+}
+
+.trigger:focus-visible,
+.trigger[aria-expanded='true'] {
+  outline: none;
+  border-color: var(--seal);
+  box-shadow: var(--focus-ring);
+}
+
+.trigger[aria-invalid='true'] {
+  border-color: var(--alert);
+}
+
+.trigger:disabled {
+  color: var(--ink-3);
+  cursor: not-allowed;
+  background: var(--paper-sunk);
+}
+
+.text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.placeholder {
+  color: var(--ink-3);
+}
+
+.chevron {
+  flex: none;
+  font-size: var(--text-xs);
+  color: var(--ink-3);
+}
+
+.filter {
+  padding: var(--space-2);
+  border-block-end: 1px solid var(--rule);
+}
+
+.list {
+  padding: var(--space-1);
+  margin: 0;
+  list-style: none;
+  outline: none;
+}
+
+.option {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  padding: var(--space-2) var(--space-3);
+  cursor: pointer;
+  border-radius: var(--radius-xs);
+}
+
+.option .check {
+  font-size: var(--text-xs);
+  color: var(--seal);
+  visibility: hidden;
+}
+
+.option[aria-selected='true'] {
+  font-weight: var(--weight-medium);
+}
+
+.option[aria-selected='true'] .check {
+  visibility: visible;
+}
+
+.option.cdk-option-active,
+.option:hover {
+  background: var(--paper-sunk);
+}
+
+.list:focus-visible .option.cdk-option-active {
+  outline: 2px solid var(--seal);
+  outline-offset: -2px;
+}
+
+.option[aria-disabled='true'] {
+  color: var(--ink-3);
+  cursor: not-allowed;
+}
+
+.none {
+  padding: var(--space-3);
+  color: var(--ink-3);
+}

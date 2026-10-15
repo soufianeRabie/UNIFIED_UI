@@ -1668,6 +1668,58 @@
       "CANCEL": "Cancel",
       "CONFIRM": "Confirm",
       "DELETE": "Delete"
+    },
+    "SELECT": {
+      "PLACEHOLDER": "Select…",
+      "EMPTY": "No options",
+      "FILTER": "Filter options",
+      "COUNT": "{{count}} selected"
+    },
+    "CALENDAR": {
+      "PREVIOUS": "Previous month",
+      "NEXT": "Next month",
+      "TODAY": "Today"
+    },
+    "DATE": {
+      "PLACEHOLDER": "Choose a date",
+      "RANGE_PLACEHOLDER": "Choose dates",
+      "CLEAR": "Clear"
+    },
+    "FILTER": {
+      "OPEN": "Filter by {{column}}",
+      "TITLE": "Filter · {{column}}",
+      "OPERATOR": "Condition",
+      "VALUE": "Value",
+      "VALUES": "Values (one per line)",
+      "FROM": "From",
+      "TO": "To",
+      "YES": "Yes",
+      "NO": "No",
+      "APPLY": "Apply",
+      "CLEAR": "Clear",
+      "ACTIVE": "Active filters",
+      "REMOVE": "Remove filter: {{label}}",
+      "CLEAR_ALL": "Clear all",
+      "OP": {
+        "EQ": "Is",
+        "NEQ": "Is not",
+        "CONTAINS": "Contains",
+        "NOT_CONTAINS": "Does not contain",
+        "STARTS_WITH": "Starts with",
+        "ENDS_WITH": "Ends with",
+        "GT": "Greater than",
+        "GTE": "At least",
+        "LT": "Less than",
+        "LTE": "At most",
+        "BETWEEN": "Between",
+        "IN": "Is one of",
+        "NOT_IN": "Is none of",
+        "IS_NULL": "Is empty",
+        "IS_NOT_NULL": "Is not empty",
+        "ON": "On",
+        "BEFORE": "Before",
+        "ON_OR_AFTER": "On or after"
+      }
     }
   },
   "ERRORS": {
