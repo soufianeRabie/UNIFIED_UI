@@ -7,12 +7,12 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 import { AuthStore } from '../../core/stores/auth.store';
 import { OidcAuthService } from '../../core/services/oidc-auth.service';
-import { LangSwitcherComponent } from '../../shared/components/lang-switcher.component';
+import { LanguageSwitcher } from '../../core/i18n';
 
 @Component({
   selector: 'app-login-page',
   standalone: true,
-  imports: [CommonModule, ButtonModule, MessageModule, TranslatePipe, LangSwitcherComponent],
+  imports: [CommonModule, ButtonModule, MessageModule, TranslatePipe, LanguageSwitcher],
   templateUrl: './login-page.html',
   styleUrl: './login-page.scss',
 })

@@ -1,0 +1,9 @@
+{
+  "defaultLanguage": "fr",
+  "fallbackLanguage": "fr",
+  "languages": [
+    { "code": "fr", "label": "Français", "dir": "ltr", "locale": "fr-FR", "enabled": true },
+    { "code": "en", "label": "English", "dir": "ltr", "locale": "en-GB", "enabled": true },
+    { "code": "ar", "label": "العربية", "dir": "rtl", "locale": "ar-MA", "enabled": false }
+  ]
+}

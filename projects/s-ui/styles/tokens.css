@@ -195,6 +195,15 @@
     --shadow-overlay: 0 24px 60px -20px rgb(0 0 0 / 75%);
   }
 
+  /* ---- scripts the brand fonts do not cover (ADR 0006 §7) -------------
+     Arabic: add @fontsource/ibm-plex-sans-arabic when the language is
+     enabled; until then the browser's Arabic system font is used. */
+  :root:lang(ar) {
+    --font-sans: 'IBM Plex Sans Arabic', 'Sora Variable', 'Segoe UI', tahoma, sans-serif;
+    --font-serif: 'IBM Plex Sans Arabic', 'Newsreader Variable', 'Segoe UI', tahoma, serif;
+    --tracking-caps: 0;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     :root {
       --duration-fast: 0ms;

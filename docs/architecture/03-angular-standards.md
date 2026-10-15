@@ -15,7 +15,7 @@ Applies to all TypeScript and templates in `src/app` and `projects/*`. Angular 2
 | Routing          | Lazy routes per domain and per page; guards are functions (`CanActivateFn`)                                                                                           |
 | Subscriptions    | `takeUntilDestroyed()` or `toSignal`; never manual `unsubscribe` bookkeeping                                                                                          |
 | Types            | `strict`, no `any` (use `unknown` + narrowing), no non-null `!` except after an explicit guard                                                                        |
-| Strings          | Every user-visible string is a translation key: `DOMAIN.FEATURE.ELEMENT` (`SECU.USERS.TITLE`)                                                                         |
+| Strings          | Every user-visible string is a translation key: `DOMAIN.FEATURE.ELEMENT` (`SECU.USERS.TITLE`). Language codes never appear in code — read `I18nStore` (ADR 0006)      |
 
 ## 2. Forbidden
 

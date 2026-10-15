@@ -2,7 +2,8 @@
   "LANG": {
     "EN": "English",
     "FR": "Français",
-    "SWITCH": "Changer de langue"
+    "SWITCH": "Changer de langue",
+    "LABEL": "Langue"
   },
   "LOGIN": {
     "BRAND": "Centre de Sécurité",

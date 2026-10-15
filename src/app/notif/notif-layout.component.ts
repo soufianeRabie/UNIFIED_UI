@@ -8,14 +8,14 @@ import { PermissionService, SecuMenuItem } from './core/services/permission.serv
 import { AuthStore } from '../core/stores/auth.store';
 import { NotificationsService } from './core/services/notifications.service';
 import { RealtimeService } from './core/services/realtime.service';
-import { LangSwitcherComponent } from '../shared/components/lang-switcher.component';
+import { LanguageSwitcher } from '../core/i18n';
 
 interface NavItem { label: string; path: string; icon: string; }
 
 @Component({
   selector: 'notif-layout',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, CommonModule, TranslatePipe, LangSwitcherComponent],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, CommonModule, TranslatePipe, LanguageSwitcher],
   template: `
     <div class="nl-shell">
       <!-- Sidebar -->
@@ -74,7 +74,7 @@ interface NavItem { label: string; path: string; icon: string; }
                 <span>{{ 'NOTIF.UNREAD_COUNT' | translate: { count: unreadCount() } }}</span>
               </div>
             }
-            <app-lang-switcher />
+            <app-language-switcher />
             <a class="nl-topbar-btn" routerLink="/notif/settings">
               <i class="pi pi-cog"></i>
             </a>

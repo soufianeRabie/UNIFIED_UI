@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
 import { PermissionService } from '../../services/permission.service';
 import type { SecuMenuItemDto, SecuPageType } from '../../models/secu.models';
-import { LangSwitcherComponent } from '../../../shared/components/lang-switcher.component';
+import { LanguageSwitcher } from '../../../core/i18n';
 
 interface MenuNode {
   idPage: number;
@@ -20,7 +20,7 @@ interface MenuNode {
 @Component({
   selector: 'app-secu-layout',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, CommonModule, TranslatePipe, LangSwitcherComponent],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, CommonModule, TranslatePipe, LanguageSwitcher],
   template: `
     <div class="secu-layout">
       <!-- Sidebar -->
@@ -79,7 +79,7 @@ interface MenuNode {
             <span class="s-breadcrumb-current">{{ 'SECU.BREADCRUMB.MODULE' | translate }}</span>
           </div>
           <div class="s-topbar-actions">
-            <app-lang-switcher />
+            <app-language-switcher />
             <div style="font-size:12px; color: var(--s-text-3); font-family: var(--s-mono);">
               {{ 'SECU.VERSION' | translate }}
             </div>

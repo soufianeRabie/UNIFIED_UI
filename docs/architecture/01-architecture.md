@@ -21,7 +21,7 @@ UNIFIED_UI/
 │  ├─ core/                      app-wide singletons, created once at bootstrap
 │  │  ├─ auth/                   OIDC session, token storage, auth interceptor, guards
 │  │  ├─ http/                   base URL resolution, error interceptor, tenant header
-│  │  ├─ i18n/                   translation setup, S UI label bridge
+│  │  ├─ i18n/                   language registry, I18nStore, Accept-Language, S UI label bridge (ADR 0006)
 │  │  ├─ config/                 runtime config (public/config.json)
 │  │  ├─ errors/                 global ErrorHandler, error → message mapping
 │  │  └─ shell/                  application frame: sidebar, topbar, breadcrumbs

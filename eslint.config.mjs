@@ -30,43 +30,27 @@ const HTML_PRESETS = [
   ...angular.configs.templateAccessibility,
 ];
 
-const STRICT_TS = ['projects/s-ui/**/*.ts', 'src/app/domains/**/*.ts'];
-const STRICT_HTML = ['projects/s-ui/**/*.html', 'src/app/domains/**/*.html'];
+/** Folders that already meet the handbook. Add a folder here once it is compliant. */
+const STRICT_DIRS = ['projects/s-ui', 'src/app/domains', 'src/app/core/i18n'];
+const STRICT_TS = STRICT_DIRS.map((d) => `${d}/**/*.ts`);
+const STRICT_HTML = STRICT_DIRS.map((d) => `${d}/**/*.html`);
 const LEGACY_TS = ['src/app/**/*.ts'];
 const LEGACY_HTML = ['src/app/**/*.html'];
 
 /** Architecture elements — docs/architecture/01-architecture.md §2–3. */
 const ELEMENTS = [
-  { type: 's-ui', pattern: 'projects/s-ui/src/**', partialMatch: false },
-  { type: 'core', pattern: 'src/app/core/**', partialMatch: false },
-  { type: 'shared', pattern: 'src/app/shared/**', partialMatch: false },
-  {
-    type: 'domain',
-    pattern: 'src/app/domains/*/domain/**',
-    partialMatch: false,
-    capture: ['scope'],
-  },
-  {
-    type: 'data-access',
-    pattern: 'src/app/domains/*/data-access/**',
-    partialMatch: false,
-    capture: ['scope'],
-  },
-  { type: 'ui', pattern: 'src/app/domains/*/ui/**', partialMatch: false, capture: ['scope'] },
-  {
-    type: 'feature',
-    pattern: 'src/app/domains/*/features/**',
-    partialMatch: false,
-    capture: ['scope'],
-  },
-  {
-    type: 'domain-root',
-    pattern: 'src/app/domains/*/*.ts',
-    partialMatch: false,
-    capture: ['scope'],
-  },
-  { type: 'app', pattern: 'src/app/*.ts', partialMatch: false },
-  { type: 'legacy', pattern: 'src/app/{secu,notif,features}/**', partialMatch: false },
+  // Element patterns match folders. Order matters: the first match wins, so the
+  // specific layers come before the catch-alls (domain root, app root).
+  { type: 's-ui', pattern: 'projects/s-ui/src' },
+  { type: 'domain', pattern: 'src/app/domains/*/domain', capture: ['scope'] },
+  { type: 'data-access', pattern: 'src/app/domains/*/data-access', capture: ['scope'] },
+  { type: 'ui', pattern: 'src/app/domains/*/ui', capture: ['scope'] },
+  { type: 'feature', pattern: 'src/app/domains/*/features', capture: ['scope'] },
+  { type: 'domain-root', pattern: 'src/app/domains/*', capture: ['scope'] },
+  { type: 'core', pattern: 'src/app/core' },
+  { type: 'shared', pattern: 'src/app/shared' },
+  { type: 'legacy', pattern: 'src/app/{secu,notif,features}' },
+  { type: 'app', pattern: 'src/app' },
 ];
 
 const SAME_SCOPE = { scope: '{{ from.element.captured.scope }}' };
@@ -198,14 +182,19 @@ export default tseslint.config(
     settings: {
       'boundaries/elements': ELEMENTS,
       'boundaries/include': ['src/app/**/*', 'projects/s-ui/src/**/*'],
-      'import/resolver': { typescript: { project: ['tsconfig.app.json', 'tsconfig.spec.json'] } },
+      'import/resolver': {
+        typescript: {
+          project: ['tsconfig.app.json', 'tsconfig.spec.json'],
+          noWarnOnMultipleProjects: true,
+        },
+      },
     },
   },
 
   // ---- LEGACY (warnings) ---------------------------------------------------
   {
     files: LEGACY_TS,
-    ignores: ['src/app/domains/**'],
+    ignores: STRICT_DIRS.map((d) => `${d}/**`),
     extends: asWarnings(TS_PRESETS),
     rules: {
       ...TS_RULES('warn'),
@@ -214,7 +203,7 @@ export default tseslint.config(
   },
   {
     files: LEGACY_HTML,
-    ignores: ['src/app/domains/**'],
+    ignores: STRICT_DIRS.map((d) => `${d}/**`),
     extends: asWarnings(HTML_PRESETS),
     rules: HTML_RULES('warn'),
   },

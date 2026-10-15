@@ -1,0 +1,21 @@
+@if (store.languages().length > 1) {
+  <label class="visually-hidden" [for]="selectId">{{ 'LANG.LABEL' | translate }}</label>
+  <select
+    class="s-control"
+    data-size="sm"
+    [id]="selectId"
+    [title]="'LANG.SWITCH' | translate"
+    (change)="onChange($event)"
+  >
+    @for (language of store.languages(); track language.code) {
+      <option
+        [value]="language.code"
+        [selected]="language.code === store.current()?.code"
+        [attr.lang]="language.code"
+        [attr.dir]="language.dir"
+      >
+        {{ language.label }}
+      </option>
+    }
+  </select>
+}
