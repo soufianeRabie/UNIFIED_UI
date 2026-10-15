@@ -7,12 +7,12 @@
 
 ## 1. Current status
 
-| Field                   | Value                                                                                                                                                                                    |
-| ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Current phase**       | Phase 0 complete → Phase 1 — Design system foundation                                                                                                                                    |
-| **Last completed step** | 0.5 Corrupted glyphs repaired — Phase 0 done — 2026-10-15                                                                                                                                |
-| **Next step**           | Phase 1.1 — wire `projects/s-ui` into the build (tsconfig alias `@s/ui`, angular.json styles: fonts, CDK overlay, `s-ui/styles/index.css`) and bridge legacy `--s-*` variables to tokens |
-| **Blocked by**          | —                                                                                                                                                                                        |
+| Field                   | Value                                                                                                     |
+| ----------------------- | --------------------------------------------------------------------------------------------------------- |
+| **Current phase**       | Phase 1 — Design system foundation (1.1 done)                                                             |
+| **Last completed step** | 1.1 `@s/ui` wired into the build + legacy palette bridged to tokens — 2026-10-15                          |
+| **Next step**           | 1.2 Multi-language foundation (language registry, RTL, N-language i18n gate, `Accept-Language`), ADR 0006 |
+| **Blocked by**          | —                                                                                                         |
 
 ### Phase checklist (details in `docs/architecture/07-migration-plan.md`)
 
@@ -24,9 +24,9 @@
   - [x] 0.5 Repair corrupted glyphs (lost emoji/symbol bytes) in legacy templates
 - [ ] **Phase 1 — Design system foundation (`projects/s-ui`)**
   - [x] Tokens written: `projects/s-ui/styles/tokens.css`, `base.css`, `controls.css`, `overlay.css`, `index.css`
-  - [ ] Restructure draft components into the folder contract (see §3 "Draft code")
-  - [ ] tsconfig path alias `@s/ui`, angular.json styles (fonts, cdk overlay css, s-ui index.css), `provideSUi` with ngx-translate
-  - [ ] Specs for every component; bridge legacy `--s-*` variables to tokens
+  - [x] 1.1 Wire into the build: `angular.json` styles (CDK overlay, self-hosted fonts, `s-ui/styles/index.css`), `@s/ui` path alias, legacy `--s-*` palette bridged to tokens
+  - [ ] 1.2 Multi-language foundation: `public/i18n/languages.json` registry (code, label, dir, locale, enabled), `<html lang dir>`, registry-driven switcher, N-language `check-i18n`, `Accept-Language` interceptor, `DomI18nService` generalised; ADR 0006
+  - [ ] 1.3 Components, one folder each with spec (02 §2 Phase 1 list): layout (stack/row/grid/panel), text (text/heading/notice), page header, icon/button/icon-button/stamp/empty/kpi, form (input/field/switch/search/filter-bar), data (data-table/cell/row-actions/pagination), overlay (dialog/confirm); `provideSUi` with ngx-translate
 - [ ] **Phase 2 — Shell + reference screen (Users)** in `src/app/domains/security`
 - [ ] **Phase 3 — Security domain screens**
 - [ ] **Phase 4 — Notification domain screens**
@@ -87,6 +87,8 @@ Written before the handbook; violates ADR 0005 (inline templates/styles, several
 ## 5. Log (newest first)
 
 ### 2026-10-15
+
+- **1.1 Wiring + bridge:** `angular.json` global styles now load `@angular/cdk/overlay-prebuilt.css`, self-hosted fonts (`@fontsource-variable/sora`, `@fontsource-variable/newsreader`, `@fontsource/ibm-plex-mono` 400/500/600), `projects/s-ui/styles/index.css`, then legacy `styles.scss`. `@s/ui` path alias → `projects/s-ui/src/public-api.ts` (empty until 1.3). Legacy `secu.styles.css` `:root` palette now **bridges** every `--s-*` variable to a token (+ new `--s-on-accent`); replaced all raw colours in both legacy stylesheets with tokens (37 accent tints → `color-mix`, 21 `#fff` text → `--s-on-accent`, `#000` on badges → `--sage/amber-contrast`, shadows → `--shadow-overlay`, gradient + backdrop blur removed); legacy page titles use the serif. Both legacy files: 0 raw colours. **Verified:** `verify` ✔ (initial 806 kB, +18 kB @font-face); browser light + dark on Users and Data sources: paper/ink/seal palette, Sora + Newsreader loaded, primary button contrast in dark 9:1 (`#13200f` on `#a8c49a`).
 
 - **0.5 Glyphs:** restored 130 corrupted sequences in 20 legacy templates to their original characters, identified from the surviving UTF-8 tail bytes (🗑 🔍 ✏ ⚠ 👁 ⏳ 🔐 🔗 🎭 👤 👥 🏢 🏷 ▶ ▾ ▸ ▲ ▼ · … é ═, password dots). 0 `U+FFFD` left in `src/app`. **Verified:** `npm run verify` ✔; browser re-sweep of the 9 affected routes → 0 corrupted characters (page-actions had 1 001). **Phase 0 complete.**
 

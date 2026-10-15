@@ -33,7 +33,16 @@
                 "input": "public"
               }
             ],
-            "styles": ["src/styles.scss"]
+            "styles": [
+              "node_modules/@angular/cdk/overlay-prebuilt.css",
+              "node_modules/@fontsource-variable/sora/index.css",
+              "node_modules/@fontsource-variable/newsreader/index.css",
+              "node_modules/@fontsource/ibm-plex-mono/400.css",
+              "node_modules/@fontsource/ibm-plex-mono/500.css",
+              "node_modules/@fontsource/ibm-plex-mono/600.css",
+              "projects/s-ui/styles/index.css",
+              "src/styles.scss"
+            ]
           },
           "configurations": {
             "production": {
