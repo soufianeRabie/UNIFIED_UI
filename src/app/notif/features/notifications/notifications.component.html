@@ -56,7 +56,7 @@
               </div>
               <div class="np-notif-body">
                 <div class="np-notif-title">{{ item.title }}</div>
-                <div class="np-notif-preview">{{ item.body | slice:0:90 }}{{ (item.body?.length ?? 0) > 90 ? '�' : '' }}</div>
+                <div class="np-notif-preview">{{ item.body | slice:0:90 }}{{ (item.body?.length ?? 0) > 90 ? '…' : '' }}</div>
                 <div class="np-notif-meta">
                   <span class="np-priority-badge np-priority-badge--{{ item.priority }}">{{ priorityLabel(item.priority) }}</span>
                   <span class="np-muted">{{ item.createdAt | date:'dd/MM/yy HH:mm' }}</span>

@@ -33,14 +33,14 @@ const PAGE_CODE = 'SETTINGS';
     @if (loading()) {
       <div class="s-card"><div class="s-empty"><div class="s-empty-text">{{ 'COMMON.LOADING' | translate }}</div></div></div>
     } @else if (loadError()) {
-      <div class="s-alert error" style="margin:16px;">�  {{ loadError() }}</div>
+      <div class="s-alert error" style="margin:16px;">⚠ {{ loadError() }}</div>
     } @else if (form) {
 
       @if (saveSuccess()) {
         <div class="s-alert success" style="margin-bottom:12px;">{{ 'SECU.AUTH_SETTINGS.SAVE_SUCCESS' | translate }}</div>
       }
       @if (saveError()) {
-        <div class="s-alert error" style="margin-bottom:12px;">�  {{ saveError() }}</div>
+        <div class="s-alert error" style="margin-bottom:12px;">⚠ {{ saveError() }}</div>
       }
 
       <!-- General -->

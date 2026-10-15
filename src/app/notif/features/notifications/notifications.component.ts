@@ -138,7 +138,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     if (!current) return;
     this.service.markRead(current.id).subscribe({
       next: () => {
-        this.status = { type: 'success', message: 'Notification marqu�©e comme lue.' };
+        this.status = { type: 'success', message: 'Notification marquée comme lue.' };
         this.open(current as NotificationItem);
         this.loadInbox();
         this.loadUnread();
@@ -154,7 +154,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     if (!unreadIds.length) return;
     forkJoin(unreadIds.map(id => this.service.markRead(id))).subscribe({
       next: () => {
-        this.status = { type: 'success', message: 'Toutes les notifications marqu�©es comme lues.' };
+        this.status = { type: 'success', message: 'Toutes les notifications marquées comme lues.' };
         this.loadInbox();
         this.loadUnread();
       },

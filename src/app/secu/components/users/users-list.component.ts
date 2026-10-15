@@ -37,7 +37,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     <div class="s-card">
       <div class="s-toolbar">
         <div class="s-search">
-          <span class="s-search-icon">�</span>
+          <span class="s-search-icon">🔍</span>
           <input
             [placeholder]="'SECU.USERS.SEARCH_PLACEHOLDER' | translate"
             [(ngModel)]="searchTerm"
@@ -57,7 +57,7 @@ import { TranslatePipe } from '@ngx-translate/core';
           <div class="s-empty-text">{{ 'COMMON.LOADING' | translate }}</div>
         </div>
       } @else if (error()) {
-        <div class="s-alert error" style="margin:16px;">�  {{ error() }}</div>
+        <div class="s-alert error" style="margin:16px;">⚠ {{ error() }}</div>
       } @else {
         <div class="s-table-wrap">
           <table class="s-table">
@@ -106,7 +106,7 @@ import { TranslatePipe } from '@ngx-translate/core';
                         [routerLink]="[user.idUser]"
                         [title]="'COMMON.DETAIL' | translate"
                       >
-                        �
+                        👁
                       </a>
                       <button
                         class="s-btn-icon"
@@ -114,7 +114,7 @@ import { TranslatePipe } from '@ngx-translate/core';
                         (click)="openEdit(user)"
                         [title]="'COMMON.EDIT' | translate"
                       >
-                        �
+                        ✏
                       </button>
                       <button
                         class="s-btn-icon danger"
@@ -122,7 +122,7 @@ import { TranslatePipe } from '@ngx-translate/core';
                         (click)="confirmDelete(user)"
                         [title]="'COMMON.DELETE' | translate"
                       >
-                        �—‘
+                        🗑
                       </button>
                     </div>
                   </td>
@@ -131,7 +131,7 @@ import { TranslatePipe } from '@ngx-translate/core';
                 <tr>
                   <td colspan="7">
                     <div class="s-empty">
-                      <div class="s-empty-icon">�¤</div>
+                      <div class="s-empty-icon">👤</div>
                       <div class="s-empty-text">{{ 'SECU.USERS.EMPTY' | translate }}</div>
                     </div>
                   </td>
@@ -160,7 +160,7 @@ import { TranslatePipe } from '@ngx-translate/core';
           </div>
           <div class="s-modal-body">
             @if (saveError()) {
-              <div class="s-alert error">�  {{ saveError() }}</div>
+              <div class="s-alert error">⚠ {{ saveError() }}</div>
             }
             <div class="s-form-row">
               <div class="s-field">

@@ -112,7 +112,7 @@ const OPERATORS  = ['Equals', 'NotEquals', 'Contains', 'StartsWith', 'Regex', 'I
         <div class="policy-list-col">
           <div class="s-toolbar" style="flex-wrap:wrap;gap:6px;">
             <div class="s-search" style="flex:1;min-width:140px;">
-              <span class="s-search-icon">�</span>
+              <span class="s-search-icon">🔍</span>
               <input placeholder="{{ 'AUTO_INLINE_SECURITY_UI.SEARCH' | translate }}" [(ngModel)]="search" />
             </div>
             <select class="s-select" style="width:110px;" [(ngModel)]="filterEffect">
@@ -182,7 +182,7 @@ const OPERATORS  = ['Equals', 'NotEquals', 'Contains', 'StartsWith', 'Regex', 'I
                 </div>
                 <div style="display:flex;gap:6px;flex-shrink:0;">
                   <button class="s-btn s-btn-ghost s-btn-sm" (click)="openEdit(selectedPolicy()!)">{{ 'AUTO_INLINE_SECURITY_UI.EDIT' | translate }}</button>
-                  <button class="s-btn-icon danger" (click)="askDelete(selectedPolicy()!)">�—‘</button>
+                  <button class="s-btn-icon danger" (click)="askDelete(selectedPolicy()!)">🗑</button>
                 </div>
               </div>
             </div>
@@ -202,7 +202,7 @@ const OPERATORS  = ['Equals', 'NotEquals', 'Contains', 'StartsWith', 'Regex', 'I
                   @if (rule.ruleKey) { <span class="rule-key">{{ rule.ruleKey }}</span> }
                   <span class="rule-val">{{ rule.ruleValue }}</span>
                   <span class="s-badge" [class.active]="rule.isActive" [class.inactive]="!rule.isActive">{{ rule.isActive?'On':'Off' }}</span>
-                  <button class="s-btn-icon danger" (click)="deleteRule(rule)">�—‘</button>
+                  <button class="s-btn-icon danger" (click)="deleteRule(rule)">🗑</button>
                 </div>
               }
             } @else {
@@ -252,7 +252,7 @@ const OPERATORS  = ['Equals', 'NotEquals', 'Contains', 'StartsWith', 'Regex', 'I
 
         <div style="padding:12px 20px;display:flex;gap:8px;align-items:center;border-bottom:1px solid var(--s-border);">
           <button class="s-btn s-btn-primary" (click)="runEval()" [disabled]="!eval.resource || !eval.action || evalLoading()">
-            {{ evalLoading() ? 'Evaluating�¦' : '�–¶ Evaluate' }}
+            {{ evalLoading() ? 'Evaluating…' : '▶ Evaluate' }}
           </button>
           <button class="s-btn s-btn-ghost" (click)="evalResult.set(null)">{{ 'AUTO_SECURITY_UI.CLEAR' | translate }}</button>
         </div>
@@ -291,7 +291,7 @@ const OPERATORS  = ['Equals', 'NotEquals', 'Contains', 'StartsWith', 'Regex', 'I
             <button class="s-btn-icon" (click)="policyModal.set(false)">✕</button>
           </div>
           <div class="s-modal-body">
-            @if (saveError()) { <div class="s-alert error" style="margin-bottom:12px;">�  {{ saveError() }}</div> }
+            @if (saveError()) { <div class="s-alert error" style="margin-bottom:12px;">⚠ {{ saveError() }}</div> }
             <div class="s-form-row">
               <div class="s-field">
                 <label class="s-label">{{ 'DOM_FALLBACK.TEXT_333' | translate }}</label>
@@ -347,7 +347,7 @@ const OPERATORS  = ['Equals', 'NotEquals', 'Contains', 'StartsWith', 'Regex', 'I
           </div>
           <div class="s-modal-footer">
             <button class="s-btn s-btn-ghost" (click)="policyModal.set(false)">{{ 'SECURITY.CHANGE_PASSWORD.CANCEL' | translate }}</button>
-            <button class="s-btn s-btn-primary" (click)="savePolicy()" [disabled]="saving()">{{ saving()?'Saving�¦':(editingPolicy()?'Update':'Create') }}</button>
+            <button class="s-btn s-btn-primary" (click)="savePolicy()" [disabled]="saving()">{{ saving()?'Saving…':(editingPolicy()?'Update':'Create') }}</button>
           </div>
         </div>
       </div>
@@ -362,7 +362,7 @@ const OPERATORS  = ['Equals', 'NotEquals', 'Contains', 'StartsWith', 'Regex', 'I
             <button class="s-btn-icon" (click)="ruleModal.set(false)">✕</button>
           </div>
           <div class="s-modal-body">
-            @if (saveError()) { <div class="s-alert error" style="margin-bottom:12px;">�  {{ saveError() }}</div> }
+            @if (saveError()) { <div class="s-alert error" style="margin-bottom:12px;">⚠ {{ saveError() }}</div> }
             <div class="s-form-row single">
               <div class="s-field">
                 <label class="s-label">{{ 'DOM_FALLBACK.TEXT_337' | translate }}</label>
@@ -386,7 +386,7 @@ const OPERATORS  = ['Equals', 'NotEquals', 'Contains', 'StartsWith', 'Regex', 'I
           </div>
           <div class="s-modal-footer">
             <button class="s-btn s-btn-ghost" (click)="ruleModal.set(false)">{{ 'SECURITY.CHANGE_PASSWORD.CANCEL' | translate }}</button>
-            <button class="s-btn s-btn-primary" (click)="saveRule()" [disabled]="saving()">{{ saving()?'Saving�¦':'Add Rule' }}</button>
+            <button class="s-btn s-btn-primary" (click)="saveRule()" [disabled]="saving()">{{ saving()?'Saving…':'Add Rule' }}</button>
           </div>
         </div>
       </div>

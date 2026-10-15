@@ -167,7 +167,7 @@ interface TreeNode extends SecuPageDto {
       <div>
         <h1 class="s-page-title">{{ 'DOM_FALLBACK.TEXT_284' | translate }}</h1>
         <p class="s-page-subtitle">
-          {{ flatPages().length }} pages �· hierarchy defines menu structure
+          {{ flatPages().length }} pages · hierarchy defines menu structure
         </p>
       </div>
       <div style="display:flex;gap:8px;align-items:center;">
@@ -201,7 +201,7 @@ interface TreeNode extends SecuPageDto {
       <!-- Toolbar -->
       <div class="s-toolbar">
         <div class="s-search">
-          <span class="s-search-icon">�</span>
+          <span class="s-search-icon">🔍</span>
           <input
             placeholder="{{ 'AUTO_INLINE_SECURITY_UI.SEARCH_PAGES' | translate }}"
             [(ngModel)]="searchTerm"
@@ -282,14 +282,14 @@ interface TreeNode extends SecuPageDto {
                         [permAction]="permissionService.canUpdate(effectivePageCode())"
                         (click)="openEdit(p)"
                       >
-                        �
+                        ✏
                       </button>
                       <button
                         class="s-btn-icon danger"
                         [permAction]="permissionService.canDelete(effectivePageCode())"
                         (click)="askDelete(p)"
                       >
-                        �—‘
+                        🗑
                       </button>
                     </div>
                   </td>
@@ -336,7 +336,7 @@ interface TreeNode extends SecuPageDto {
                       }
                       @if (row.children.length) {
                         <button class="toggle-btn" (click)="toggleNode(row)">
-                          {{ row.expanded ? '�–¾' : '�–¸' }}
+                          {{ row.expanded ? '▾' : '▸' }}
                         </button>
                       } @else {
                         <span style="width:18px;display:inline-block;"></span>
@@ -369,7 +369,7 @@ interface TreeNode extends SecuPageDto {
                           [disabled]="!canMoveUp(row)"
                           title="{{ 'DOM_FALLBACK.TEXT_387' | translate }}"
                         >
-                          �–²
+                          ▲
                         </button>
                         <button
                           class="sort-btn"
@@ -377,7 +377,7 @@ interface TreeNode extends SecuPageDto {
                           [disabled]="!canMoveDown(row)"
                           title="{{ 'DOM_FALLBACK.TEXT_388' | translate }}"
                         >
-                          �–¼
+                          ▼
                         </button>
                       </div>
                     </div>
@@ -398,7 +398,7 @@ interface TreeNode extends SecuPageDto {
                         (click)="openEdit(row)"
                         title="{{ 'DOM_FALLBACK.TEXT_324' | translate }}"
                       >
-                        �
+                        ✏
                       </button>
                       <button
                         class="s-btn-icon danger"
@@ -406,7 +406,7 @@ interface TreeNode extends SecuPageDto {
                         (click)="askDelete(row)"
                         title="{{ 'COMMON.DELETE' | translate }}"
                       >
-                        �—‘
+                        🗑
                       </button>
                     </div>
                   </td>
@@ -434,7 +434,7 @@ interface TreeNode extends SecuPageDto {
           </div>
           <div class="s-modal-body">
             @if (saveError()) {
-              <div class="s-alert error">�  {{ saveError() }}</div>
+              <div class="s-alert error">⚠ {{ saveError() }}</div>
             }
 
             <div class="s-form-row">
@@ -528,7 +528,7 @@ interface TreeNode extends SecuPageDto {
                     } @else {
                       <span style="color:var(--s-text-3)">{{ 'DOM_FALLBACK.TEXT_304' | translate }}</span>
                     }
-                    <span style="margin-left:auto;color:var(--s-text-3);font-size:10px">�–¾</span>
+                    <span style="margin-left:auto;color:var(--s-text-3);font-size:10px">▾</span>
                   </button>
                   @if (parentPickerOpen()) {
                     <div
@@ -539,7 +539,7 @@ interface TreeNode extends SecuPageDto {
                         [class.selected]="!form.parentId"
                         (click)="selectParent(null)"
                       >
-                        <span>�</span> <span>{{ 'DOM_FALLBACK.TEXT_304' | translate }}</span>
+                        <span>🔐</span> <span>{{ 'DOM_FALLBACK.TEXT_304' | translate }}</span>
                       </div>
                       @for (p of parentOptions(); track p.idPage) {
                         @if (p.idPage !== editPage()?.idPage) {
@@ -595,7 +595,7 @@ interface TreeNode extends SecuPageDto {
               (click)="save()"
               [disabled]="saving()"
             >
-              {{ saving() ? 'Saving�¦' : editPage() ? 'Update' : 'Create' }}
+              {{ saving() ? 'Saving…' : editPage() ? 'Update' : 'Create' }}
             </button>
           </div>
         </div>
@@ -619,7 +619,7 @@ interface TreeNode extends SecuPageDto {
               >?
               @if (childCount(deleteTarget()!) > 0) {
                 <br /><br /><span style="color:var(--s-amber);font-size:12px;"
-                  >�  This page has {{ childCount(deleteTarget()!) }} child page(s). They will become
+                  >⚠ This page has {{ childCount(deleteTarget()!) }} child page(s). They will become
                   root-level pages.</span
                 >
               }

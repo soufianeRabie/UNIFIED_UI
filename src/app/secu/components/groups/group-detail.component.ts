@@ -170,21 +170,21 @@ interface PagePermNode {
       <!-- Stats -->
       <div class="s-stats-grid" style="margin-bottom:20px;">
         <div class="s-stat-card">
-          <div class="s-stat-icon purple">�­</div>
+          <div class="s-stat-icon purple">🎭</div>
           <div>
             <div class="s-stat-value">{{ groupRoles().length }}</div>
             <div class="s-stat-label">{{ 'DOM_FALLBACK.TEXT_309' | translate }}</div>
           </div>
         </div>
         <div class="s-stat-card">
-          <div class="s-stat-icon blue">�</div>
+          <div class="s-stat-icon blue">🔐</div>
           <div>
             <div class="s-stat-value">{{ effectivePermCount() }}</div>
             <div class="s-stat-label">{{ 'DOM_FALLBACK.TEXT_247' | translate }}</div>
           </div>
         </div>
         <div class="s-stat-card">
-          <div class="s-stat-icon green">�¤</div>
+          <div class="s-stat-icon green">👤</div>
           <div>
             <div class="s-stat-value">{{ memberCount() }}</div>
             <div class="s-stat-label">{{ 'DOM_FALLBACK.TEXT_250' | translate }}</div>
@@ -343,7 +343,7 @@ interface PagePermNode {
                           (click)="askRemoveRole(gr)"
                           title="{{ 'AUTO_SECURITY_UI.REMOVE' | translate }}"
                         >
-                          �—‘
+                          🗑
                         </button>
                       </td>
                     </tr>
@@ -352,7 +352,7 @@ interface PagePermNode {
                       <tr>
                         <td colspan="5">
                           <div class="s-empty">
-                            <div class="s-empty-icon">�­</div>
+                            <div class="s-empty-icon">🎭</div>
                             <div class="s-empty-text">{{ 'DOM_FALLBACK.TEXT_257' | translate }}</div>
                           </div>
                         </td>
@@ -379,7 +379,7 @@ interface PagePermNode {
               </div>
               <div style="display:flex;gap:8px;align-items:center;">
                 <div class="s-search" style="max-width:200px;">
-                  <span class="s-search-icon">�</span>
+                  <span class="s-search-icon">🔍</span>
                   <input placeholder="{{ 'AUTO_INLINE_SECURITY_UI.FILTER_PAGES' | translate }}" [(ngModel)]="permSearch" />
                 </div>
                 <button class="s-btn s-btn-ghost s-btn-sm" (click)="expandAll()">{{ 'DOM_FALLBACK.TEXT_289' | translate }}</button>
@@ -391,7 +391,7 @@ interface PagePermNode {
 
             @if (!groupRoles().length) {
               <div class="s-empty" style="padding:48px;">
-                <div class="s-empty-icon">�</div>
+                <div class="s-empty-icon">🔐</div>
                 <div class="s-empty-text">
                   {{ 'DOM_FALLBACK.TEXT_259' | translate }}
                 </div>
@@ -422,7 +422,7 @@ interface PagePermNode {
                 >{{ 'DOM_FALLBACK.TEXT_262' | translate }}</span
               >
               <div class="s-search" style="margin-left:auto;max-width:220px;">
-                <span class="s-search-icon">�</span>
+                <span class="s-search-icon">🔍</span>
                 <input placeholder="{{ 'AUTO_INLINE_SECURITY_UI.SEARCH_MEMBERS' | translate }}" [(ngModel)]="memberSearch" />
               </div>
             </div>
@@ -473,7 +473,7 @@ interface PagePermNode {
                     <tr>
                       <td colspan="5">
                         <div class="s-empty">
-                          <div class="s-empty-icon">�¥</div>
+                          <div class="s-empty-icon">👥</div>
                           <div class="s-empty-text">{{ 'DOM_FALLBACK.TEXT_263' | translate }}</div>
                         </div>
                       </td>
@@ -491,7 +491,7 @@ interface PagePermNode {
     <ng-template #pgNodeTpl let-node>
       <div class="pg-row">
         <div class="pg-header" (click)="node.expanded = !node.expanded">
-          <span class="pg-chevron" [class.open]="node.expanded">�–¶</span>
+          <span class="pg-chevron" [class.open]="node.expanded">▶</span>
           <span style="font-size:13px">📄</span>
           <span
             style="font-family:var(--s-mono);font-size:12px;color:var(--s-accent);min-width:100px;flex-shrink:0;"
@@ -793,7 +793,7 @@ export class GroupDetailComponent implements OnInit {
     this.confirmModal.set({
       title: 'Remove Role',
       message: `Remove role <strong style="color:var(--s-accent);font-family:var(--s-mono)">${gr.roleCode}</strong> from this group?<br><br>
-        <span style="font-size:12px;color:var(--s-amber);">�  Users in this group will lose permissions granted by this role.</span>`,
+        <span style="font-size:12px;color:var(--s-amber);">⚠ Users in this group will lose permissions granted by this role.</span>`,
       onConfirm: () => {
         const id = +this.route.snapshot.paramMap.get('id')!;
         const newIds = this.groupRoles()

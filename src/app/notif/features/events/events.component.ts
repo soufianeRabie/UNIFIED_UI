@@ -69,7 +69,7 @@ export class EventsComponent {
       next: (items) => {
         this.eventTypes = items;
         this.eventTypeOptions = items.map((item) => ({
-          label: `${item.code} �· ${item.label}`,
+          label: `${item.code} · ${item.label}`,
           value: item.code
         }));
       },

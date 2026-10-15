@@ -7,21 +7,21 @@
 
 ## 1. Current status
 
-| Field                   | Value                                                                              |
-| ----------------------- | ---------------------------------------------------------------------------------- |
-| **Current phase**       | Phase 0 — Guard rails (0.1–0.4 done)                                               |
-| **Last completed step** | 0.4 i18n gate + missing keys — 2026-10-15                                          |
-| **Next step**           | 0.5 Repair corrupted glyphs in legacy security templates (see §4 #3), then Phase 1 |
-| **Blocked by**          | —                                                                                  |
+| Field                   | Value                                                                                                                                                                                    |
+| ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Current phase**       | Phase 0 complete → Phase 1 — Design system foundation                                                                                                                                    |
+| **Last completed step** | 0.5 Corrupted glyphs repaired — Phase 0 done — 2026-10-15                                                                                                                                |
+| **Next step**           | Phase 1.1 — wire `projects/s-ui` into the build (tsconfig alias `@s/ui`, angular.json styles: fonts, CDK overlay, `s-ui/styles/index.css`) and bridge legacy `--s-*` variables to tokens |
+| **Blocked by**          | —                                                                                                                                                                                        |
 
 ### Phase checklist (details in `docs/architecture/07-migration-plan.md`)
 
-- [ ] **Phase 0 — Guard rails**
+- [x] **Phase 0 — Guard rails** (done 2026-10-15)
   - [x] 0.1 ESLint + angular-eslint + boundaries (errors for `projects/s-ui/**`, `src/app/domains/**`; warnings for legacy)
   - [x] 0.2 Stylelint (no raw colours/`!important`/`::ng-deep`/numeric z-index) + Prettier + `npm run verify`
   - [x] 0.3 Delete dead code (20 unreachable files, Tailwind, broken `@secu/ui` dependency, scaffold `secu/app.*`)
   - [x] 0.4 `scripts/check-i18n.mjs` (`npm run i18n:check`, part of `verify`) + 189 missing keys filled (en + fr)
-  - [ ] 0.5 Repair corrupted glyphs (lost emoji bytes) still visible in legacy security screens
+  - [x] 0.5 Repair corrupted glyphs (lost emoji/symbol bytes) in legacy templates
 - [ ] **Phase 1 — Design system foundation (`projects/s-ui`)**
   - [x] Tokens written: `projects/s-ui/styles/tokens.css`, `base.css`, `controls.css`, `overlay.css`, `index.css`
   - [ ] Restructure draft components into the folder contract (see §3 "Draft code")
@@ -77,7 +77,7 @@ Written before the handbook; violates ADR 0005 (inline templates/styles, several
 | --- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------- |
 | 1   | 27 rows in `hr_management."NOT_NOTIFICATION"` + 33 Hangfire jobs created 2026-10-14 ~22:36 by a mis-configured run — not cleaned                      | Yes: delete or keep                         |
 | 2   | 189 translation keys missing (en + fr); generated keys like `DOM_FALLBACK.TEXT_178`                                                                   | No — Phase 0.4                              |
-| 3   | ~440 corrupted characters (lost emoji bytes) in secu components — fixed as screens migrate (icons → `s-icon`)                                         | No                                          |
+| 3   | ~~~440 corrupted characters~~ fixed in 0.5 (originals restored; emoji icons are replaced by `s-icon` during migration)                                | No                                          |
 | 4   | Security seeder leaves admin `tenant_id` NULL → notification API rejects calls (`Missing X-Tenant-Id`)                                                | Yes: seed a default tenant in SECURITY_API? |
 | 5   | Gmail app password was stored in plain text in old config → rotate it                                                                                 | Owner action                                |
 | 6   | Old folders still on disk: `C:\SecurityUi`, `C:\DATA SOUFIANE RABYA\NotificationApi\NotificationApi`, `HR_MANAGEMENT\{NOTIFICATION_API,SECURITY_API}` | Yes: delete when confirmed                  |
@@ -87,6 +87,8 @@ Written before the handbook; violates ADR 0005 (inline templates/styles, several
 ## 5. Log (newest first)
 
 ### 2026-10-15
+
+- **0.5 Glyphs:** restored 130 corrupted sequences in 20 legacy templates to their original characters, identified from the surviving UTF-8 tail bytes (🗑 🔍 ✏ ⚠ 👁 ⏳ 🔐 🔗 🎭 👤 👥 🏢 🏷 ▶ ▾ ▸ ▲ ▼ · … é ═, password dots). 0 `U+FFFD` left in `src/app`. **Verified:** `npm run verify` ✔; browser re-sweep of the 9 affected routes → 0 corrupted characters (page-actions had 1 001). **Phase 0 complete.**
 
 - **0.4 i18n:** added `scripts/check-i18n.mjs` (fails on keys used in `src/app` but missing from `public/i18n/{en,fr}.json`; reports generated + unused keys) and `npm run i18n:check`, now part of `verify`. Wrote 189 missing keys in EN + FR from each key's on-screen context (no `{{…}}` in values — ngx-translate would treat it as a parameter). Repaired 54 corrupted values per locale (lost `…`, emoji prefixes baked into labels). Fixed `notif/features/data-sources/data-sources.component.html`, which printed 46 keys **without** the translate pipe. **Verified:** `npm run verify` ✔; browser sweep of all 28 security + notification routes (logged in as admin/DEFAULT) → **0 raw keys on every screen** (before: e.g. `SECU.USERS.COL.*` on Users). Remaining: corrupted glyphs on users (4), roles (25), groups (22), page-actions (1 001), pages, policies, permissions, companies → step 0.5.
 

@@ -172,7 +172,7 @@ interface MatrixCell {
       <div>
         <h1 class="s-page-title">{{ 'DOM_FALLBACK.TEXT_264' | translate }}</h1>
         <p class="s-page-subtitle">
-          Link actions to pages �· {{ totalLinks() }} links across {{ allPages().length }} pages
+          Link actions to pages · {{ totalLinks() }} links across {{ allPages().length }} pages
         </p>
       </div>
       <div style="display:flex;gap:8px;align-items:center;">
@@ -236,7 +236,7 @@ interface MatrixCell {
                 ><span style="font-size:14px;color:var(--s-green)">✓</span> {{ 'AUTO_INLINE_SECURITY_UI.LINK_EXISTS_CLICK_TO_REMOVE' | translate }}</span
               >
               <span style="display:flex;align-items:center;gap:5px;"
-                ><span style="font-size:12px;color:var(--s-border-2)">�·</span> {{ 'AUTO_INLINE_SECURITY_UI.NO_LINK_CLICK_TO_CREATE' | translate }}</span
+                ><span style="font-size:12px;color:var(--s-border-2)">·</span> {{ 'AUTO_INLINE_SECURITY_UI.NO_LINK_CLICK_TO_CREATE' | translate }}</span
               >
             </div>
           </div>
@@ -274,11 +274,11 @@ interface MatrixCell {
                           [title]="cell.exists ? 'Click to remove link' : 'Click to create link'"
                         >
                           @if (cell.saving) {
-                            <span class="cell-spin">�³</span>
+                            <span class="cell-spin">⏳</span>
                           } @else if (cell.exists) {
                             <span class="cell-check">✓</span>
                           } @else {
-                            <span class="cell-empty">�·</span>
+                            <span class="cell-empty">·</span>
                           }
                         </div>
                       </td>
@@ -297,7 +297,7 @@ interface MatrixCell {
         <div class="s-card">
           <div class="s-toolbar">
             <div class="s-search">
-              <span class="s-search-icon">�</span>
+              <span class="s-search-icon">🔍</span>
               <input placeholder="{{ 'AUTO_INLINE_SECURITY_UI.SEARCH' | translate }}" [(ngModel)]="listSearch" />
             </div>
             <select class="s-select" style="width:200px;" [(ngModel)]="listPageFilter">
@@ -346,7 +346,7 @@ interface MatrixCell {
                         >{{ pa.isActive ? 'Active' : 'Inactive' }}</span
                       >
                     </td>
-                    <td><button class="s-btn-icon danger" (click)="askDelete(pa)">�—‘</button></td>
+                    <td><button class="s-btn-icon danger" (click)="askDelete(pa)">🗑</button></td>
                   </tr>
                 } @empty {
                   <tr>
@@ -381,7 +381,7 @@ interface MatrixCell {
           </div>
           <div class="s-modal-body">
             @if (createError()) {
-              <div class="s-alert error">�  {{ createError() }}</div>
+              <div class="s-alert error">⚠ {{ createError() }}</div>
             }
             <div class="s-form-row single">
               <div class="s-field">
@@ -422,7 +422,7 @@ interface MatrixCell {
               (click)="doCreate()"
               [disabled]="!createForm.pageId || !createForm.actionId || creating()"
             >
-              {{ creating() ? 'Saving�¦' : 'Create Link' }}
+              {{ creating() ? 'Saving…' : 'Create Link' }}
             </button>
           </div>
         </div>

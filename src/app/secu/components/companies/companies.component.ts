@@ -61,11 +61,11 @@ type Tab = 'companies' | 'types';
         </div>
       </div>
 
-      <!-- �� COMPANIES ��������������������������������������������������� -->
+      <!-- ══ COMPANIES ═══════════════════════════════════════════════════ -->
       @if (tab() === 'companies') {
         <div class="s-toolbar" style="justify-content:space-between;">
           <div class="s-search">
-            <span class="s-search-icon">�</span>
+            <span class="s-search-icon">🔍</span>
             <input
               placeholder="{{ 'AUTO_INLINE_SECURITY_UI.SEARCH_COMPANIES' | translate }}"
               [(ngModel)]="compSearch"
@@ -143,7 +143,7 @@ type Tab = 'companies' | 'types';
                   <td>
                     <div style="display:flex;gap:4px;">
                       <button class="s-btn-icon" [permAction]="permissionService.canUpdate(PAGE_CODE)" (click)="openEditCompany(c)" title="{{ 'DOM_FALLBACK.TEXT_324' | translate }}">
-                        �
+                        ✏
                       </button>
                       <button
                         class="s-btn-icon danger"
@@ -151,7 +151,7 @@ type Tab = 'companies' | 'types';
                         (click)="askDeleteCompany(c)"
                         title="{{ 'COMMON.DELETE' | translate }}"
                       >
-                        �—‘
+                        🗑
                       </button>
                     </div>
                   </td>
@@ -160,7 +160,7 @@ type Tab = 'companies' | 'types';
                 <tr>
                   <td colspan="7">
                     <div class="s-empty">
-                      <div class="s-empty-icon">�¢</div>
+                      <div class="s-empty-icon">🏢</div>
                       <div class="s-empty-text">{{ 'DOM_FALLBACK.TEXT_234' | translate }}</div>
                     </div>
                   </td>
@@ -178,11 +178,11 @@ type Tab = 'companies' | 'types';
         />
       }
 
-      <!-- �� TYPES �������������������������������������������������������� -->
+      <!-- ══ TYPES ════════════════════════════════════════════════════════ -->
       @if (tab() === 'types') {
         <div class="s-toolbar" style="justify-content:space-between;">
           <div class="s-search">
-            <span class="s-search-icon">�</span>
+            <span class="s-search-icon">🔍</span>
             <input
               placeholder="{{ 'AUTO_INLINE_SECURITY_UI.SEARCH_TYPES' | translate }}"
               [(ngModel)]="typeSearch"
@@ -235,8 +235,8 @@ type Tab = 'companies' | 'types';
                   </td>
                   <td>
                     <div style="display:flex;gap:4px;">
-                      <button class="s-btn-icon" [permAction]="permissionService.canUpdate(PAGE_CODE)" (click)="openEditType(t)">�</button>
-                      <button class="s-btn-icon danger" [permAction]="permissionService.canDelete(PAGE_CODE)" (click)="askDeleteType(t)">�—‘</button>
+                      <button class="s-btn-icon" [permAction]="permissionService.canUpdate(PAGE_CODE)" (click)="openEditType(t)">✏</button>
+                      <button class="s-btn-icon danger" [permAction]="permissionService.canDelete(PAGE_CODE)" (click)="askDeleteType(t)">🗑</button>
                     </div>
                   </td>
                 </tr>
@@ -244,7 +244,7 @@ type Tab = 'companies' | 'types';
                 <tr>
                   <td colspan="6">
                     <div class="s-empty">
-                      <div class="s-empty-icon">�·</div>
+                      <div class="s-empty-icon">🏷</div>
                       <div class="s-empty-text">{{ 'DOM_FALLBACK.TEXT_235' | translate }}</div>
                     </div>
                   </td>
@@ -273,7 +273,7 @@ type Tab = 'companies' | 'types';
           </div>
           <div class="s-modal-body">
             @if (saveError()) {
-              <div class="s-alert error" style="margin-bottom:12px;">�  {{ saveError() }}</div>
+              <div class="s-alert error" style="margin-bottom:12px;">⚠ {{ saveError() }}</div>
             }
             <div class="s-form-row">
               <div class="s-field">
@@ -345,7 +345,7 @@ type Tab = 'companies' | 'types';
           <div class="s-modal-footer">
             <button class="s-btn s-btn-ghost" (click)="compModal.set(false)">{{ 'COMMON.CANCEL' | translate }}</button>
             <button class="s-btn s-btn-primary" (click)="saveCompany()" [disabled]="saving()">
-              {{ saving() ? 'Saving�¦' : editCompany() ? 'Update' : 'Create' }}
+              {{ saving() ? 'Saving…' : editCompany() ? 'Update' : 'Create' }}
             </button>
           </div>
         </div>
@@ -362,7 +362,7 @@ type Tab = 'companies' | 'types';
           </div>
           <div class="s-modal-body">
             @if (saveError()) {
-              <div class="s-alert error" style="margin-bottom:12px;">�  {{ saveError() }}</div>
+              <div class="s-alert error" style="margin-bottom:12px;">⚠ {{ saveError() }}</div>
             }
             <div class="s-form-row single">
               <div class="s-field">
@@ -401,7 +401,7 @@ type Tab = 'companies' | 'types';
           <div class="s-modal-footer">
             <button class="s-btn s-btn-ghost" (click)="typeModal.set(false)">{{ 'COMMON.CANCEL' | translate }}</button>
             <button class="s-btn s-btn-primary" (click)="saveType()" [disabled]="saving()">
-              {{ saving() ? 'Saving�¦' : editType() ? 'Update' : 'Create' }}
+              {{ saving() ? 'Saving…' : editType() ? 'Update' : 'Create' }}
             </button>
           </div>
         </div>

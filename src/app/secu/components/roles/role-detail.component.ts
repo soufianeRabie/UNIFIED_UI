@@ -47,17 +47,17 @@ import { TranslatePipe } from '@ngx-translate/core';
                   <td><span class="mono">{{ p.pageCode }}</span></td>
                   <td>{{ p.pageName }}</td>
                   <td><span class="s-badge action">{{ p.actionCode }}</span></td>
-                  <td style="font-size:12px;color:var(--s-text-3);font-family:var(--s-mono)">{{ p.grantedById ? p.grantedById.substring(0,8) + '�¦' : '—' }}</td>
+                  <td style="font-size:12px;color:var(--s-text-3);font-family:var(--s-mono)">{{ p.grantedById ? p.grantedById.substring(0,8) + '…' : '—' }}</td>
                   <td style="font-size:12px;color:var(--s-text-2)">{{ p.grantedAt ? (p.grantedAt | date:'dd/MM/yy') : '—' }}</td>
                   <td><span class="s-badge" [class.active]="p.isActive" [class.inactive]="!p.isActive">{{ p.isActive ? 'Active' : 'Inactive' }}</span></td>
                   <td>
-                    <button class="s-btn-icon danger" (click)="removePermission(p)" title="{{ 'AUTO_SECURITY_UI.REMOVE' | translate }}">�—‘</button>
+                    <button class="s-btn-icon danger" (click)="removePermission(p)" title="{{ 'AUTO_SECURITY_UI.REMOVE' | translate }}">🗑</button>
                   </td>
                 </tr>
               } @empty {
                 <tr><td colspan="7">
                   <div class="s-empty">
-                    <div class="s-empty-icon">�</div>
+                    <div class="s-empty-icon">🔐</div>
                     <div class="s-empty-text">{{ 'AUTO_INLINE_SECURITY_UI.NO_PERMISSIONS_ASSIGNED_TO_THIS_ROLE' | translate }}</div>
                   </div>
                 </td></tr>

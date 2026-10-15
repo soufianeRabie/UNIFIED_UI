@@ -23,7 +23,7 @@ type TotpStep = 'idle' | 'setup' | 'verify' | 'active';
     @if (loadingSettings()) {
       <div class="s-card"><div class="s-empty"><div class="s-empty-text">{{ 'COMMON.LOADING' | translate }}</div></div></div>
     } @else if (settingsError()) {
-      <div class="s-alert error" style="margin:16px;">�  {{ settingsError() }}</div>
+      <div class="s-alert error" style="margin:16px;">⚠ {{ settingsError() }}</div>
     } @else {
 
       <!-- TOTP — shown only if admin enabled it in auth settings -->
@@ -37,7 +37,7 @@ type TotpStep = 'idle' | 'setup' | 'verify' | 'active';
               <button class="s-btn s-btn-primary" style="width:fit-content;" (click)="startTotpSetup()" [disabled]="totpLoading()">
                 {{ totpLoading() ? ('COMMON.LOADING' | translate) : ('SECU.MY_SECURITY.TOTP.SETUP_BTN' | translate) }}
               </button>
-              @if (totpError()) { <div class="s-alert error mgt">�  {{ totpError() }}</div> }
+              @if (totpError()) { <div class="s-alert error mgt">⚠ {{ totpError() }}</div> }
             }
 
             @if (totpStep() === 'setup' || totpStep() === 'verify') {
@@ -71,7 +71,7 @@ type TotpStep = 'idle' | 'setup' | 'verify' | 'active';
                   />
                 </div>
 
-                @if (totpError()) { <div class="s-alert error">�  {{ totpError() }}</div> }
+                @if (totpError()) { <div class="s-alert error">⚠ {{ totpError() }}</div> }
 
                 <div style="display:flex;gap:8px;">
                   <button class="s-btn s-btn-primary" (click)="verifyTotp()" [disabled]="totpLoading() || totpCode.length < 6">
@@ -86,7 +86,7 @@ type TotpStep = 'idle' | 'setup' | 'verify' | 'active';
               <div style="display:flex;flex-direction:column;gap:12px;max-width:480px;">
                 <div class="s-alert success">{{ 'SECU.MY_SECURITY.TOTP.ACTIVE_MSG' | translate }}✓ </div>
                 <p class="s-help-text">{{ 'SECU.MY_SECURITY.TOTP.ACTIVE_HINT' | translate }}</p>
-                @if (totpError()) { <div class="s-alert error">�  {{ totpError() }}</div> }
+                @if (totpError()) { <div class="s-alert error">⚠ {{ totpError() }}</div> }
                 <button class="s-btn s-btn-danger" style="width:fit-content;" (click)="disableTotp()" [disabled]="totpLoading()">
                   {{ totpLoading() ? ('SECU.MY_SECURITY.TOTP.DISABLING' | translate) : ('SECU.MY_SECURITY.TOTP.DISABLE_BTN' | translate) }}
                 </button>
@@ -115,7 +115,7 @@ type TotpStep = 'idle' | 'setup' | 'verify' | 'active';
               @if (emailOtpLoading()) { <span style="font-size:12px;color:var(--s-text-3);">{{ 'COMMON.SAVING' | translate }}</span> }
             </div>
             @if (emailOtpMessage()) { <div class="s-alert success mgt">✓ {{ emailOtpMessage() }}</div> }
-            @if (emailOtpError()) { <div class="s-alert error mgt">�  {{ emailOtpError() }}</div> }
+            @if (emailOtpError()) { <div class="s-alert error mgt">⚠ {{ emailOtpError() }}</div> }
           </div>
         </div>
       }
@@ -135,7 +135,7 @@ type TotpStep = 'idle' | 'setup' | 'verify' | 'active';
               </button>
             }
 
-            @if (recoveryError()) { <div class="s-alert error mgt">�  {{ recoveryError() }}</div> }
+            @if (recoveryError()) { <div class="s-alert error mgt">⚠ {{ recoveryError() }}</div> }
 
             @if (recoveryCodes()) {
               <div class="s-alert warning mgt">⚠ {{ 'SECU.MY_SECURITY.RECOVERY.SAVE_WARNING' | translate }}</div>

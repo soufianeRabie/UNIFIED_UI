@@ -288,7 +288,7 @@ interface PageGroup {
       <div>
         <h1 class="s-page-title">{{ 'DOM_FALLBACK.TEXT_307' | translate }}</h1>
         <p class="s-page-subtitle">
-          {{ roles().length }} roles �· {{ allPageActions().length }} page-actions �·
+          {{ roles().length }} roles · {{ allPageActions().length }} page-actions ·
           {{ totalGranted() }} grants
         </p>
       </div>
@@ -318,14 +318,14 @@ interface PageGroup {
       <!-- Stats -->
       <div class="s-stats-grid" style="margin-bottom:20px;">
         <div class="s-stat-card">
-          <div class="s-stat-icon blue">�­</div>
+          <div class="s-stat-icon blue">🎭</div>
           <div>
             <div class="s-stat-value">{{ roles().length }}</div>
             <div class="s-stat-label">{{ 'DOM_FALLBACK.TEXT_309' | translate }}</div>
           </div>
         </div>
         <div class="s-stat-card">
-          <div class="s-stat-icon amber">�—</div>
+          <div class="s-stat-icon amber">🔗</div>
           <div>
             <div class="s-stat-value">{{ allPageActions().length }}</div>
             <div class="s-stat-label">{{ 'DOM_FALLBACK.TEXT_264' | translate }}</div>
@@ -355,7 +355,7 @@ interface PageGroup {
             style="padding:10px 16px;border-bottom:1px solid var(--s-border);display:flex;align-items:center;gap:10px;flex-wrap:wrap;"
           >
             <div class="s-search" style="max-width:180px;">
-              <span class="s-search-icon">�</span>
+              <span class="s-search-icon">🔍</span>
               <input placeholder="{{ 'AUTO_INLINE_SECURITY_UI.FILTER_PAGES' | translate }}" [(ngModel)]="mxSearch" />
             </div>
             <span style="font-size:11px;color:var(--s-text-3);"
@@ -364,7 +364,7 @@ interface PageGroup {
             @if (pendingCount() > 0) {
               <span style="font-size:12px;color:var(--s-amber);margin-left:auto;"
                 >{{ pendingCount() }} operation{{ pendingCount() !== 1 ? 's' : '' }} in
-                progress�¦</span
+                progress…</span
               >
             }
           </div>
@@ -397,7 +397,7 @@ interface PageGroup {
                       style="cursor:pointer;user-select:none;"
                     >
                       <span style="margin-right:6px;font-size:9px;color:var(--s-text-3);">{{
-                        pg.expanded ? '�–¾' : '�–¸'
+                        pg.expanded ? '▾' : '▸'
                       }}</span>
                       <span style="font-family:var(--s-mono);color:var(--s-accent)">{{
                         pg.pageCode
@@ -446,11 +446,11 @@ interface PageGroup {
                               "
                             >
                               @if (cell.saving) {
-                                <span class="spin">�³</span>
+                                <span class="spin">⏳</span>
                               } @else if (cell.granted) {
                                 <span class="check">✓</span>
                               } @else {
-                                <span class="dot">�·</span>
+                                <span class="dot">·</span>
                               }
                             </div>
                           </td>
@@ -502,7 +502,7 @@ interface PageGroup {
             @if (!selectedRoleId()) {
               <div class="s-card">
                 <div class="s-empty" style="padding:60px;">
-                  <div class="s-empty-icon">�­</div>
+                  <div class="s-empty-icon">🎭</div>
                   <div class="s-empty-text">{{ 'DOM_FALLBACK.TEXT_314' | translate }}</div>
                 </div>
               </div>
@@ -517,7 +517,7 @@ interface PageGroup {
                   </span>
                   <div style="margin-left:auto;display:flex;gap:8px;">
                     <div class="s-search" style="max-width:160px;">
-                      <span class="s-search-icon">�</span>
+                      <span class="s-search-icon">🔍</span>
                       <input placeholder="{{ 'AUTO_INLINE_SECURITY_UI.FILTER' | translate }}" [(ngModel)]="roleViewSearch" />
                     </div>
                     <button class="s-btn s-btn-ghost s-btn-sm" (click)="expandAllRole()">
@@ -532,7 +532,7 @@ interface PageGroup {
                   @for (pg of filteredRolePageGroups(); track pg.pageCode) {
                     <div class="rp-page">
                       <div class="rp-header" (click)="pg.expanded = !pg.expanded">
-                        <span class="rp-chevron" [class.open]="pg.expanded">�–¶</span>
+                        <span class="rp-chevron" [class.open]="pg.expanded">▶</span>
                         <span style="font-size:13px">📄</span>
                         <span
                           style="font-family:var(--s-mono);font-size:12px;color:var(--s-accent);min-width:100px;flex-shrink:0;"
@@ -570,7 +570,7 @@ interface PageGroup {
                               @if (cell.saving) {
                                 <span
                                   style="font-size:10px;color:var(--s-text-3);animation:spin .6s linear infinite;display:inline-block"
-                                  >�³</span
+                                  >⏳</span
                                 >
                               }
                             </div>

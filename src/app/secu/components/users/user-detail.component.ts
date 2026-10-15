@@ -241,7 +241,7 @@ interface PageNode {
                 user()!.username
               }}</span>
               @if (user()!.email) {
-                <span style="color:var(--s-border-2)">�·</span>
+                <span style="color:var(--s-border-2)">·</span>
                 <span style="font-size:12px;color:var(--s-text-2)">{{ user()!.email }}</span>
               }
             </div>
@@ -283,7 +283,7 @@ interface PageNode {
           </div>
         </div>
 
-        <!-- �� INFO ���������������������������������������������������� -->
+        <!-- ══ INFO ════════════════════════════════════════════════════ -->
         @if (tab() === 'info') {
           <div class="s-card-body">
             <div class="s-detail-grid">
@@ -375,7 +375,7 @@ interface PageNode {
           </div>
         }
 
-        <!-- �� GROUPS ���������������������������������������������������� -->
+        <!-- ══ GROUPS ════════════════════════════════════════════════════ -->
         @if (tab() === 'groups') {
           <div class="tab-body">
             <div class="s-toolbar" style="justify-content:space-between;">
@@ -489,7 +489,7 @@ interface PageNode {
                           (click)="askRemoveGroup(ug)"
                           title="{{ 'DOM_FALLBACK.TEXT_390' | translate }}"
                         >
-                          �—‘
+                          🗑
                         </button>
                       </td>
                     </tr>
@@ -498,7 +498,7 @@ interface PageNode {
                       <tr>
                         <td colspan="6">
                           <div class="s-empty">
-                            <div class="s-empty-icon">�¥</div>
+                            <div class="s-empty-icon">👥</div>
                             <div class="s-empty-text">
                               {{ 'DOM_FALLBACK.TEXT_358' | translate }}
                             </div>
@@ -513,7 +513,7 @@ interface PageNode {
           </div>
         }
 
-        <!-- �� DIRECT ROLES ���������������������������������������������� -->
+        <!-- ══ DIRECT ROLES ══════════════════════════════════════════════ -->
         @if (tab() === 'roles') {
           <div class="tab-body">
             <div class="s-toolbar" style="justify-content:space-between;flex-wrap:wrap;gap:8px;">
@@ -621,7 +621,7 @@ interface PageNode {
                             (click)="askRemoveDirectRole(row.role)"
                             title="{{ 'DOM_FALLBACK.TEXT_391' | translate }}"
                           >
-                            �—‘
+                            🗑
                           </button>
                         }
                       </td>
@@ -631,7 +631,7 @@ interface PageNode {
                       <tr>
                         <td colspan="5">
                           <div class="s-empty">
-                            <div class="s-empty-icon">�­</div>
+                            <div class="s-empty-icon">🎭</div>
                             <div class="s-empty-text">{{ 'DOM_FALLBACK.TEXT_366' | translate }}</div>
                           </div>
                         </td>
@@ -644,7 +644,7 @@ interface PageNode {
           </div>
         }
 
-        <!-- �� PERMISSIONS ������������������������������������������������ -->
+        <!-- ══ PERMISSIONS ════════════════════════════════════════════════ -->
         @if (tab() === 'permissions') {
           <div class="tab-body">
             <!-- Toolbar -->
@@ -656,7 +656,7 @@ interface PageNode {
               </div>
               <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
                 <div class="s-search" style="max-width:200px;">
-                  <span class="s-search-icon">�</span>
+                  <span class="s-search-icon">🔍</span>
                   <input placeholder="{{ 'AUTO_INLINE_SECURITY_UI.FILTER_PAGES' | translate }}" [(ngModel)]="permSearch" />
                 </div>
                 <button class="s-btn s-btn-ghost s-btn-sm" (click)="expandAll()">{{ 'DOM_FALLBACK.TEXT_289' | translate }}</button>
@@ -704,7 +704,7 @@ interface PageNode {
                 ></ng-container>
               } @empty {
                 <div class="s-empty" style="padding:48px 20px;">
-                  <div class="s-empty-icon">�</div>
+                  <div class="s-empty-icon">🔐</div>
                   <div class="s-empty-text">{{ 'DOM_FALLBACK.TEXT_373' | translate }}</div>
                 </div>
               }
@@ -725,7 +725,7 @@ interface PageNode {
                     (click)="savePermissions()"
                     [disabled]="permSaving()"
                   >
-                    {{ permSaving() ? 'Saving�¦' : 'Save Changes' }}
+                    {{ permSaving() ? 'Saving…' : 'Save Changes' }}
                   </button>
                 </div>
               </div>
@@ -740,7 +740,7 @@ interface PageNode {
     <ng-template #pageNodeTpl let-node let-depth="depth">
       <div class="page-node">
         <div class="page-header" (click)="node.expanded = !node.expanded">
-          <span class="page-chevron" [class.open]="node.expanded">�–¶</span>
+          <span class="page-chevron" [class.open]="node.expanded">▶</span>
           <span style="font-size:13px;">📄</span>
           <span
             style="font-family:var(--s-mono);font-size:12px;color:var(--s-accent);min-width:100px;flex-shrink:0;"
@@ -1281,7 +1281,7 @@ export class UserDetailComponent implements OnInit {
     this.confirmModal.set({
       title: 'Remove from Group',
       message: `Remove user from group <strong style="color:var(--s-purple);font-family:var(--s-mono)">${ug.groupCode}</strong>?
-        <br><br><span style="font-size:12px;color:var(--s-amber);">�  Roles inherited via this group will be removed from effective permissions.</span>`,
+        <br><br><span style="font-size:12px;color:var(--s-amber);">⚠ Roles inherited via this group will be removed from effective permissions.</span>`,
       onConfirm: () => {
         const userId = this.route.snapshot.paramMap.get('id')!;
         const newIds = this.userGroups()

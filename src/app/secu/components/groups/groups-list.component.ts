@@ -33,7 +33,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     <div class="s-card">
       <div class="s-toolbar">
         <div class="s-search">
-          <span class="s-search-icon">�</span>
+          <span class="s-search-icon">🔍</span>
           <input [placeholder]="'SECU.GROUPS.SEARCH_PLACEHOLDER' | translate" [(ngModel)]="searchTerm" (ngModelChange)="reload()" />
         </div>
         <label class="s-toggle">
@@ -89,21 +89,21 @@ import { TranslatePipe } from '@ngx-translate/core';
                         [permAction]="permissionService.canRead(effectivePageCode())"
                         [routerLink]="[g.idGroup]"
                         [title]="'SECU.GROUPS.MANAGE_ROLES_TITLE' | translate"
-                        >�</a
+                        >👁</a
                       >
                       <button
                         class="s-btn-icon"
                         [permAction]="permissionService.canUpdate(effectivePageCode())"
                         (click)="openEdit(g)"
                       >
-                        �
+                        ✏
                       </button>
                       <button
                         class="s-btn-icon danger"
                         [permAction]="permissionService.canDelete(effectivePageCode())"
                         (click)="confirmDelete(g)"
                       >
-                        �—‘
+                        🗑
                       </button>
                     </div>
                   </td>
@@ -137,7 +137,7 @@ import { TranslatePipe } from '@ngx-translate/core';
           </div>
           <div class="s-modal-body">
             @if (saveError()) {
-              <div class="s-alert error">�  {{ saveError() }}</div>
+              <div class="s-alert error">⚠ {{ saveError() }}</div>
             }
             <div class="s-form-row single">
               <div class="s-field">
