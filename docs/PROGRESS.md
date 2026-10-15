@@ -7,12 +7,12 @@
 
 ## 1. Current status
 
-| Field                   | Value                                                                  |
-| ----------------------- | ---------------------------------------------------------------------- |
-| **Current phase**       | Phase 0 — Guard rails (0.1–0.3 done)                                   |
-| **Last completed step** | 0.3 Dead code removed — 2026-10-15                                     |
-| **Next step**           | 0.4 `scripts/check-i18n.mjs` + fill missing translation keys (en + fr) |
-| **Blocked by**          | —                                                                      |
+| Field                   | Value                                                                              |
+| ----------------------- | ---------------------------------------------------------------------------------- |
+| **Current phase**       | Phase 0 — Guard rails (0.1–0.4 done)                                               |
+| **Last completed step** | 0.4 i18n gate + missing keys — 2026-10-15                                          |
+| **Next step**           | 0.5 Repair corrupted glyphs in legacy security templates (see §4 #3), then Phase 1 |
+| **Blocked by**          | —                                                                                  |
 
 ### Phase checklist (details in `docs/architecture/07-migration-plan.md`)
 
@@ -20,7 +20,8 @@
   - [x] 0.1 ESLint + angular-eslint + boundaries (errors for `projects/s-ui/**`, `src/app/domains/**`; warnings for legacy)
   - [x] 0.2 Stylelint (no raw colours/`!important`/`::ng-deep`/numeric z-index) + Prettier + `npm run verify`
   - [x] 0.3 Delete dead code (20 unreachable files, Tailwind, broken `@secu/ui` dependency, scaffold `secu/app.*`)
-  - [ ] 0.4 `scripts/check-i18n.mjs` + fill the 189 missing keys (en + fr)
+  - [x] 0.4 `scripts/check-i18n.mjs` (`npm run i18n:check`, part of `verify`) + 189 missing keys filled (en + fr)
+  - [ ] 0.5 Repair corrupted glyphs (lost emoji bytes) still visible in legacy security screens
 - [ ] **Phase 1 — Design system foundation (`projects/s-ui`)**
   - [x] Tokens written: `projects/s-ui/styles/tokens.css`, `base.css`, `controls.css`, `overlay.css`, `index.css`
   - [ ] Restructure draft components into the folder contract (see §3 "Draft code")
@@ -86,6 +87,8 @@ Written before the handbook; violates ADR 0005 (inline templates/styles, several
 ## 5. Log (newest first)
 
 ### 2026-10-15
+
+- **0.4 i18n:** added `scripts/check-i18n.mjs` (fails on keys used in `src/app` but missing from `public/i18n/{en,fr}.json`; reports generated + unused keys) and `npm run i18n:check`, now part of `verify`. Wrote 189 missing keys in EN + FR from each key's on-screen context (no `{{…}}` in values — ngx-translate would treat it as a parameter). Repaired 54 corrupted values per locale (lost `…`, emoji prefixes baked into labels). Fixed `notif/features/data-sources/data-sources.component.html`, which printed 46 keys **without** the translate pipe. **Verified:** `npm run verify` ✔; browser sweep of all 28 security + notification routes (logged in as admin/DEFAULT) → **0 raw keys on every screen** (before: e.g. `SECU.USERS.COL.*` on Users). Remaining: corrupted glyphs on users (4), roles (25), groups (22), page-actions (1 001), pages, policies, permissions, companies → step 0.5.
 
 - **0.3 Dead code:** import-graph reachability from `main.ts` + specs (static + lazy `import()`) found 20 unreachable files → deleted: car-rental services (analytics, branch, customer, invoice, payment, pricing, reservation, vehicle, vehicle-category), `theme.service`, models (analytics, billing, fleet, organization, page-response, pricing, rental), `secu/directives/has-action.directive.ts`, `secu/guards/secu-auth.guard.ts`, `shared/layout/main-layout.component.ts` (also removed 2 of the 3 boundary violations). Removed never-configured Tailwind (`@tailwind` lines were emitted raw into the CSS bundle) and deps `tailwindcss`, `postcss`, `autoprefixer`, `@secu/ui` (broken `file:` link). Prettier `endOfLine: auto` (CRLF checkouts on Windows). **Verified:** 104/104 files reachable, format ✔, lint ✔, lint:styles ✔, build ✔ (788 kB), tests ✔ 2/2.
 - Note: local services (5000/5003/4200) were stopped when the previous session ended — restart per §2 when a browser check is needed.
