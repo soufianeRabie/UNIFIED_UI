@@ -1,0 +1,53 @@
+// Shared frame of every dialog (SDialog and SConfirm), tokens only.
+
+@mixin frame {
+  .frame {
+    display: flex;
+    flex-direction: column;
+    max-block-size: min(86vh, 760px);
+    color: var(--ink);
+    background: var(--paper-raised);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-overlay);
+  }
+
+  .head {
+    display: flex;
+    gap: var(--space-3);
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-4) var(--space-5);
+    border-block-end: 1px solid var(--rule);
+  }
+
+  .title {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-size: var(--text-xl);
+    font-weight: var(--weight-medium);
+    letter-spacing: var(--tracking-tight);
+  }
+
+  .body {
+    padding: var(--space-5);
+    overflow-y: auto;
+    font-size: var(--text-base);
+    color: var(--ink-2);
+  }
+
+  .foot {
+    display: flex;
+    gap: var(--space-2);
+    justify-content: flex-end;
+    padding: var(--space-3) var(--space-5);
+    background: var(--paper-sunk);
+    border-block-start: 1px solid var(--rule);
+    border-end-start-radius: var(--radius-lg);
+    border-end-end-radius: var(--radius-lg);
+  }
+
+  .foot:empty {
+    display: none;
+  }
+}

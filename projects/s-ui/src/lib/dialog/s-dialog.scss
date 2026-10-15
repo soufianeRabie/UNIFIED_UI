@@ -1,0 +1,7 @@
+@use '../core/dialog';
+
+:host {
+  display: contents;
+}
+
+@include dialog.frame;

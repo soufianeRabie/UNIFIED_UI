@@ -1,0 +1,25 @@
+<section
+  class="frame"
+  role="alertdialog"
+  [attr.aria-labelledby]="titleId"
+  [attr.aria-describedby]="bodyId"
+>
+  <header class="head">
+    <h2 class="title" [id]="titleId">{{ options.title }}</h2>
+  </header>
+  <div class="body" [id]="bodyId">{{ options.message }}</div>
+  <footer class="foot">
+    <button type="button" s-button variant="ghost" class="cancel" (click)="ref.close(false)">
+      {{ text().cancel }}
+    </button>
+    <button
+      type="button"
+      s-button
+      class="confirm"
+      [variant]="danger ? 'danger' : 'primary'"
+      (click)="ref.close(true)"
+    >
+      {{ text().confirm }}
+    </button>
+  </footer>
+</section>

@@ -30,3 +30,5 @@ export * from './lib/search';
 export * from './lib/filter-bar';
 export * from './lib/pagination';
 export * from './lib/data-table';
+export * from './lib/dialog';
+export * from './lib/confirm';

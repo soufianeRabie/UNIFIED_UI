@@ -1,0 +1,18 @@
+<ng-template #panel>
+  <section class="frame">
+    <header class="head">
+      <h2 class="title" [id]="titleId">{{ title() }}</h2>
+      <button
+        type="button"
+        s-icon-button
+        icon="times"
+        variant="ghost"
+        size="sm"
+        [aria-label]="closeLabel()"
+        (click)="close()"
+      ></button>
+    </header>
+    <div class="body"><ng-content /></div>
+    <footer class="foot"><ng-content select="[s-dialog-footer]" /></footer>
+  </section>
+</ng-template>

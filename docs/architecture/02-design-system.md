@@ -61,7 +61,7 @@ projects/s-ui/src/lib/button/
 - Every interactive element is reachable and operable by keyboard and shows `:focus-visible` (token `--focus-ring`).
 - Icon-only buttons require `aria-label` (also used as the tooltip). The compiler enforces it: it is an `input.required`, and the template linter sees it as the button's content.
 - State is never conveyed by colour alone (stamps have text and border; switches show a state label).
-- Dialogs: focus trap, `Escape` closes, focus returns to the trigger, `aria-labelledby` set — provided by CDK.
+- Dialogs: focus trap, `Escape` closes, focus returns to the trigger, `aria-labelledby` set, and the rest of the page is hidden from assistive tech while open (CDK; more robust than `aria-modal`). Confirmations are `alertdialog` with focus on Cancel.
 - Tables: `<th scope="col">`, `aria-sort` on sortable headers, `aria-busy` while loading.
 - Contrast: every token pair used for text meets 4.5:1 in both themes (checked when tokens change).
 
