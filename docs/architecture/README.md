@@ -13,9 +13,10 @@ When the code and this handbook disagree, the code is wrong — or the handbook 
 | 05  | [Feature blueprint](05-feature-blueprint.md)   | You build or migrate a screen                              |
 | 06  | [Quality gates](06-quality-gates.md)           | You open or review a pull request                          |
 | 07  | [Migration plan](07-migration-plan.md)         | You need to know what is being done next                   |
+| 08  | [Query contract](08-query-contract.md)         | You build a list, a table or a list API                    |
 | ADR | [Decision records](adr/)                       | You want the _why_ behind a rule                           |
 
-## The ten rules
+## The rules
 
 1. **One responsibility per file.** A component is a folder: `.ts`, `.html`, `.scss`, `.spec.ts`. Types, DTOs, mappers and constants live in their own files.
 2. **Dependencies point inward.** `features → ui/data-access → domain`, and everything may use `@s/ui`. Nothing imports "upwards" or across domains. ([01](01-architecture.md))
@@ -26,4 +27,6 @@ When the code and this handbook disagree, the code is wrong — or the handbook 
 7. **OnPush, standalone, `inject()`, signal inputs, built-in control flow.** No exceptions. ([03](03-angular-standards.md))
 8. **No logic in templates.** Templates read signals/computed values; they do not call methods that compute. ([03](03-angular-standards.md))
 9. **Every string is translated, every control is accessible.** WCAG 2.2 AA is the floor. ([02](02-design-system.md), [03](03-angular-standards.md))
-10. **Nothing merges red.** Lint, style lint, types, tests and budgets pass, or the PR does not merge. ([06](06-quality-gates.md))
+10. **Lists are queried server-side through one contract.** `POST /query` with paging, sort, search and a filter tree; tables bind to `SQuery`. ([08](08-query-contract.md))
+11. **Every widget is ours, every component is thin.** No native/third-party widgets; logic lives in pure, tested functions. ([ADR 0008](adr/0008-own-widgets-thin-components.md))
+12. **Nothing merges red.** Lint, style lint, types, tests and budgets pass, or the PR does not merge. ([06](06-quality-gates.md))

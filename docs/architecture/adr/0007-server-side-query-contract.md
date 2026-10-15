@@ -1,0 +1,14 @@
+# ADR 0007 — One server-side query contract: `POST /query`, filter trees, schema
+
+- **Status:** Accepted · 2026-10-15
+- **Context:** Every list endpoint takes ad-hoc GET parameters (`search`, `includeInactive`, `page`, `size`) and hard-codes its filtering and ordering in the handler. Users need type-aware column filters (text, numbers, dates, enums, booleans), multi-column sort and combined conditions on large tables, for every screen of every product. Re-implementing that per endpoint is slow, inconsistent and unsafe.
+- **Decision:**
+  1. **Transport.** Lists are queried with `POST /api/<resource>/query` and a JSON body. GET query strings cannot express nested AND/OR groups cleanly, hit URL length limits with `in` lists, and leak filter values into access logs, proxies and browser history. The call is still a read: no side effect, safe to retry.
+  2. **Shape.** `{ page, size, search?, sort[], filter? }` where `filter` is a tree of groups (`and`/`or`) and conditions (`field`, `op`, `value`). Full specification: [08 — Query contract](../08-query-contract.md).
+  3. **Declared, not reflected.** Each resource declares a _query definition_: the public field names, their type, the expression they map to, and whether they are filterable, sortable, searchable. Anything not declared is rejected. Field names are API names, never column or property names.
+  4. **One engine.** A generic engine validates the request against the definition, converts values to the field type, and builds the `IQueryable` (filter, search, sort, page). It has no dependency on any domain. Errors are `400` with precise paths (`filter.conditions[1].value`), never a SQL error.
+  5. **Discoverable.** `GET /api/<resource>/query/schema` returns the fields, types, operators and enum values, so any UI can build filters dynamically.
+  6. **Bounded.** Max page size 100, max 3 sort keys, max 25 conditions, max depth 3, max 100 values in `in`. The definition's key is always appended as the final sort so pages are deterministic.
+  7. **Placement.** The engine lives in `SecurityApi.Application/Common/Querying` as a self-contained module (only LINQ/EF Core abstractions). When `NOTIFICATION_API` adopts it, it is extracted unchanged into a shared `Platform.Querying` package.
+  8. **UI side.** `@s/ui` owns an API-agnostic query model (`SQuery`, `SFilterGroup`, `SFilterCondition`, operators per type) with pure, tested functions; `SDataTable` exposes column filters bound to it. Mapping to the wire DTO happens only in `data-access` mappers.
+- **Consequences:** New screens get server-side paging, multi-sort, search and every filter type by declaring a definition (server) and columns (UI). Existing GET list endpoints stay for legacy screens and are removed as screens migrate. The engine and the UI query functions are the most heavily tested code in the platform.

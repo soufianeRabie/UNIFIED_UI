@@ -7,12 +7,12 @@
 
 ## 1. Current status
 
-| Field                   | Value                                                                                                                                                                            |
-| ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Current phase**       | Phase 1 complete → Phase 2 — Shell + reference screen (Users)                                                                                                                    |
-| **Last completed step** | 1.4 Visual review gallery `/dev/ui` — Phase 1 done — 2026-10-15                                                                                                                  |
-| **Next step**           | Phase 2.1 — `core/shell` (`SAppShell`-style frame: sidebar nav from the permission menu, topbar with breadcrumbs + language switcher) replacing `secu-layout` and `notif-layout` |
-| **Blocked by**          | —                                                                                                                                                                                |
+| Field                   | Value                                                                                                                                                                                                                                   |
+| ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Current phase**       | Phase 2 — Query platform, widgets, shell, reference screen                                                                                                                                                                              |
+| **Last completed step** | 1.4 Visual review gallery `/dev/ui` — Phase 1 done — 2026-10-15                                                                                                                                                                         |
+| **Next step**           | 2.1 Server query engine in `SECURITY_API/SecurityApi.Application/Common/Querying` + `SecurityApi.Application.Tests` (xUnit); users definition; `POST /api/secu/users/query`, `GET …/query/schema` (see `SECURITY_API/docs/querying.md`) |
+| **Blocked by**          | —                                                                                                                                                                                                                                       |
 
 ### Phase checklist (details in `docs/architecture/07-migration-plan.md`)
 
@@ -33,7 +33,12 @@
     - [x] 1.3d `SDataTable` (+ `s-cell`, `s-row-actions` typed templates, types), `SPagination`
     - [x] 1.3e `SDialog` (declarative `[(open)]`), `SConfirm` service (`alertdialog`, focus on Cancel)
   - [x] 1.4 Visual review gallery `src/app/dev/s-ui-gallery` at `/dev/ui` (dev builds only)
-- [ ] **Phase 2 — Shell + reference screen (Users)** in `src/app/domains/security`
+- [ ] **Phase 2 — Query platform, widgets, shell, reference screen** (ADR 0007, ADR 0008, handbook 08)
+  - [ ] 2.1 Server query engine (SECURITY_API): generic `Common/Querying`, tests, users definition, `POST …/users/query` + schema
+  - [ ] 2.2 `@s/ui` query model: types + pure functions + tests
+  - [ ] 2.3 `@s/ui` widgets: `SPopover`, `SSelect`, `SCalendar`, `SDatePicker`, `SColumnFilter`, `SFilterChips`; `SDataTable` `[(query)]`
+  - [ ] 2.4 Shell `core/shell` replacing `secu-layout` / `notif-layout`
+  - [ ] 2.5 Users reference screen in `domains/security`; legacy users screen deleted
 - [ ] **Phase 3 — Security domain screens**
 - [ ] **Phase 4 — Notification domain screens**
 - [ ] **Phase 5 — Remove legacy CSS, bridge, PrimeNG**
@@ -96,6 +101,8 @@ Written before the handbook; violates ADR 0005 (inline templates/styles, several
 ## 5. Log (newest first)
 
 ### 2026-10-15
+
+- **Phase 2 architecture (owner: "behave as senior architect"; server-side, generic, dynamic filters; own widgets; thin components):** ADR 0007 (one query contract: `POST /api/<resource>/query` + `GET …/query/schema`, filter tree, typed operators, limits, 400 with paths, engine placement), handbook **08 — Query contract** (wire format, operator matrix, dates/time zones, schema, server + UI design), ADR 0008 (every widget ours on CDK + `Intl`; thin components with logic in pure `*.utils.ts`), handbook README rules 10–12, 02 inventory, 03 §3 thin components, 07 Phase 2 breakdown; `SECURITY_API/docs/querying.md` (server module design).
 
 - **1.4 Visual review:** dev-only gallery `src/app/dev/s-ui-gallery/` (route `/dev/ui`, `canMatch: isDevMode()`, strict-linted) rendering every component with sample data + Light/Dark/RTL toggles and table state switches. Reviewed in the browser: narrow layout (grids collapse, low/medium-priority columns hide), desktop layout, dark + RTL (everything mirrors, switch thumb uses logical inset), dialog (serif title, focus on first field, page hidden from AT), confirm (`alertdialog`, focus on Cancel, red "Supprimer"), French `S.*` labels via the adapter ("1–20 sur 57"). **Bug found + fixed:** the legacy universal reset `* { margin:0; padding:0 }` was unlayered and beat `@layer components` (inputs had no padding) → moved into `@layer base` in `secu.styles.css`; verified legacy Users screen values unchanged (title margin 0, td 11/14px, search 7/10/30px). **Phase 1 complete.**
 

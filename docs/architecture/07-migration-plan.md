@@ -25,10 +25,13 @@ From today's code (one large stylesheet per module, templates and styles inline,
 
 **Bridge:** legacy `--s-*` variables are re-pointed at the new tokens, so every not-yet-migrated screen immediately adopts the new palette, type and radii.
 
-## Phase 2 — Shell + reference screen
+## Phase 2 — Query platform, widgets, shell, reference screen
 
-1. `core/shell`: `SAppShell`, sidebar and topbar on `@s/ui`; one shell for security and notification (replaces `secu-layout` and `notif-layout`).
-2. Create `domains/security` and migrate **Users** completely per [05](05-feature-blueprint.md). This screen becomes the template every other migration copies.
+1. **2.1 Server query engine** (`SECURITY_API`, [08](08-query-contract.md)): generic `Common/Querying` module + test project; `users` definition; `POST /api/secu/users/query` and `GET …/query/schema`.
+2. **2.2 `@s/ui` query model**: `query/` types + pure functions (operators per type, condition updates, sort) with unit tests.
+3. **2.3 `@s/ui` widgets** (ADR 0008): `SPopover`, `SSelect` (single/multi), `SCalendar`, `SDatePicker`, `SColumnFilter`, `SFilterChips`; `SDataTable` header filter buttons bound to `[(query)]`.
+4. **2.4 Shell**: `core/shell` — one frame for security and notification (sidebar from the permission menu, topbar, breadcrumbs, language switcher); replaces `secu-layout` / `notif-layout`.
+5. **2.5 Users reference screen**: `domains/security` per [05](05-feature-blueprint.md) on the query contract; legacy users screen deleted. This screen is the template every other migration copies.
 
 ## Phase 3 — Security domain
 

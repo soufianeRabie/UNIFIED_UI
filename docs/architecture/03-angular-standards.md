@@ -36,7 +36,21 @@ Applies to all TypeScript and templates in `src/app` and `projects/*`. Angular 2
 | Barrel imports from inside the same library (`import … from '@s/ui'` inside `s-ui`)           | relative imports                                                                                                              |
 | Default exports                                                                               | named exports                                                                                                                 |
 
-## 3. State management
+## 3. Thin components (ADR 0008)
+
+A component class only **wires**: inputs, outputs, injected services, and `computed()` view models that call pure functions.
+
+```ts
+// s-calendar.ts — wiring only
+protected readonly month = computed(() => buildMonthGrid(this.visibleMonth(), this.locale(), this.value()));
+
+// s-calendar.utils.ts — the logic, unit-tested without a DOM
+export function buildMonthGrid(month: YearMonth, locale: string, selected: IsoDate | null): MonthGrid { … }
+```
+
+Logic with a branch worth testing — date math, operator rules, query updates, formatting, validation — goes to a sibling `*.utils.ts` (pure) or a store, never into the component. Limits: component `.ts` 120 lines soft / 200 hard.
+
+## 4. State management
 
 - **Page state** lives in a store service provided at the route (`providers: [UsersStore]`), so it dies with the page.
 - A store exposes **read-only signals** and **intent methods**; it never exposes `WritableSignal`.
@@ -61,13 +75,13 @@ export class UsersStore {
 - **App state** (session, permissions, tenant) lives in `core`/`shared` stores provided in root.
 - No global state library (NgRx) until a measured need appears — ADR required.
 
-## 4. Error handling
+## 5. Error handling
 
 - `data-access` maps HTTP errors to a typed `AppError` (`{ kind: 'network' | 'forbidden' | 'validation' | 'not-found' | 'unknown', message, fieldErrors? }`).
 - Stores keep `error: AppError | null`; pages render it with `SNotice` or the table's `error` input.
 - Unexpected exceptions reach the global `ErrorHandler`, which logs and shows a toast — never a blank screen.
 
-## 5. Performance
+## 6. Performance
 
 - OnPush everywhere; `@for` always has a stable `track` (an id, not `$index`, when items can move).
 - Lazy-load every domain and every page; use `@defer (on viewport)` for heavy below-the-fold panels.
@@ -75,7 +89,7 @@ export class UsersStore {
 - Images: `NgOptimizedImage`. Icons: font/SVG, never PNG sprites.
 - Bundle budgets in `angular.json` are hard errors (see [06](06-quality-gates.md)).
 
-## 6. File size limits
+## 7. File size limits
 
 | File               | Soft limit | Hard limit (PR blocked) |
 | ------------------ | ---------- | ----------------------- |
