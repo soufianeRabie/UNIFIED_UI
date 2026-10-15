@@ -7,12 +7,12 @@
 
 ## 1. Current status
 
-| Field                   | Value                                                                                                                                                                                                                                   |
-| ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Current phase**       | Phase 2 — Query platform, widgets, shell, reference screen                                                                                                                                                                              |
-| **Last completed step** | 1.4 Visual review gallery `/dev/ui` — Phase 1 done — 2026-10-15                                                                                                                                                                         |
-| **Next step**           | 2.1 Server query engine in `SECURITY_API/SecurityApi.Application/Common/Querying` + `SecurityApi.Application.Tests` (xUnit); users definition; `POST /api/secu/users/query`, `GET …/query/schema` (see `SECURITY_API/docs/querying.md`) |
-| **Blocked by**          | —                                                                                                                                                                                                                                       |
+| Field                   | Value                                                                                                                                                                         |
+| ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Current phase**       | Phase 2 — Query platform, widgets, shell, reference screen                                                                                                                    |
+| **Last completed step** | 2.1 Server query engine + `POST /api/secu/users/query` — 2026-10-15                                                                                                           |
+| **Next step**           | 2.2 `@s/ui` `query/` model: `SQuery`, `SFilterGroup`, `SFilterCondition`, `SFilterType`, `SFilterOperator`, operator matrix (mirror of server), pure update functions + tests |
+| **Blocked by**          | —                                                                                                                                                                             |
 
 ### Phase checklist (details in `docs/architecture/07-migration-plan.md`)
 
@@ -34,7 +34,7 @@
     - [x] 1.3e `SDialog` (declarative `[(open)]`), `SConfirm` service (`alertdialog`, focus on Cancel)
   - [x] 1.4 Visual review gallery `src/app/dev/s-ui-gallery` at `/dev/ui` (dev builds only)
 - [ ] **Phase 2 — Query platform, widgets, shell, reference screen** (ADR 0007, ADR 0008, handbook 08)
-  - [ ] 2.1 Server query engine (SECURITY_API): generic `Common/Querying`, tests, users definition, `POST …/users/query` + schema
+  - [x] 2.1 Server query engine (SECURITY_API `f38b440`): generic `Common/Querying`, 75 tests, users definition, `POST …/users/query` + schema
   - [ ] 2.2 `@s/ui` query model: types + pure functions + tests
   - [ ] 2.3 `@s/ui` widgets: `SPopover`, `SSelect`, `SCalendar`, `SDatePicker`, `SColumnFilter`, `SFilterChips`; `SDataTable` `[(query)]`
   - [ ] 2.4 Shell `core/shell` replacing `secu-layout` / `notif-layout`
@@ -101,6 +101,8 @@ Written before the handbook; violates ADR 0005 (inline templates/styles, several
 ## 5. Log (newest first)
 
 ### 2026-10-15
+
+- **2.1 Server query engine (SECURITY_API `f38b440`):** `SecurityApi.Application/Common/Querying/` — 14 single-purpose files, no domain references: wire model (`QueryRequest`, filter tree with `JsonElement` values), `FieldType` + `FilterOperator` + `OperatorMatrix` (contract §3), `QueryDefinition` fluent builder (type inferred from CLR type, C# nullability read via `NullabilityInfoContext`, `AsDate()`/`AsEnum()`, fail-fast at startup), strict `ValueConverter` (datetime requires explicit offset → UTC), `QueryValidator` (all errors at once with JSON paths → existing 400 shape), `FilterExpressionBuilder` (case-insensitive text, negatives include nulls, values as **SQL parameters** via holders), multi-sort + key tiebreak, search, `QuerySchema`. Users: `SecuUserQueryDefinition` (no secrets exposed), `QuerySecuUsersQuery` (tenant scope **before** user filter), `POST /api/secu/users/query`, `GET /api/secu/users/query/schema`; legacy `GET users` `[Obsolete]`. **Security fix:** `SecuPermissionFilter` mapped every POST to CREATE → `…/query` now READ. New `SecurityApi.Application.Tests` (xUnit, in solution). **Verified:** 75/75 tests; live API: 401 without token; schema 200 (9 fields); search+sort+filter query 200; invalid request 400 with `size`, `sort[0].field`, `filter.op` paths.
 
 - **Phase 2 architecture (owner: "behave as senior architect"; server-side, generic, dynamic filters; own widgets; thin components):** ADR 0007 (one query contract: `POST /api/<resource>/query` + `GET …/query/schema`, filter tree, typed operators, limits, 400 with paths, engine placement), handbook **08 — Query contract** (wire format, operator matrix, dates/time zones, schema, server + UI design), ADR 0008 (every widget ours on CDK + `Intl`; thin components with logic in pure `*.utils.ts`), handbook README rules 10–12, 02 inventory, 03 §3 thin components, 07 Phase 2 breakdown; `SECURITY_API/docs/querying.md` (server module design).
 
