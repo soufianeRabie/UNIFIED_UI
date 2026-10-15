@@ -1,0 +1,52 @@
+<span class="range">{{ view().range }}</span>
+@if (view().lastPage > 1) {
+  <nav class="pages" [attr.aria-label]="view().nav">
+    <button
+      type="button"
+      class="btn"
+      [disabled]="view().atStart"
+      [attr.aria-label]="view().first"
+      (click)="go(1)"
+    >
+      <s-icon name="angle-double-left" />
+    </button>
+    <button
+      type="button"
+      class="btn"
+      [disabled]="view().atStart"
+      [attr.aria-label]="view().previous"
+      (click)="go(page() - 1)"
+    >
+      <s-icon name="angle-left" />
+    </button>
+    @for (item of view().pages; track item.number) {
+      <button
+        type="button"
+        class="btn"
+        [attr.aria-current]="item.current ? 'page' : null"
+        [attr.aria-label]="item.label"
+        (click)="go(item.number)"
+      >
+        {{ item.number }}
+      </button>
+    }
+    <button
+      type="button"
+      class="btn"
+      [disabled]="view().atEnd"
+      [attr.aria-label]="view().next"
+      (click)="go(page() + 1)"
+    >
+      <s-icon name="angle-right" />
+    </button>
+    <button
+      type="button"
+      class="btn"
+      [disabled]="view().atEnd"
+      [attr.aria-label]="view().last"
+      (click)="go(view().lastPage)"
+    >
+      <s-icon name="angle-double-right" />
+    </button>
+  </nav>
+}

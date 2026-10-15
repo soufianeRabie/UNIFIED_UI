@@ -7,12 +7,12 @@
 
 ## 1. Current status
 
-| Field                   | Value                                                                                                                                           |
-| ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Current phase**       | Phase 1 — Design system foundation (1.1–1.2 done)                                                                                               |
-| **Last completed step** | 1.3c form components — 2026-10-15                                                                                                               |
-| **Next step**           | 1.3d data: `SDataTable` (typed columns, `s-cell` / `s-row-actions` templates, sort, skeleton, empty, error, responsive priority), `SPagination` |
-| **Blocked by**          | —                                                                                                                                               |
+| Field                   | Value                                                                                                                                                               |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Current phase**       | Phase 1 — Design system foundation (1.1–1.2 done)                                                                                                                   |
+| **Last completed step** | 1.3d data table + pagination — 2026-10-15                                                                                                                           |
+| **Next step**           | 1.3e overlays: `SDialog` (declarative `[(open)]`, CDK Dialog, focus trap, Escape, restore focus), `SConfirm` service (`await confirm.ask(…)`); then Phase 1 wrap-up |
+| **Blocked by**          | —                                                                                                                                                                   |
 
 ### Phase checklist (details in `docs/architecture/07-migration-plan.md`)
 
@@ -30,7 +30,7 @@
     - [x] 1.3a core (`scale.types`, `SUiI18n` contract + `SUiLabels`, `provideSUi`, `_scale.scss`) + layout (`SStack`, `SRow`, `SGrid`, `SPanel`, `SPanelHeader`); app bridge `sUiI18nAdapter`; `S.*` keys in en/fr
     - [x] 1.3b `SText`, `SHeading`, `SNotice`, `SPageHeader`, `SIcon`, `SButton`, `SIconButton`, `SStamp`, `SEmpty`, `SKpi`
     - [x] 1.3c `SField` (+ `S_FIELD` context), `SInput` (directive), `SSwitch` (ControlValueAccessor), `SSearch` (debounced `searched`), `SFilterBar`
-    - [ ] 1.3d data (data table, cell, row actions, pagination)
+    - [x] 1.3d `SDataTable` (+ `s-cell`, `s-row-actions` typed templates, types), `SPagination`
     - [ ] 1.3e overlays (dialog, confirm)
 - [ ] **Phase 2 — Shell + reference screen (Users)** in `src/app/domains/security`
 - [ ] **Phase 3 — Security domain screens**
@@ -94,6 +94,8 @@ Written before the handbook; violates ADR 0005 (inline templates/styles, several
 ## 5. Log (newest first)
 
 ### 2026-10-15
+
+- **1.3d data:** `pagination/` (`[(page)]`, range label, 5-page window, `aria-current`, first/prev/next/last with labels, hidden nav when one page; all text via `SUiLabels`) and `data-table/` (`SDataTable<T>`: typed `SColumn[]` with `sortable`, `align`, `width` scale xs–xl, `priority` medium/low for responsive hiding, `mono`; `rowKey` identity; `[(sort)]` cycling asc→desc→none with `aria-sort`; skeleton rows on first load, dimmed stale rows on reload, `aria-busy`; empty state spanning all columns; error replaces table with `role=alert` notice; pagination when `total` bound). Header/body state precomputed in `computed()` view models — no compute methods in the template. `s-cell` / `s-row-actions` take `[rows]` as a **type witness** so `let-row` is fully typed under strict templates (no `any`). ESLint: `_`-prefixed unused args allowed (ngTemplateContextGuard). Handbook 02/05 examples updated. **Verified:** `verify` ✔ — 27 files / 56 tests.
 
 - **1.3c forms:** `field/` (`SField` provides `S_FIELD`: id, `aria-describedby` → hint/error, `aria-invalid`; error is `role=alert`), `input/` (`SInput` directive on input/select/textarea, consumes `S_FIELD`; `controlSize` not `size` — native attribute clash), `switch/` (`role=switch`, labelled by projected text, CVA incl. form-disabled, logical `inset-inline-start` so it mirrors in RTL), `search/` (`[(value)]`, debounced `(searched)` — not `search`, a native event; clear button + Escape; labels via `SUiLabels`), `filter-bar/` (`role=search`). Conventions: all `@s/ui` attributes kebab-case (`s-page-actions`, `s-panel-actions` renamed; ESLint directive-selector kebab for `projects/s-ui`). Handbook 02 §4 updated. **Verified:** `verify` ✔ — 25 files / 46 tests.
 

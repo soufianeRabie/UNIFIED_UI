@@ -28,3 +28,5 @@ export * from './lib/input';
 export * from './lib/switch';
 export * from './lib/search';
 export * from './lib/filter-bar';
+export * from './lib/pagination';
+export * from './lib/data-table';

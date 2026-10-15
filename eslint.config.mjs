@@ -134,6 +134,11 @@ const TS_RULES = (level) => ({
   ],
   '@typescript-eslint/no-explicit-any': level,
   '@typescript-eslint/no-non-null-assertion': level,
+  // `_name`: required by a signature but intentionally unused (e.g. ngTemplateContextGuard).
+  '@typescript-eslint/no-unused-vars': [
+    level,
+    { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
+  ],
   // Only where constructor injection is banned: `--fix` would turn DI constructor types into
   // `import type` and break injection at runtime in legacy code.
   '@typescript-eslint/consistent-type-imports':

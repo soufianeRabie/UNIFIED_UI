@@ -1,0 +1,56 @@
+:host {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3) var(--space-5);
+  font-size: var(--text-sm);
+  color: var(--ink-3);
+}
+
+.range {
+  font-variant-numeric: tabular-nums;
+}
+
+.pages {
+  display: flex;
+  gap: var(--space-1);
+}
+
+.btn {
+  display: grid;
+  place-items: center;
+  min-inline-size: 30px;
+  block-size: 30px;
+  padding: 0 var(--space-2);
+  font: inherit;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-2);
+  cursor: pointer;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  transition: background-color var(--duration-fast) var(--ease-standard);
+}
+
+.btn:hover:not(:disabled) {
+  color: var(--ink);
+  background: var(--paper-sunk);
+}
+
+.btn:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.btn[aria-current='page'] {
+  font-weight: var(--weight-semibold);
+  color: var(--seal-contrast);
+  background: var(--seal);
+}

@@ -1,0 +1,101 @@
+@if (error(); as message) {
+  <div class="notice">
+    <s-notice tone="danger">{{ message }}</s-notice>
+  </div>
+} @else {
+  <div class="scroll">
+    <table
+      [attr.aria-label]="caption()"
+      [attr.aria-busy]="loading()"
+      [class.dim]="loading() && !showSkeleton()"
+    >
+      <thead>
+        <tr>
+          @for (header of headers(); track header.column.key) {
+            <th
+              scope="col"
+              [attr.data-align]="header.column.align"
+              [attr.data-width]="header.column.width"
+              [attr.data-priority]="header.column.priority"
+              [attr.aria-sort]="header.ariaSort"
+            >
+              @if (header.column.sortable) {
+                <button type="button" class="sort" (click)="toggleSort(header.column)">
+                  {{ header.column.header }}
+                  <s-icon [name]="header.sortIcon" />
+                </button>
+              } @else {
+                {{ header.column.header }}
+              }
+            </th>
+          }
+          @if (rowActions()) {
+            <th scope="col" class="actions-col">
+              <span class="visually-hidden">{{ text().actions }}</span>
+            </th>
+          }
+        </tr>
+      </thead>
+      <tbody>
+        @if (showSkeleton()) {
+          @for (i of skeleton; track i) {
+            <tr class="skeleton" aria-hidden="true">
+              @for (header of headers(); track header.column.key) {
+                <td [attr.data-priority]="header.column.priority"><span class="bone"></span></td>
+              }
+              @if (rowActions()) {
+                <td></td>
+              }
+            </tr>
+          }
+        } @else {
+          @for (line of body(); track line.id) {
+            <tr>
+              @for (cell of line.cells; track cell.column.key) {
+                <td
+                  [attr.data-align]="cell.column.align"
+                  [attr.data-priority]="cell.column.priority"
+                  [class.mono]="cell.column.mono"
+                >
+                  @if (cell.template; as template) {
+                    <ng-container
+                      *ngTemplateOutlet="
+                        template;
+                        context: { $implicit: line.row, row: line.row, index: line.index }
+                      "
+                    />
+                  } @else {
+                    {{ cell.text }}
+                  }
+                </td>
+              }
+              @if (rowActions(); as actions) {
+                <td class="actions-col">
+                  <div class="actions">
+                    <ng-container
+                      *ngTemplateOutlet="
+                        actions.template;
+                        context: { $implicit: line.row, row: line.row, index: line.index }
+                      "
+                    />
+                  </div>
+                </td>
+              }
+            </tr>
+          } @empty {
+            <tr>
+              <td [attr.colspan]="columnCount()">
+                <s-empty [icon]="emptyIcon()" [title]="text().empty"
+                  ><ng-content select="[s-empty-text]"
+                /></s-empty>
+              </td>
+            </tr>
+          }
+        }
+      </tbody>
+    </table>
+  </div>
+  @if (total() !== null) {
+    <s-pagination [(page)]="page" [pageSize]="pageSize()" [total]="total() ?? 0" />
+  }
+}

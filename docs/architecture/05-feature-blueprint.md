@@ -64,8 +64,8 @@ A page template is only composition. If you need a `<div>` with a class, you nee
 <s-panel>
   <s-filter-bar>…</s-filter-bar>
   <s-data-table …>
-    <ng-template sCell="…" let-row>…</ng-template>
-    <ng-template sRowActions let-row>…</ng-template>
+    <ng-template s-cell="…" [rows]="store.items()" let-row>…</ng-template>
+    <ng-template s-row-actions [rows]="store.items()" let-row>…</ng-template>
   </s-data-table>
 </s-panel>
 <secu-user-form-dialog [(open)]="…" [user]="…" (save)="store.save($event)" />

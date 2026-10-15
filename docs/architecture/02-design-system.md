@@ -97,10 +97,10 @@ projects/s-ui/src/lib/button/
     [total]="store.total()"
     [(page)]="page"
   >
-    <ng-template sCell="status" let-user>
+    <ng-template s-cell="status" [rows]="store.users()" let-user>
       <s-stamp [tone]="user.active ? 'success' : 'neutral'">…</s-stamp>
     </ng-template>
-    <ng-template sRowActions let-user>
+    <ng-template s-row-actions [rows]="store.users()" let-user>
       <button
         s-icon-button
         icon="pencil"
