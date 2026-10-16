@@ -10,9 +10,7 @@ export const SECU_ROUTES: Routes = [
       // ── Identity ──────────────────────────────────────────────────────
       {
         path: 'users',
-        loadComponent: () =>
-          import('./components/users/users-list.component').then((m) => m.UsersListComponent),
-        title: 'Users — Security',
+        loadChildren: () => import('../domains/security').then((m) => m.USERS_ROUTES),
       },
       {
         path: 'users/:id',

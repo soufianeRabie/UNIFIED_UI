@@ -68,7 +68,7 @@
     "USERS": {
       "TITLE": "Utilisateurs",
       "SUBTITLE": "Gérer les profils utilisateurs de sécurité",
-      "NEW": "+ Nouvel utilisateur",
+      "NEW": "Nouvel utilisateur",
       "SEARCH": "Rechercher des utilisateurs…",
       "COLUMNS": {
         "USERNAME": "Nom d'utilisateur",
@@ -101,7 +101,10 @@
         "PASSWORD": "Mot de passe",
         "IS_ACTIVE": "Actif",
         "SAVE": "Enregistrer",
-        "CANCEL": "Annuler"
+        "CANCEL": "Annuler",
+        "ERROR_REQUIRED": "Ce champ est obligatoire.",
+        "ERROR_EMAIL": "Saisissez une adresse e-mail valide.",
+        "ERROR_TOO_LONG": "{{max}} caractères maximum."
       },
       "EMPTY": "Aucun utilisateur trouvé.",
       "LOADING": "Chargement des utilisateurs…",
@@ -125,7 +128,8 @@
       "DELETE": {
         "TITLE": "Supprimer l'utilisateur",
         "CONFIRM_PREFIX": "Supprimer l'utilisateur",
-        "CONFIRM_SUFFIX": " ? Cette action est irréversible."
+        "CONFIRM_SUFFIX": " ? Cette action est irréversible.",
+        "CONFIRM": "Supprimer l'utilisateur « {{name}} » ? Cette action est irréversible."
       }
     },
     "ROLES": {

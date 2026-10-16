@@ -21,6 +21,8 @@ import { acceptLanguageInterceptor, provideI18n, sUiI18nAdapter } from './core/i
 import { DomI18nService } from './core/services/dom-i18n.service';
 import { provideShellNav } from './core/shell';
 import { AppShellNav } from './app-shell-nav';
+import { PAGE_PERMISSIONS } from './core/permissions';
+import { PermissionService } from './secu/services/permission.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -42,6 +44,7 @@ export const appConfig: ApplicationConfig = {
     provideI18n(),
     provideSUi({ i18n: sUiI18nAdapter }),
     provideShellNav(AppShellNav),
+    { provide: PAGE_PERMISSIONS, useExisting: PermissionService },
     provideAppInitializer(() => inject(DomI18nService).init()),
   ],
 };

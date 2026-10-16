@@ -68,7 +68,7 @@
     "USERS": {
       "TITLE": "Users",
       "SUBTITLE": "Manage security user profiles",
-      "NEW": "+ New User",
+      "NEW": "New user",
       "SEARCH": "Search users…",
       "COLUMNS": {
         "USERNAME": "Username",
@@ -101,7 +101,10 @@
         "PASSWORD": "Password",
         "IS_ACTIVE": "Active",
         "SAVE": "Save",
-        "CANCEL": "Cancel"
+        "CANCEL": "Cancel",
+        "ERROR_REQUIRED": "This field is required.",
+        "ERROR_EMAIL": "Enter a valid email address.",
+        "ERROR_TOO_LONG": "Maximum {{max}} characters."
       },
       "EMPTY": "No users found.",
       "LOADING": "Loading users…",
@@ -125,7 +128,8 @@
       "DELETE": {
         "TITLE": "Delete user",
         "CONFIRM_PREFIX": "Delete the user",
-        "CONFIRM_SUFFIX": "? This action cannot be undone."
+        "CONFIRM_SUFFIX": "? This action cannot be undone.",
+        "CONFIRM": "Delete user \"{{name}}\"? This action cannot be undone."
       }
     },
     "ROLES": {

@@ -38,6 +38,8 @@ const STRICT_DIRS = [
   'src/app/core/i18n',
   'src/app/core/query',
   'src/app/core/shell',
+  'src/app/core/errors/app-error',
+  'src/app/core/permissions',
   'src/app/dev',
 ];
 const STRICT_TS = STRICT_DIRS.map((d) => `${d}/**/*.ts`);
@@ -78,7 +80,9 @@ const POLICIES = [
   { from: { element: { type: 'domain' } }, allow: { to: sameScope('domain') } },
   {
     from: { element: { type: 'data-access' } },
-    allow: { to: [sameScope('data-access'), sameScope('domain'), { element: { type: 'core' } }] },
+    allow: {
+      to: [sameScope('data-access'), sameScope('domain'), anyOf('core', 's-core')],
+    },
   },
   {
     from: { element: { type: 'ui' } },

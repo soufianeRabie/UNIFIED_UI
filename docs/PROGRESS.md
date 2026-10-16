@@ -10,7 +10,7 @@
 | Field                   | Value                                                                                                                                 |
 | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
 | **Current phase**       | Phase 2 — Query platform, widgets, shell, reference screen                                                                            |
-| **Last completed step** | 2.4 One application shell (`SAppShell`, `SSidebarNav`, `SBreadcrumbs`, `core/shell`) — 2026-10-16                                     |
+| **Last completed step** | 2.5 Users reference screen (`domains/security`) — 2026-10-16                                                                          |
 | **Next step**           | 2.5 Users reference screen in `domains/security` on the query contract (`POST /api/secu/users/query`); delete the legacy users screen |
 | **Blocked by**          | —                                                                                                                                     |
 
@@ -40,7 +40,7 @@
   - [x] 2.3 `@s/ui` widgets: `SPopover`, `SSelect`, `SCalendar`, `SDatePicker`, `SColumnFilter`, `SFilterChips`; `SDataTable` `[(query)]` (`4c235ad`, `3f2e261`, 2.3c)
   - [x] 2.3d Split (ADR 0010): `@s/tokens` (CSS), `@s/core` (framework-free TS), `@s/ui` (Angular) — React/Next-ready core
   - [x] 2.4 Shell `core/shell` replacing `secu-layout` / `notif-layout` (both deleted)
-  - [ ] 2.5 Users reference screen in `domains/security`; legacy users screen deleted
+  - [x] 2.5 Users reference screen in `domains/security`; legacy users list deleted (user detail `users/:id` stays legacy until Phase 3)
 - [ ] **Phase 3 — Security domain screens**
 - [ ] **Phase 4 — Notification domain screens**
 - [ ] **Phase 5 — Remove legacy CSS, bridge, PrimeNG**
@@ -90,9 +90,10 @@ Written before the handbook; violates ADR 0005 (inline templates/styles, several
 
 ## 4. Test debt (write in the test phase — owner decision 2026-10-16)
 
-| Area | What needs tests                                |
-| ---- | ----------------------------------------------- |
-| —    | (nothing yet: everything up to 2.3d is covered) |
+| Area      | What needs tests                                                                                                                                           |
+| --------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2.4 shell | `core/shell`, `app-shell-nav.mapper`                                                                                                                       |
+| 2.5 users | `core/errors/app-error` (problem mapper, ErrorMessages), `UsersStore`, `user.mapper`, `user-form.errors`, `users-list.view`, `UserFormDialog`, `UsersList` |
 
 ## 5. Known issues / open items
 
@@ -114,6 +115,8 @@ Written before the handbook; violates ADR 0005 (inline templates/styles, several
 ## 6. Log (newest first)
 
 ### 2026-10-16
+
+- **2.5 Users screen** (architecture 09): `core/errors/app-error` (RFC 9457 to `AppError`, `ErrorMessages`; `COMMON.LEGACY` shows server text), `core/permissions` token (`PAGE_PERMISSIONS`, provided by the legacy `PermissionService`), `domains/security` (domain / data-access with `httpResource` store / ui `UserFormDialog` / feature `UsersList`), route `users` lazy via `USERS_ROUTES`; ESLint: data-access may import `@s/core`. **Verified in browser:** list from `POST users/query`, sort, search, create (validation + server errors), edit, delete (server soft-deletes: user becomes inactive). Open: 429 `Retry-After` UX (ADR 0009 point 4) not built; server temp-password generator sometimes fails policy (task chip raised); test users `test.user1/2` left inactive in the dev DB.
 
 - **2.4 Shell:** `@s/core` `nav/` (framework-free nav model: active trail, breadcrumbs, open groups); `@s/ui` `SAppShell` (skip link, landmarks, collapsible sidebar, drawer < 1024px with focus trap + Escape + scrim, RTL), `SSidebarNav` (sections, groups, `aria-current`, collapsed icons with names as tooltips, badges), `SBreadcrumbs`; app `core/shell` (strict-linted): `ShellLayout`, `ShellStore` (url, crumbs, collapsed remembered), `SHELL_NAV_SOURCE` token; app root `AppShellNav` + pure `app-shell-nav.mapper.ts` (permission menu → Security / Notifications / My account, live inbox badge via the notification hub). Routes: one `''` shell route (auth guard) wraps `admin`, `admin/security`, `notif`, `no-access`, `security/change-password`; `secu-layout` and `notif-layout` deleted. **Verified:** `verify` ✔ (46 files / 133 tests, no new tests — see §4); browser after real OIDC login: sidebar from the permission menu, breadcrumbs "Security › Users", notification pages in the same frame, collapse/expand. Found: the dev server must be restarted after `angular.json` style changes (unstyled app otherwise).
 

@@ -1,0 +1,102 @@
+<s-stack gap="5">
+  <s-page-header
+    [title]="'SECU.USERS.TITLE' | translate"
+    [subtitle]="'SECU.USERS.SUBTITLE' | translate"
+  >
+    @if (can().create) {
+      <button
+        type="button"
+        s-button
+        s-page-actions
+        variant="primary"
+        icon="plus"
+        (click)="openCreate()"
+      >
+        {{ 'SECU.USERS.NEW' | translate }}
+      </button>
+    }
+  </s-page-header>
+
+  @if (pageError(); as text) {
+    <s-notice tone="danger">{{ text }}</s-notice>
+  }
+
+  <s-panel>
+    <s-filter-bar>
+      <s-search
+        [placeholder]="'SECU.USERS.SEARCH_PLACEHOLDER' | translate"
+        (searched)="search($event)"
+      />
+    </s-filter-bar>
+    <s-filter-chips
+      [query]="store.query()"
+      (queryChange)="setQuery($event)"
+      [fields]="store.fields()"
+      [columns]="columns()"
+    />
+    <s-data-table
+      [rows]="rows()"
+      [columns]="columns()"
+      rowKey="id"
+      [caption]="'SECU.USERS.TITLE' | translate"
+      [loading]="store.loading()"
+      [error]="listError()"
+      [emptyTitle]="'SECU.USERS.EMPTY' | translate"
+      emptyIcon="user"
+      [total]="store.total()"
+      [query]="store.query()"
+      (queryChange)="setQuery($event)"
+      [fields]="store.fields()"
+      [limits]="store.limits()"
+    >
+      <ng-template s-cell="isActive" [rows]="rows()" let-row>
+        <s-stamp [tone]="row.isActive ? 'success' : 'neutral'" dot>
+          {{ (row.isActive ? 'COMMON.ACTIVE' : 'COMMON.INACTIVE') | translate }}
+        </s-stamp>
+      </ng-template>
+      <ng-template s-row-actions [rows]="rows()" let-row>
+        @if (can().read) {
+          <a
+            s-icon-button
+            icon="eye"
+            variant="ghost"
+            size="sm"
+            [routerLink]="[row.id]"
+            [aria-label]="'COMMON.DETAIL' | translate"
+          ></a>
+        }
+        @if (can().update) {
+          <button
+            type="button"
+            s-icon-button
+            icon="pencil"
+            variant="ghost"
+            size="sm"
+            [aria-label]="'COMMON.EDIT' | translate"
+            (click)="openEdit(row.user)"
+          ></button>
+        }
+        @if (can().delete) {
+          <button
+            type="button"
+            s-icon-button
+            icon="trash"
+            variant="ghost"
+            size="sm"
+            [aria-label]="'COMMON.DELETE' | translate"
+            (click)="askRemove(row.user)"
+          ></button>
+        }
+      </ng-template>
+    </s-data-table>
+  </s-panel>
+</s-stack>
+
+<secu-user-form-dialog
+  [(open)]="editorOpen"
+  [user]="editing()"
+  [saving]="store.saving()"
+  [errorText]="dialogError()"
+  [fieldErrors]="fieldErrors()"
+  (saved)="save($event)"
+/>

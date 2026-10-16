@@ -1,0 +1,65 @@
+<s-dialog
+  [(open)]="open"
+  [title]="
+    (editing() ? 'SECU.USERS.MODAL.EDIT_TITLE' : 'SECU.USERS.MODAL.CREATE_TITLE') | translate
+  "
+>
+  <form id="security-user-form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+    <s-stack gap="4">
+      @if (errorText(); as text) {
+        <s-notice tone="danger">{{ text }}</s-notice>
+      }
+      <s-field
+        [label]="'SECU.USERS.MODAL.USERNAME' | translate"
+        [error]="
+          views().username.text ?? (views().username.key | translate: { max: limits.username })
+        "
+        required
+      >
+        <input s-input mono formControlName="username" autocomplete="off" />
+      </s-field>
+      <s-field
+        [label]="'SECU.USERS.MODAL.FULL_NAME' | translate"
+        [error]="
+          views().fullName.text ?? (views().fullName.key | translate: { max: limits.fullName })
+        "
+        required
+      >
+        <input s-input formControlName="fullName" autocomplete="off" />
+      </s-field>
+      <s-field
+        [label]="'SECU.USERS.MODAL.EMAIL' | translate"
+        [error]="views().email.text ?? (views().email.key | translate: { max: limits.email })"
+      >
+        <input s-input type="email" formControlName="email" autocomplete="off" />
+      </s-field>
+      <s-field
+        [label]="'SECU.USERS.MODAL.EXTERNAL_ID' | translate"
+        [error]="
+          views().externalId.text ??
+          (views().externalId.key | translate: { max: limits.externalId })
+        "
+      >
+        <input s-input mono formControlName="externalId" autocomplete="off" />
+      </s-field>
+      @if (editing()) {
+        <s-switch formControlName="isActive">{{ 'COMMON.ACTIVE' | translate }}</s-switch>
+      }
+    </s-stack>
+  </form>
+  <ng-container s-dialog-footer>
+    <button type="button" s-button variant="ghost" (click)="open.set(false)">
+      {{ 'COMMON.CANCEL' | translate }}
+    </button>
+    <button
+      type="submit"
+      form="security-user-form"
+      s-button
+      variant="primary"
+      [loading]="saving()"
+      [disabled]="saving()"
+    >
+      {{ (editing() ? 'COMMON.UPDATE' : 'COMMON.CREATE') | translate }}
+    </button>
+  </ng-container>
+</s-dialog>
