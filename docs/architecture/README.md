@@ -32,4 +32,5 @@ Back-end rules (shared .NET packages, errors, protection, database portability, 
 10. **Lists are queried server-side through one contract.** `POST /query` with paging, sort, search and a filter tree; tables bind to `SQuery`. ([08](08-query-contract.md))
 11. **Every widget is ours, every component is thin.** No native/third-party widgets; logic lives in pure, tested functions. ([ADR 0008](adr/0008-own-widgets-thin-components.md))
 12. **Errors are codes.** The UI translates `ERRORS.<code>` with `args` and maps `errors[].path` to fields; server text is only a fallback. ([ADR 0009](adr/0009-error-codes-contract.md))
-13. **Nothing merges red.** Lint, style lint, types, tests and budgets pass, or the PR does not merge. ([06](06-quality-gates.md))
+13. **Domain slices, facades, zoneless.** Layers feature/ui/data-access/domain/util, stores are the only state entry, no zone.js reliance. ([09](09-angular-architecture.md), [ADR 0011](adr/0011-advanced-angular-architecture.md))
+14. **Nothing merges red.** Lint, style lint, types, tests and budgets pass, or the PR does not merge. ([06](06-quality-gates.md))

@@ -189,3 +189,5 @@ Written before the handbook; violates ADR 0005 (inline templates/styles, several
 3. **After each completed step:** tick it in §1, add a dated bullet to §6, list untested code in §4 (what changed, which files, verification done), update §3/§4 if affected.
 4. **Never** mark a step done without verification (build, tests, or browser check — say which).
 5. **Commit** progress with the code it describes (`docs: update progress` or inside the feature commit). Push only when the owner has asked for pushes in that session.
+
+- 2026-10-16: Wrote restrictive Angular architecture rules (09 + ADR 0011). TODO: lint enforcement for layer types, max-lines-per-function, max-params.
