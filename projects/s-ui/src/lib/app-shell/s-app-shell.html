@@ -1,0 +1,65 @@
+<a class="skip" href="#s-main" (click)="skipToContent($event)">{{ text().skip }}</a>
+
+<div class="frame" [attr.data-collapsed]="collapsed() ? '' : null">
+  <aside class="sidebar" [class.open]="mobileOpen()" [cdkTrapFocus]="mobileOpen()">
+    <div class="brand">
+      <ng-content select="[s-shell-brand]" />
+    </div>
+    <div class="nav-area">
+      <ng-content select="[s-shell-nav]" />
+    </div>
+    <div class="sidebar-foot">
+      <button
+        type="button"
+        class="collapse"
+        [attr.aria-label]="text().toggle"
+        [attr.title]="text().toggle"
+        [attr.aria-pressed]="collapsed()"
+        (click)="collapsed.set(!collapsed())"
+      >
+        <s-icon [name]="collapsed() ? 'angle-double-right' : 'angle-double-left'" />
+      </button>
+      <button
+        type="button"
+        class="close"
+        [attr.aria-label]="text().close"
+        (click)="mobileOpen.set(false)"
+      >
+        <s-icon name="times" />
+      </button>
+    </div>
+  </aside>
+
+  @if (mobileOpen()) {
+    <button
+      type="button"
+      class="scrim"
+      tabindex="-1"
+      [attr.aria-label]="text().close"
+      (click)="mobileOpen.set(false)"
+    ></button>
+  }
+
+  <div class="column">
+    <header class="topbar">
+      <button
+        type="button"
+        class="menu"
+        [attr.aria-label]="text().open"
+        [attr.aria-expanded]="mobileOpen()"
+        (click)="mobileOpen.set(true)"
+      >
+        <s-icon name="bars" />
+      </button>
+      <div class="topbar-start">
+        <ng-content select="[s-shell-topbar]" />
+      </div>
+      <div class="topbar-end">
+        <ng-content select="[s-shell-actions]" />
+      </div>
+    </header>
+    <main #main id="s-main" class="content" tabindex="-1">
+      <ng-content />
+    </main>
+  </div>
+</div>

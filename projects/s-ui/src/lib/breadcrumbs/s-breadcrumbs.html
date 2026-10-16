@@ -1,0 +1,20 @@
+@if (crumbs().length > 0) {
+  <nav [attr.aria-label]="label()">
+    <ol class="trail">
+      @for (crumb of crumbs(); track $index; let last = $last) {
+        <li class="crumb">
+          @if (last) {
+            <span class="current" aria-current="page">{{ crumb.label }}</span>
+          } @else if (crumb.url) {
+            <a [routerLink]="crumb.url">{{ crumb.label }}</a>
+          } @else {
+            <span>{{ crumb.label }}</span>
+          }
+          @if (!last) {
+            <s-icon name="chevron-right" class="sep" />
+          }
+        </li>
+      }
+    </ol>
+  </nav>
+}

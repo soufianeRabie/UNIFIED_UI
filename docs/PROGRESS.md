@@ -7,12 +7,12 @@
 
 ## 1. Current status
 
-| Field                   | Value                                                                                                                                |
-| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| **Current phase**       | Phase 2 — Query platform, widgets, shell, reference screen                                                                           |
-| **Last completed step** | 2.3 Own widgets + table query mode (`SPopover`, `SSelect`, `SCalendar`, `SDatePicker`, `SColumnFilter`, `SFilterChips`) — 2026-10-15 |
-| **Next step**           | 2.4 Shell `core/shell` (`SAppShell`, `SSidebarNav`, `STopbar`, breadcrumbs) replacing `secu-layout` / `notif-layout`                 |
-| **Blocked by**          | —                                                                                                                                    |
+| Field                   | Value                                                                                                                                 |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| **Current phase**       | Phase 2 — Query platform, widgets, shell, reference screen                                                                            |
+| **Last completed step** | 2.4 One application shell (`SAppShell`, `SSidebarNav`, `SBreadcrumbs`, `core/shell`) — 2026-10-16                                     |
+| **Next step**           | 2.5 Users reference screen in `domains/security` on the query contract (`POST /api/secu/users/query`); delete the legacy users screen |
+| **Blocked by**          | —                                                                                                                                     |
 
 ### Phase checklist (details in `docs/architecture/07-migration-plan.md`)
 
@@ -39,7 +39,7 @@
   - [x] 2.2 `@s/ui` query model (`projects/s-ui/src/lib/query`) + app `core/query` (DTOs, mappers) + `ERRORS.*` keys (en/fr/ar) + i18n gate for error codes
   - [x] 2.3 `@s/ui` widgets: `SPopover`, `SSelect`, `SCalendar`, `SDatePicker`, `SColumnFilter`, `SFilterChips`; `SDataTable` `[(query)]` (`4c235ad`, `3f2e261`, 2.3c)
   - [x] 2.3d Split (ADR 0010): `@s/tokens` (CSS), `@s/core` (framework-free TS), `@s/ui` (Angular) — React/Next-ready core
-  - [ ] 2.4 Shell `core/shell` replacing `secu-layout` / `notif-layout`
+  - [x] 2.4 Shell `core/shell` replacing `secu-layout` / `notif-layout` (both deleted)
   - [ ] 2.5 Users reference screen in `domains/security`; legacy users screen deleted
 - [ ] **Phase 3 — Security domain screens**
 - [ ] **Phase 4 — Notification domain screens**
@@ -114,6 +114,8 @@ Written before the handbook; violates ADR 0005 (inline templates/styles, several
 ## 6. Log (newest first)
 
 ### 2026-10-16
+
+- **2.4 Shell:** `@s/core` `nav/` (framework-free nav model: active trail, breadcrumbs, open groups); `@s/ui` `SAppShell` (skip link, landmarks, collapsible sidebar, drawer < 1024px with focus trap + Escape + scrim, RTL), `SSidebarNav` (sections, groups, `aria-current`, collapsed icons with names as tooltips, badges), `SBreadcrumbs`; app `core/shell` (strict-linted): `ShellLayout`, `ShellStore` (url, crumbs, collapsed remembered), `SHELL_NAV_SOURCE` token; app root `AppShellNav` + pure `app-shell-nav.mapper.ts` (permission menu → Security / Notifications / My account, live inbox badge via the notification hub). Routes: one `''` shell route (auth guard) wraps `admin`, `admin/security`, `notif`, `no-access`, `security/change-password`; `secu-layout` and `notif-layout` deleted. **Verified:** `verify` ✔ (46 files / 133 tests, no new tests — see §4); browser after real OIDC login: sidebar from the permission menu, breadcrumbs "Security › Users", notification pages in the same frame, collapse/expand. Found: the dev server must be restarted after `angular.json` style changes (unstyled app otherwise).
 
 - **2.3d Framework-free split (owner: "will it integrate with React / Next?"):** ADR 0010. `projects/s-tokens` (tokens, base, controls CSS + layer order; `angular.json` loads it before `s-ui/styles` which keeps only CDK overlay CSS), `projects/s-core` (24 files moved with history: `query/`, `date/`, `calendar/`, `select/`, `filter/`, `table/`, `i18n/s-labels.ts`; ESLint forbids `@angular/*`, `react`, `rxjs`… there), `@s/core` path alias, boundaries element `s-core` (anyone may import it, it imports nothing), test include, i18n check scans it. App imports logic/types from `@s/core`, components from `@s/ui`. **Verified:** `verify` ✔ — same 46 files / 133 tests (no behaviour change).
 - **Owner decision — tests deferred:** no new unit tests during development (cost); new untested code is listed under **Test debt** below and covered in a dedicated test phase. `verify` and existing tests stay mandatory.

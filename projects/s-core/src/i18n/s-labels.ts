@@ -60,6 +60,13 @@ export const S_UI_DEFAULT_LABELS = {
   'S.FILTER.OP.ON': 'On',
   'S.FILTER.OP.BEFORE': 'Before',
   'S.FILTER.OP.ON_OR_AFTER': 'On or after',
+  'S.SHELL.SKIP': 'Skip to content',
+  'S.SHELL.NAV': 'Main navigation',
+  'S.SHELL.OPEN_MENU': 'Open menu',
+  'S.SHELL.CLOSE_MENU': 'Close menu',
+  'S.SHELL.COLLAPSE': 'Collapse sidebar',
+  'S.SHELL.EXPAND': 'Expand sidebar',
+  'S.SHELL.BREADCRUMB': 'Breadcrumb',
 } as const;
 
 export type SUiLabelKey = keyof typeof S_UI_DEFAULT_LABELS;

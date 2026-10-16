@@ -11,6 +11,9 @@
     "@angular/common": "^21.1.0",
     "@angular/core": "^21.1.0",
     "@angular/forms": "^21.1.0",
+    "@angular/router": "^21.1.0",
+    "@s/core": "^0.1.0",
+    "@s/tokens": "^0.1.0",
     "primeicons": "^7.0.0"
   }
 }

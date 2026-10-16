@@ -99,6 +99,30 @@
         "BEFORE": "قبل",
         "ON_OR_AFTER": "في أو بعد"
       }
+    },
+    "SHELL": {
+      "SKIP": "الانتقال إلى المحتوى",
+      "NAV": "التنقل الرئيسي",
+      "OPEN_MENU": "فتح القائمة",
+      "CLOSE_MENU": "إغلاق القائمة",
+      "COLLAPSE": "طي الشريط الجانبي",
+      "EXPAND": "توسيع الشريط الجانبي",
+      "BREADCRUMB": "مسار التنقل"
     }
+  },
+  "SHELL": {
+    "SECTION": {
+      "SECURITY": "الأمان",
+      "NOTIFICATIONS": "الإشعارات",
+      "ACCOUNT": "حسابي"
+    },
+    "ACCOUNT": {
+      "MY_SECURITY": "أماني",
+      "CHANGE_PASSWORD": "تغيير كلمة المرور",
+      "AUTH_SETTINGS": "إعدادات تسجيل الدخول",
+      "LOGOUT": "تسجيل الخروج"
+    },
+    "BRAND": "الواجهة الموحدة",
+    "NOTIFICATIONS": "الإشعارات ({{count}} غير مقروءة)"
   }
 }

@@ -1,0 +1,41 @@
+<s-app-shell
+  [collapsed]="shell.collapsed()"
+  (collapsedChange)="shell.setCollapsed($event)"
+  [(mobileOpen)]="shell.mobileOpen"
+>
+  <span s-shell-brand class="brand">
+    <span class="mark" aria-hidden="true">S</span>
+    <span class="name">{{ 'SHELL.BRAND' | translate }}</span>
+  </span>
+
+  <s-sidebar-nav
+    s-shell-nav
+    [sections]="shell.sections()"
+    [currentUrl]="shell.url()"
+    [collapsed]="shell.collapsed()"
+    (navigated)="shell.mobileOpen.set(false)"
+    (expandRequested)="shell.setCollapsed(false)"
+  />
+
+  <s-breadcrumbs s-shell-topbar [crumbs]="shell.crumbs()" />
+
+  <app-language-switcher s-shell-actions />
+  @if (userName()) {
+    <span s-shell-actions class="user">
+      <s-icon name="user" />
+      <span class="user-name">{{ userName() }}</span>
+    </span>
+  }
+  <button
+    s-shell-actions
+    type="button"
+    s-icon-button
+    icon="sign-out"
+    variant="ghost"
+    size="sm"
+    [aria-label]="'SHELL.ACCOUNT.LOGOUT' | translate"
+    (click)="signOut()"
+  ></button>
+
+  <router-outlet />
+</s-app-shell>

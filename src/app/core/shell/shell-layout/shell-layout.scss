@@ -1,0 +1,46 @@
+:host {
+  display: block;
+}
+
+.brand {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+  min-inline-size: 0;
+}
+
+.mark {
+  display: grid;
+  flex: none;
+  place-items: center;
+  inline-size: 28px;
+  block-size: 28px;
+  font-family: var(--font-serif);
+  font-weight: var(--weight-bold);
+  color: var(--seal-contrast);
+  background: var(--seal);
+  border-radius: var(--radius-sm);
+}
+
+.name {
+  overflow: hidden;
+  font-family: var(--font-serif);
+  font-size: var(--text-md);
+  font-weight: var(--weight-semibold);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.user {
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
+  font-size: var(--text-sm);
+  color: var(--ink-2);
+}
+
+@media (width < 640px) {
+  .user-name {
+    display: none;
+  }
+}

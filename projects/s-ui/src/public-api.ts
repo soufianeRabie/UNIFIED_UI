@@ -39,3 +39,6 @@ export * from './lib/calendar';
 export * from './lib/date-picker';
 export * from './lib/column-filter';
 export * from './lib/filter-chips';
+export * from './lib/app-shell';
+export * from './lib/sidebar-nav';
+export * from './lib/breadcrumbs';

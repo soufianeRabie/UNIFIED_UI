@@ -1,0 +1,66 @@
+<nav class="nav" [attr.aria-label]="view().label">
+  @for (section of view().sections; track section.id) {
+    <div class="section">
+      <div class="section-label" [id]="'s-nav-' + section.id">{{ section.label }}</div>
+      <ul class="items" [attr.aria-labelledby]="'s-nav-' + section.id">
+        <ng-container *ngTemplateOutlet="items; context: { $implicit: section.nodes, depth: 0 }" />
+      </ul>
+    </div>
+  }
+</nav>
+
+<ng-template #items let-nodes let-depth="depth">
+  @for (node of nodes; track node.item.id) {
+    <li class="entry" [attr.data-depth]="depth">
+      <div class="row">
+        @if (node.item.url) {
+          <a
+            class="link"
+            [routerLink]="node.item.url"
+            routerLinkActive="active"
+            ariaCurrentWhenActive="page"
+            [attr.title]="collapsed() ? node.item.label : null"
+            [attr.aria-label]="collapsed() ? node.item.label : null"
+            (click)="navigated.emit()"
+          >
+            <s-icon class="icon" [name]="node.item.icon ?? 'circle'" />
+            <span class="text">{{ node.item.label }}</span>
+            @if (node.item.badge) {
+              <span class="badge">{{ node.item.badge > 99 ? '99+' : node.item.badge }}</span>
+            }
+          </a>
+          @if (node.children.length > 0 && !collapsed()) {
+            <button
+              type="button"
+              class="toggle"
+              [attr.aria-expanded]="node.open"
+              [attr.aria-label]="node.item.label"
+              (click)="toggle(node)"
+            >
+              <s-icon name="chevron-down" />
+            </button>
+          }
+        } @else {
+          <button
+            type="button"
+            class="link group"
+            [attr.aria-expanded]="node.open"
+            [attr.title]="collapsed() ? node.item.label : null"
+            (click)="toggle(node)"
+          >
+            <s-icon class="icon" [name]="node.item.icon ?? 'folder'" />
+            <span class="text">{{ node.item.label }}</span>
+            <s-icon name="chevron-down" class="chevron" />
+          </button>
+        }
+      </div>
+      @if (node.children.length > 0 && node.open && !collapsed()) {
+        <ul class="items">
+          <ng-container
+            *ngTemplateOutlet="items; context: { $implicit: node.children, depth: depth + 1 }"
+          />
+        </ul>
+      }
+    </li>
+  }
+</ng-template>

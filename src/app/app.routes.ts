@@ -30,35 +30,39 @@ export const routes: Routes = [
     component: LoginPageComponent,
   },
   {
-    path: 'no-access',
+    // One frame for every signed-in page (step 2.4): core/shell, menu from the permission API.
+    path: '',
     canActivate: [authGuard],
-    loadComponent: () =>
-      import('./features/no-access/no-access.component').then((m) => m.NoAccessComponent),
-  },
-  {
-    // [SRB ] Accessible to all authenticated users — no permissionUrlGuard so employees
-    //        can reach it even if they have no admin pages in their menu.
-    path: 'security/change-password',
-    canActivate: [authGuard],
-    loadComponent: () =>
-      import('./features/change-password/change-password.component').then(
-        (m) => m.ChangePasswordComponent,
-      ),
-  },
-  {
-    path: 'admin/security',
-    canActivate: [authGuard, permissionUrlGuard],
-    loadChildren: () => import('./secu/secu.routes').then((m) => m.SECU_ROUTES),
-  },
-  {
-    path: 'admin',
-    canActivate: [authGuard, permissionUrlGuard],
-    loadChildren: () => import('./secu/secu.routes').then((m) => m.SECU_ROUTES),
-  },
-  {
-    path: 'notif',
-    canActivate: [authGuard],
-    loadChildren: () => import('./notif/notif.routes').then((m) => m.NOTIF_ROUTES),
+    loadComponent: () => import('./core/shell').then((m) => m.ShellLayout),
+    children: [
+      {
+        path: 'no-access',
+        loadComponent: () =>
+          import('./features/no-access/no-access.component').then((m) => m.NoAccessComponent),
+      },
+      {
+        // Every signed-in user, even without admin pages in their menu.
+        path: 'security/change-password',
+        loadComponent: () =>
+          import('./features/change-password/change-password.component').then(
+            (m) => m.ChangePasswordComponent,
+          ),
+      },
+      {
+        path: 'admin/security',
+        canActivate: [permissionUrlGuard],
+        loadChildren: () => import('./secu/secu.routes').then((m) => m.SECU_ROUTES),
+      },
+      {
+        path: 'admin',
+        canActivate: [permissionUrlGuard],
+        loadChildren: () => import('./secu/secu.routes').then((m) => m.SECU_ROUTES),
+      },
+      {
+        path: 'notif',
+        loadChildren: () => import('./notif/notif.routes').then((m) => m.NOTIF_ROUTES),
+      },
+    ],
   },
   {
     // Design-system gallery for reviewers; never matched in production builds.

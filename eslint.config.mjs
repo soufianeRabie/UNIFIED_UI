@@ -37,6 +37,7 @@ const STRICT_DIRS = [
   'src/app/domains',
   'src/app/core/i18n',
   'src/app/core/query',
+  'src/app/core/shell',
   'src/app/dev',
 ];
 const STRICT_TS = STRICT_DIRS.map((d) => `${d}/**/*.ts`);

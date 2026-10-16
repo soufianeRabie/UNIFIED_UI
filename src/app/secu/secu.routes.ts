@@ -2,9 +2,8 @@ import { Routes } from '@angular/router';
 
 export const SECU_ROUTES: Routes = [
   {
+    // The frame (sidebar, topbar) is the shared shell: app.routes → core/shell (step 2.4).
     path: '',
-    loadComponent: () =>
-      import('./components/shared/secu-layout.component').then((m) => m.SecuLayoutComponent),
     children: [
       { path: '', redirectTo: 'users', pathMatch: 'full' },
 

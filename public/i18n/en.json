@@ -1720,6 +1720,15 @@
         "BEFORE": "Before",
         "ON_OR_AFTER": "On or after"
       }
+    },
+    "SHELL": {
+      "SKIP": "Skip to content",
+      "NAV": "Main navigation",
+      "OPEN_MENU": "Open menu",
+      "CLOSE_MENU": "Close menu",
+      "COLLAPSE": "Collapse sidebar",
+      "EXPAND": "Expand sidebar",
+      "BREADCRUMB": "Breadcrumb"
     }
   },
   "ERRORS": {
@@ -1765,5 +1774,20 @@
       "INVALID_VALUE": "Value {{value}} is not valid for field '{{field}}' ({{type}}).",
       "TEXT_TOO_LONG": "Text values are limited to {{max}} characters."
     }
+  },
+  "SHELL": {
+    "SECTION": {
+      "SECURITY": "Security",
+      "NOTIFICATIONS": "Notifications",
+      "ACCOUNT": "My account"
+    },
+    "ACCOUNT": {
+      "MY_SECURITY": "My security",
+      "CHANGE_PASSWORD": "Change password",
+      "AUTH_SETTINGS": "Sign-in settings",
+      "LOGOUT": "Sign out"
+    },
+    "BRAND": "Unified console",
+    "NOTIFICATIONS": "Notifications ({{count}} unread)"
   }
 }

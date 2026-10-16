@@ -1720,6 +1720,15 @@
         "BEFORE": "Avant le",
         "ON_OR_AFTER": "À partir du"
       }
+    },
+    "SHELL": {
+      "SKIP": "Aller au contenu",
+      "NAV": "Navigation principale",
+      "OPEN_MENU": "Ouvrir le menu",
+      "CLOSE_MENU": "Fermer le menu",
+      "COLLAPSE": "Réduire le menu",
+      "EXPAND": "Déplier le menu",
+      "BREADCRUMB": "Fil d’Ariane"
     }
   },
   "ERRORS": {
@@ -1765,5 +1774,20 @@
       "INVALID_VALUE": "La valeur {{value}} n'est pas valide pour le champ « {{field}} » ({{type}}).",
       "TEXT_TOO_LONG": "Les valeurs texte sont limitées à {{max}} caractères."
     }
+  },
+  "SHELL": {
+    "SECTION": {
+      "SECURITY": "Sécurité",
+      "NOTIFICATIONS": "Notifications",
+      "ACCOUNT": "Mon compte"
+    },
+    "ACCOUNT": {
+      "MY_SECURITY": "Ma sécurité",
+      "CHANGE_PASSWORD": "Changer le mot de passe",
+      "AUTH_SETTINGS": "Paramètres de connexion",
+      "LOGOUT": "Se déconnecter"
+    },
+    "BRAND": "Console unifiée",
+    "NOTIFICATIONS": "Notifications ({{count}} non lues)"
   }
 }
