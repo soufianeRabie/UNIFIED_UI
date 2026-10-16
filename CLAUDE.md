@@ -3,8 +3,9 @@
 ## Read first, in this order
 
 1. `docs/PROGRESS.md` — current phase, next step, known issues, environment facts.
-2. `docs/architecture/README.md` — the ten rules.
-3. The handbook page(s) for the step you are about to do (`docs/architecture/01`–`08`, `adr/`). For any back-end step: `../PLATFORM_DOTNET/CLAUDE.md` and `../PLATFORM_DOTNET/docs/architecture/` (shared .NET packages, errors as codes, protection, DB portability, concurrency).
+2. `docs/architecture/README.md` — the rules.
+3. `docs/architecture/09-angular-architecture.md` + `adr/0011` — restrictive Angular rules (MUST/MUST NOT). They override older pages.
+4. The handbook page(s) for the step you are about to do (`docs/architecture/01`–`08`, `adr/`). For any back-end step: `../PLATFORM_DOTNET/CLAUDE.md` and `../PLATFORM_DOTNET/docs/architecture/` (shared .NET packages, errors as codes, protection, DB portability, concurrency).
 
 ## Non-negotiable
 
@@ -12,6 +13,7 @@
 - One component per folder (`.ts` / `.html` / `.scss` / `.types.ts` / `.spec.ts` / `index.ts`). No inline templates or styles, no `style=""`, no raw colours/sizes outside `projects/s-tokens/styles/tokens.css`.
 - Layers: `features → ui / data-access → domain`; `@s/ui` never imports app code; DTOs stay in `data-access`.
 - Angular 21 modern APIs only: standalone, OnPush, `inject()`, signal `input/model/output`, `@if/@for`.
+- Before finishing any step, walk the review checklist in `09-angular-architecture.md` §9 and report any rule you could not meet.
 - Never commit secrets. Real `appsettings*.json` in the API repos are git-ignored on purpose.
 
 ## Workflow
